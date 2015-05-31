@@ -1,8 +1,19 @@
-## bobthefish
+# bobthefish
 
 bobthefish is a Powerline-style, Git-aware fish theme optimized for awesome.
 
+[![](https://img.shields.io/badge/Framework-Oh My Fish-blue.svg?style=flat)](https://github.com/oh-my-fish/oh-my-fish) ![](https://img.shields.io/cocoapods/l/AFNetworking.svg) [![Join the chat at https://gitter.im/oh-my-fish/oh-my-fish](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/oh-my-fish/oh-my-fish?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![bobthefish][screenshot]
+
+
+### Installation
+
+Add it to your `~/.config/fish/config.fish` file:
+
+    Theme bobthefish
+
+Open a new terminal session and run `omf install`.
 
 You will probably need a [Powerline-patched font][patching] for this to work.
 [I recommend picking one of these][fonts].
