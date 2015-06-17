@@ -285,7 +285,42 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
-  set -l ahead   (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}')
+
+
+  set -l os
+  set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null; set os $status)
+  set -l count
+  set -l behindCount
+  set -l aheadCount
+  set -l ahead
+
+		if test $os -eq 0
+			set behindCount (count (for arg in $commits; echo $arg; end | grep '^<'))
+			set aheadCount (count (for arg in $commits; echo $arg; end | grep -v '^<'))
+			set count "$behindCount	$aheadCount"
+		else
+			set count
+		end
+
+		switch "$count"
+    		case '' # no upstream
+    		  echo "no upstream"
+    		case "0	0" # equal to upstream
+    			set ahead ""
+    		case "0	*" # ahead of upstream
+    			set ahead "↑$aheadCount"
+    		case "*	0" # behind upstream
+    			set ahead "↓$behindCount"
+    		case '*' # diverged from upstream
+    			set ahead "↑$aheadCount↓$behindCount"
+    		end
+    		if test -n "$count" -a -n "$name"
+    			set ahead (command git rev-parse --abbrev-ref "$upstream" ^/dev/null)
+    			echo "else $ahead"
+    		end
+
+  #echo "--> ahead $ahead"
+  #set -l ahead   (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}')
 
   set -l new ''
   set -l show_untracked (git config --bool bash.showUntrackedFiles)
@@ -306,10 +341,10 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
     set flag_bg $__bobthefish_lt_orange
     set flag_fg $__bobthefish_dk_orange
   end
-
+	
   __bobthefish_path_segment $argv[1]
 
-  __bobthefish_start_segment $flag_bg $flag_fg --bold
+  __bobthefish_start_segment $flag_bg $flag_fg
   echo -n -s (__bobthefish_git_branch) $flags ' '
   set_color normal
 
