@@ -304,7 +304,6 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
 
 		switch "$count"
     		case '' # no upstream
-    		  echo "no upstream"
     		case "0	0" # equal to upstream
     			set ahead ""
     		case "0	*" # ahead of upstream
