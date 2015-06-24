@@ -14,6 +14,7 @@
 #
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
+#     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
@@ -120,6 +121,36 @@ function __bobthefish_project_pwd -d 'Print the working directory relative to pr
   echo "$PWD" | sed -e "s#$argv[1]##g" -e 's#^/##'
 end
 
+function __bobthefish_git_ahead -d 'Print the ahead/behind state for the current branch'
+  if [ "$theme_display_git_ahead_verbose" = 'yes' ]
+    __bobthefish_git_ahead_verbose
+    return
+  end
+
+  command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}'
+end
+
+function __bobthefish_git_ahead_verbose -d 'Print a more verbose ahead/behind state for the current branch'
+  set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
+  if [ $status != 0 ]
+    return
+  end
+
+  set -l behind (count (for arg in $commits; echo $arg; end | grep '^<'))
+  set -l ahead (count (for arg in $commits; echo $arg; end | grep -v '^<'))
+
+  switch "$ahead $behind"
+    case '' # no upstream
+    case '0 0' # equal to upstream
+      return
+    case '* 0' # ahead of upstream
+      echo "↑$ahead"
+    case '0 *' # behind upstream
+      echo "↓$behind"
+    case '*' # diverged from upstream
+      echo "↑$ahead↓$behind"
+  end
+end
 
 # ===========================
 # Segment functions
@@ -285,41 +316,7 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
-
-
-  set -l os
-  set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null; set os $status)
-  set -l count
-  set -l behindCount
-  set -l aheadCount
-  set -l ahead
-
-		if test $os -eq 0
-			set behindCount (count (for arg in $commits; echo $arg; end | grep '^<'))
-			set aheadCount (count (for arg in $commits; echo $arg; end | grep -v '^<'))
-			set count "$behindCount	$aheadCount"
-		else
-			set count
-		end
-
-		switch "$count"
-    		case '' # no upstream
-    		case "0	0" # equal to upstream
-    			set ahead ""
-    		case "0	*" # ahead of upstream
-    			set ahead "↑$aheadCount"
-    		case "*	0" # behind upstream
-    			set ahead "↓$behindCount"
-    		case '*' # diverged from upstream
-    			set ahead "↑$aheadCount↓$behindCount"
-    		end
-    		if test -n "$count" -a -n "$name"
-    			set ahead (command git rev-parse --abbrev-ref "$upstream" ^/dev/null)
-    			echo "else $ahead"
-    		end
-
-  #echo "--> ahead $ahead"
-  #set -l ahead   (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}')
+  set -l ahead   (__bobthefish_git_ahead)
 
   set -l new ''
   set -l show_untracked (git config --bool bash.showUntrackedFiles)
@@ -340,10 +337,10 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
     set flag_bg $__bobthefish_lt_orange
     set flag_fg $__bobthefish_dk_orange
   end
-	
+
   __bobthefish_path_segment $argv[1]
 
-  __bobthefish_start_segment $flag_bg $flag_fg
+  __bobthefish_start_segment $flag_bg $flag_fg --bold
   echo -n -s (__bobthefish_git_branch) $flags ' '
   set_color normal
 
