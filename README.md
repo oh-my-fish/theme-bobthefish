@@ -61,7 +61,7 @@ This theme is based loosely on [agnoster][agnoster].
 You can override some default options in your `config.fish`:
 
     set -g theme_display_git no
-    set -g theme_display_git_untracked yes
+    set -g theme_display_git_untracked no
     set -g theme_display_git_ahead_verbose yes
     set -g theme_display_hg yes
     set -g theme_display_virtualenv no
