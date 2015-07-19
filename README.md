@@ -38,13 +38,13 @@ This theme is based loosely on [agnoster][agnoster].
      * Previous command failed (`!`)
      * Background jobs (`%`)
      * You currently have superpowers (`$`)
- * User@Host (unless you're the default user)
+ * `User@Host` (unless you're the default user)
  * Current RVM or rbenv (Ruby) version
  * Current virtualenv (Python) version
      * _If you use virtualenv, you will probably need to disable the default virtualenv prompt, since it doesn't play nice with fish: `set -x VIRTUAL_ENV_DISABLE_PROMPT 1`_
  * Abbreviated parent directory
  * Current directory, or Git or Mercurial project name
- * Current project's repo branch (<img width="16" alt="branch-glyph" src="https://cloud.githubusercontent.com/assets/53660/8768360/53ee9b58-2e32-11e5-9977-cee0063936fa.png"> master) or detached head (➦ d0dfd9b)
+ * Current project's repo branch (<img width="16" alt="branch-glyph" src="https://cloud.githubusercontent.com/assets/53660/8768360/53ee9b58-2e32-11e5-9977-cee0063936fa.png"> master) or detached head (`➦` d0dfd9b)
  * Git or Mercurial status, via colors and flags:
      * Dirty working directory (`*`)
      * Untracked files (`…`)
@@ -52,7 +52,7 @@ This theme is based loosely on [agnoster][agnoster].
      * Stashed changes (`$`)
      * Unpulled commits (`-`)
      * Unpushed commits (`+`)
-     * Unpulled *and* unpushed commits (`±`)
+     * Unpulled _and_ unpushed commits (`±`)
      * _Note that not all of these have been implemented for hg yet :)_
  * Abbreviated project-relative path
 
@@ -61,14 +61,16 @@ This theme is based loosely on [agnoster][agnoster].
 
 You can override some default options in your `config.fish`:
 
-    set -g theme_display_git no
-    set -g theme_display_git_untracked no
-    set -g theme_display_git_ahead_verbose yes
-    set -g theme_display_hg yes
-    set -g theme_display_virtualenv no
-    set -g theme_display_ruby no
-    set -g theme_display_user yes
-    set -g default_user your_normal_user
+```fish
+set -g theme_display_git no
+set -g theme_display_git_untracked no
+set -g theme_display_git_ahead_verbose yes
+set -g theme_display_hg yes
+set -g theme_display_virtualenv no
+set -g theme_display_ruby no
+set -g theme_display_user yes
+set -g default_user your_normal_user
+```
 
 
 [screenshot]: http://i.0x7f.us/bobthefish.png
