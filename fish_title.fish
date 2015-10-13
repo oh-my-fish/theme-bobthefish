@@ -1,4 +1,4 @@
 function fish_title
-  echo $_ ' '
-  pwd
+  [ "$theme_title_display_process" = 'yes' ]; and echo $_ ' '
+  [ "$theme_title_display_path" != 'no' ]; and pwd
 end
