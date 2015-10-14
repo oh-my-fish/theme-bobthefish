@@ -322,7 +322,8 @@ function __bobthefish_prompt_git -a current_dir -d 'Display the actual git state
   set -l new ''
   set -l show_untracked (git config --bool bash.showUntrackedFiles)
   if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
-    if [ (command git ls-files --other --exclude-standard) ]
+    set new (command git ls-files --other --exclude-standard)
+    if [ "$new" ]
       if [ "$theme_avoid_ambiguous_glyphs" = 'yes' ]
         set new '...'
       else
