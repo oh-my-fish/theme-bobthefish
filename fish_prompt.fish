@@ -22,6 +22,7 @@
 #     set -g theme_title_display_process yes
 #     set -g theme_title_display_path no
 #     set -g theme_date_format "+%a %H:%M"
+#     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g default_user your_normal_user
 
 set -g __bobthefish_current_bg NONE
@@ -324,8 +325,13 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
   set -l new ''
   set -l show_untracked (git config --bool bash.showUntrackedFiles)
   if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
-    set new (command git ls-files --other --exclude-standard)
-    [ "$new" ]; and set new '…'
+    if [ (command git ls-files --other --exclude-standard) ]
+      if [ "$theme_avoid_ambiguous_glyphs" = 'yes' ]
+        set new '...'
+      else
+        set new '…'
+      end
+    end
   end
 
   set -l flags   "$dirty$staged$stashed$ahead$new"

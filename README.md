@@ -72,6 +72,7 @@ set -g theme_display_user yes
 set -g theme_title_display_process yes
 set -g theme_title_display_path no
 set -g theme_date_format "+%a %H:%M"
+set -g theme_avoid_ambiguous_glyphs yes
 set -g default_user your_normal_user
 ```
 
