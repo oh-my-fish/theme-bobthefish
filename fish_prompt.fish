@@ -96,8 +96,8 @@ end
 
 function __bobthefish_hg_branch -d 'Get the current hg branch'
   set -l branch (command hg branch ^/dev/null)
-  set -l book " @ "(command hg book | grep \* | cut -d\  -f3)
-  echo "$__bobthefish_branch_glyph $branch$book"
+  set -l book (command hg book | grep \* | cut -d\  -f3)
+  echo "$__bobthefish_branch_glyph $branch @ $book"
 end
 
 function __bobthefish_pretty_parent -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
@@ -240,8 +240,7 @@ function __bobthefish_prompt_status -d 'Display symbols for a non zero exit stat
   end
 
   # if superuser (uid == 0)
-  set -l uid (id -u $USER)
-  if [ $uid -eq 0 ]
+  if [ (id -u $USER) -eq 0 ]
     set superuser $__bobthefish_superuser_glyph
   end
 
@@ -249,8 +248,6 @@ function __bobthefish_prompt_status -d 'Display symbols for a non zero exit stat
   if [ (jobs -l | wc -l) -gt 0 ]
     set bg_jobs $__bobthefish_bg_job_glyph
   end
-
-  set -l status_flags "$nonzero$superuser$bg_jobs"
 
   if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
     __bobthefish_start_segment fff 000
