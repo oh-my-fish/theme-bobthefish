@@ -100,8 +100,8 @@ function __bobthefish_hg_branch -d 'Get the current hg branch'
   echo "$__bobthefish_branch_glyph $branch$book"
 end
 
-function __bobthefish_pretty_parent -d 'Print a parent directory, shortened to fit the prompt'
-  echo -n (dirname $argv[1]) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
+function __bobthefish_pretty_parent -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
+  echo -n (dirname $current_dir) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
 end
 
 function __bobthefish_git_project_dir -d 'Print the current git project base directory'
@@ -121,8 +121,8 @@ function __bobthefish_hg_project_dir -d 'Print the current hg project base direc
   end
 end
 
-function __bobthefish_project_pwd -d 'Print the working directory relative to project root'
-  echo "$PWD" | sed -e "s#$argv[1]##g" -e 's#^/##'
+function __bobthefish_project_pwd -a current_dir -d 'Print the working directory relative to project root'
+  echo "$PWD" | sed -e "s#$current_dir##g" -e 's#^/##'
 end
 
 function __bobthefish_git_ahead -d 'Print the ahead/behind state for the current branch'
@@ -187,8 +187,8 @@ function __bobthefish_start_segment -d 'Start a prompt segment'
   set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -d 'Display a shortened form of a directory'
-  if [ -w "$argv[1]" ]
+function __bobthefish_path_segment -a current_dir -d 'Display a shortened form of a directory'
+  if [ -w "$current_dir" ]
     __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
   else
     __bobthefish_start_segment $__bobthefish_dk_red $__bobthefish_lt_red
@@ -197,15 +197,15 @@ function __bobthefish_path_segment -d 'Display a shortened form of a directory'
   set -l directory
   set -l parent
 
-  switch "$argv[1]"
+  switch "$current_dir"
     case /
       set directory '/'
     case "$HOME"
       set directory '~'
     case '*'
-      set parent    (__bobthefish_pretty_parent "$argv[1]")
+      set parent    (__bobthefish_pretty_parent "$current_dir")
       set parent    "$parent/"
-      set directory (basename "$argv[1]")
+      set directory (basename "$current_dir")
   end
 
   [ "$parent" ]; and echo -n -s "$parent"
@@ -282,7 +282,7 @@ function __bobthefish_prompt_user -d 'Display actual user if different from $def
   end
 end
 
-function __bobthefish_prompt_hg -d 'Display the actual hg state'
+function __bobthefish_prompt_hg -a current_dir -d 'Display the actual hg state'
   set -l dirty (command hg stat; or echo -n '*')
 
   set -l flags "$dirty"
@@ -295,7 +295,7 @@ function __bobthefish_prompt_hg -d 'Display the actual hg state'
     set flag_fg fff
   end
 
-  __bobthefish_path_segment $argv[1]
+  __bobthefish_path_segment $current_dir
 
   __bobthefish_start_segment $flag_bg $flag_fg
   echo -n -s $__bobthefish_hg_glyph ' '
@@ -304,7 +304,7 @@ function __bobthefish_prompt_hg -d 'Display the actual hg state'
   echo -n -s (__bobthefish_hg_branch) $flags ' '
   set_color normal
 
-  set -l project_pwd  (__bobthefish_project_pwd $argv[1])
+  set -l project_pwd  (__bobthefish_project_pwd $current_dir)
   if [ "$project_pwd" ]
     if [ -w "$PWD" ]
       __bobthefish_start_segment 333 999
@@ -316,7 +316,7 @@ function __bobthefish_prompt_hg -d 'Display the actual hg state'
   end
 end
 
-function __bobthefish_prompt_git -d 'Display the actual git state'
+function __bobthefish_prompt_git -a current_dir -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
@@ -334,7 +334,7 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
     end
   end
 
-  set -l flags   "$dirty$staged$stashed$ahead$new"
+  set -l flags "$dirty$staged$stashed$ahead$new"
   [ "$flags" ]; and set flags " $flags"
 
   set -l flag_bg $__bobthefish_lt_green
@@ -347,13 +347,13 @@ function __bobthefish_prompt_git -d 'Display the actual git state'
     set flag_fg $__bobthefish_dk_orange
   end
 
-  __bobthefish_path_segment $argv[1]
+  __bobthefish_path_segment $current_dir
 
   __bobthefish_start_segment $flag_bg $flag_fg --bold
   echo -n -s (__bobthefish_git_branch) $flags ' '
   set_color normal
 
-  set -l project_pwd  (__bobthefish_project_pwd $argv[1])
+  set -l project_pwd (__bobthefish_project_pwd $current_dir)
   if [ "$project_pwd" ]
     if [ -w "$PWD" ]
       __bobthefish_start_segment 333 999
