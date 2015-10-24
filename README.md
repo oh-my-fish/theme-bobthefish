@@ -9,11 +9,9 @@ bobthefish is a Powerline-style, Git-aware fish theme optimized for awesome.
 
 ### Installation
 
-Add it to your `~/.config/fish/config.fish` file:
+Be sure to have Oh My Fish installed. Then just:
 
-    Theme bobthefish
-
-Open a new terminal session and run `omf install`.
+    omf install bobthefish
 
 You will probably need a [Powerline-patched font][patching] for this to work.
 [I recommend picking one of these][fonts].
