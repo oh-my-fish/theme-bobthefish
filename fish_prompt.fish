@@ -393,16 +393,15 @@ end
 
 function __bobthefish_prompt_rubies -d 'Display current Ruby (rvm/rbenv)'
   [ "$theme_display_ruby" = 'no' ]; and return
-  set -l ruby_version
-  if type rvm-prompt >/dev/null 2>&1
+  if which rvm-prompt >/dev/null 2>&1
     set ruby_version (rvm-prompt i v g)
-  else if type rbenv >/dev/null 2>&1
+  else if which rbenv >/dev/null 2>&1
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
-    [ "$ruby_version" = (rbenv global) ]; and return
+    set -q RBENV_ROOT; and set rbenv_root $RBENV_ROOT; or set rbenv_root ~/.rbenv
+    [ "$ruby_version" = (cat $rbenv_root/version 2>/dev/null; or echo 'system') ]; and return
   end
   [ -z "$ruby_version" ]; and return
-
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
   echo -n -s $ruby_version ' '
   set_color normal
