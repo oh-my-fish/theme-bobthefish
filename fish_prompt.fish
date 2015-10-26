@@ -322,7 +322,7 @@ function __bobthefish_prompt_git -a current_dir -d 'Display the actual git state
   set -l new ''
   set -l show_untracked (git config --bool bash.showUntrackedFiles)
   if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
-    set new (command git ls-files --other --exclude-standard)
+    set new (command git ls-files --other --exclude-standard --directory)
     if [ "$new" ]
       if [ "$theme_avoid_ambiguous_glyphs" = 'yes' ]
         set new '...'
@@ -393,16 +393,15 @@ end
 
 function __bobthefish_prompt_rubies -d 'Display current Ruby (rvm/rbenv)'
   [ "$theme_display_ruby" = 'no' ]; and return
-  set -l ruby_version
-  if type rvm-prompt >/dev/null 2>&1
+  if which rvm-prompt >/dev/null 2>&1
     set ruby_version (rvm-prompt i v g)
-  else if type rbenv >/dev/null 2>&1
+  else if which rbenv >/dev/null 2>&1
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
-    [ "$ruby_version" = (rbenv global) ]; and return
+    set -q RBENV_ROOT; and set rbenv_root $RBENV_ROOT; or set rbenv_root ~/.rbenv
+    [ "$ruby_version" = (cat $rbenv_root/version 2>/dev/null; or echo 'system') ]; and return
   end
   [ -z "$ruby_version" ]; and return
-
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
   echo -n -s $ruby_version ' '
   set_color normal
