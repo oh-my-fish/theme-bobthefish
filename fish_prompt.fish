@@ -2,7 +2,7 @@
 #
 # bobthefish is a Powerline-style, Git-aware fish theme optimized for awesome.
 #
-# You will probably need a Powerline-patched font for this to work:
+# You will need a Powerline-patched font for this to work:
 #
 #     https://powerline.readthedocs.org/en/latest/fontpatching.html
 #
@@ -10,7 +10,7 @@
 #
 #     https://github.com/Lokaltog/powerline-fonts
 #
-# You can override some default options in your config.fish:
+# You can override some default prompt options in your config.fish:
 #
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
@@ -19,8 +19,6 @@
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
-#     set -g theme_title_display_process yes
-#     set -g theme_title_display_path no
 #     set -g theme_date_format "+%a %H:%M"
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g default_user your_normal_user
@@ -391,10 +389,51 @@ function __bobthefish_prompt_virtualfish -d "Display activated virtual environme
   set_color normal
 end
 
-function __bobthefish_prompt_rubies -d 'Display current Ruby (rvm/rbenv)'
-  [ "$theme_display_ruby" = 'no' ]; and return
+function __bobthefish_rvm_parse_ruby -a ruby_string scope -d 'Parse RVM Ruby string'
+  # Function arguments:
+  # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
+  # - 'default' or 'current'
+  set -l __ruby (echo $ruby_string | cut -d '@' -f 1 2>/dev/null)
+  set -g __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 2>/dev/null)
+  set -g __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 2>/dev/null)
+  set -g __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 2>/dev/null)
+  [ "$__ruby_gemset" = "$__ruby" ]; and set -l __ruby_gemset global
+end
+
+function __bobthefish_rvm_info -d 'Current Ruby information from RVM'
+  # More `sed`/`grep`/`cut` magic...
+  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | \
+    sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_current_ruby (rvm-prompt i v g)
+  # Parse default and current Rubies to global variables
+  __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
+  __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
+  # Show unobtrusive RVM prompt
+  if [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; return
+  # If interpreter differs form default interpreter, show everything:
+  else if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]; rvm-prompt i v
+      else; rvm-prompt i v g; end
+  # If version differs form default version
+  else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]; rvm-prompt v
+    else; rvm-prompt v g; end
+  # If gemset differs form default or 'global' gemset, just show it
+  else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
+    rvm-prompt g;
+  end
+  set --erase --global __rvm_current_ruby_gemset
+  set --erase --global __rvm_current_ruby_interpreter
+  set --erase --global __rvm_current_ruby_version
+  set --erase --global __rvm_default_ruby_gemset
+  set --erase --global __rvm_default_ruby_interpreter
+  set --erase --global __rvm_default_ruby_version
+end
+
+function __bobthefish_show_ruby -d 'Current Ruby (rvm/rbenv)'
+  set -l ruby_version
   if which rvm-prompt >/dev/null 2>&1
-    set ruby_version (rvm-prompt i v g)
+    set ruby_version (__bobthefish_rvm_info)
   else if which rbenv >/dev/null 2>&1
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
@@ -407,6 +446,10 @@ function __bobthefish_prompt_rubies -d 'Display current Ruby (rvm/rbenv)'
   set_color normal
 end
 
+function __bobthefish_prompt_rubies -d 'Display current Ruby information'
+  [ "$theme_display_ruby" = 'no' ]; and return
+  __bobthefish_show_ruby
+end
 
 # ===========================
 # Apply theme
