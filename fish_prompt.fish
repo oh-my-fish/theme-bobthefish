@@ -477,6 +477,7 @@ end
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_status
+  __bobthefish_prompt_vi
   __bobthefish_prompt_user
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
@@ -490,6 +491,5 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   else
     __bobthefish_prompt_dir
   end
-  __bobthefish_prompt_vi
   __bobthefish_finish_segments
 end
