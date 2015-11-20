@@ -20,6 +20,7 @@
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
 #     set -g theme_display_vi no
+#     set -g theme_display_vi_hide_mode default
 #     set -g theme_title_display_process yes
 #     set -g theme_title_display_path no
 #     set -g theme_date_format "+%a %H:%M"
@@ -369,20 +370,22 @@ function __bobthefish_prompt_dir -d 'Display a shortened form of the current dir
 end
 
 function __bobthefish_prompt_vi -d 'Display vi mode'
-  [ "$theme_display_vi" = 'no' ]; and return
-  set -l vi_mode
-  switch $fish_bind_mode
-  case default
-    __bobthefish_start_segment $__bobthefish_med_grey $__bobthefish_dk_grey --bold
-    echo -n -s 'N'
-  case insert
-    __bobthefish_start_segment $__bobthefish_lt_green $__bobthefish_dk_grey --bold
-    echo -n -s 'I'
-  case visual
-    __bobthefish_start_segment $__bobthefish_lt_orange $__bobthefish_dk_grey --bold
-    echo -n -s 'V'
+  if [ "$theme_display_vi" = 'yes' ]
+    if [ "$fish_bind_mode" != "$theme_display_vi_hide_mode" ]
+      switch $fish_bind_mode
+      case default
+        __bobthefish_start_segment $__bobthefish_med_grey $__bobthefish_dk_grey --bold
+        echo -n -s 'N '
+      case insert
+        __bobthefish_start_segment $__bobthefish_lt_green $__bobthefish_dk_grey --bold
+        echo -n -s 'I '
+      case visual
+        __bobthefish_start_segment $__bobthefish_lt_orange $__bobthefish_dk_grey --bold
+        echo -n -s 'V '
+      end
+      set_color normal
+    end
   end
-  set_color normal
 end
 
 function __bobthefish_virtualenv_python_version -d 'Get current python version'
