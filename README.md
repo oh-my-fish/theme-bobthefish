@@ -33,6 +33,8 @@ This theme is based loosely on [agnoster][agnoster].
      * Previous command failed (`!`)
      * Background jobs (`%`)
      * You currently have superpowers (`$`)
+ * Current vi mode
+     * _You'll need to `set -g theme_display_vi yes` to enable_
  * `User@Host` (unless you're the default user)
  * Current RVM or rbenv (Ruby) version
  * Current virtualenv (Python) version
@@ -63,6 +65,8 @@ set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_ruby no
 set -g theme_display_user yes
+set -g theme_display_vi yes
+set -g theme_display_vi_hide_mode default
 set -g theme_title_display_process yes
 set -g theme_title_display_path no
 set -g theme_title_use_abbreviated_path no
