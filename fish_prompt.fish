@@ -15,6 +15,7 @@
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
+#     set -g theme_display_vagrant yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
@@ -47,6 +48,13 @@ set __bobthefish_superscript_glyph       \u00B9 \u00B2 \u00B3
 set __bobthefish_virtualenv_glyph        \u25F0
 set __bobthefish_pypy_glyph              \u1D56
 
+# Vagrant glyphs
+set __bobthefish_vagrant_running_glyph   \u2191 # ↑ 'running'
+set __bobthefish_vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
+set __bobthefish_vagrant_aborted_glyph   \u2715 # ✕ 'aborted'
+set __bobthefish_vagrant_saved_glyph     \u21E1 # ⇡ 'saved'
+set __bobthefish_vagrant_unknown_glyph   '!'    # strange cases
+
 # Colors
 set __bobthefish_lt_green   addc10
 set __bobthefish_med_green  189303
@@ -71,6 +79,7 @@ set __bobthefish_dk_brown   4d2600
 set __bobthefish_med_brown  803F00
 set __bobthefish_lt_brown   BF5E00
 
+set __bobthefish_vagrant    48B4FB
 
 # ===========================
 # Helper methods
@@ -227,6 +236,38 @@ end
 # ===========================
 # Theme components
 # ===========================
+
+function __bobthefish_prompt_vagrant -d 'Display Vagrant status'
+  [ "$theme_display_vagrant" != 'yes' ]; and return
+  which VBoxManage >/dev/null 2>&1; and set -l __vbox_installed yes
+  if [ -f Vagrantfile -a "$__vbox_installed" = 'yes' ]
+    # Get machine UUIDs
+    set -e __vagrant_ids
+    set -e __vagrant_statuses
+    for m in .vagrant/machines/**/id
+      set -l __machine_id (cat $m)
+      set __vagrant_ids $__vagrant_ids $__machine_id
+    end
+    for i in $__vagrant_ids
+      set -l __vm_status (VBoxManage showvminfo --machinereadable $i 2>/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+      set __vagrant_statuses "$__vagrant_statuses<$__vm_status>"
+    end
+    # Transform statuses to gliphs
+    set __vagrant_statuses ( echo -n $__vagrant_statuses | sed \
+      -e "s#<running>#$__bobthefish_vagrant_running_glyph#g" \
+      -e "s#<poweroff>#$__bobthefish_vagrant_poweroff_glyph#g" \
+      -e "s#<aborted>#$__bobthefish_vagrant_aborted_glyph#g" \
+      -e "s#<saved>#$__bobthefish_vagrant_saved_glyph#g" \
+      -e "s#<>#$__bobthefish_vagrant_unknown_glyph#g"
+      )
+    # Display status if any status
+    if [ "$__vagrant_statuses" != '' ]
+      __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+      echo -n -s "$__vagrant_statuses "
+      set_color normal
+    end
+  end
+end
 
 function __bobthefish_prompt_status -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
@@ -475,6 +516,7 @@ end
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_status
   __bobthefish_prompt_vi
+  __bobthefish_prompt_vagrant
   __bobthefish_prompt_user
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
