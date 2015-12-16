@@ -252,7 +252,7 @@ function __bobthefish_prompt_vagrant -d 'Display Vagrant status'
       set -l __vm_status (VBoxManage showvminfo --machinereadable $i 2>/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
       set __vagrant_statuses "$__vagrant_statuses<$__vm_status>"
     end
-    # Transform statuses to gliphs
+    # Transform statuses to glyphs
     set __vagrant_statuses ( echo -n $__vagrant_statuses | sed \
       -e "s#<running>#$__bobthefish_vagrant_running_glyph#g" \
       -e "s#<poweroff>#$__bobthefish_vagrant_poweroff_glyph#g" \
