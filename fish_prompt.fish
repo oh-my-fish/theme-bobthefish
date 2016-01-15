@@ -440,7 +440,7 @@ function __bobthefish_prompt_virtualfish -d "Display activated virtual environme
   set -l version_glyph (__bobthefish_virtualenv_python_version)
   if [ "$version_glyph" ]
     __bobthefish_start_segment $__bobthefish_med_blue $__bobthefish_lt_grey
-    echo -n -s $__bobthefish_virtualenv_glyph $version_glyph
+    echo -n -s $__bobthefish_virtualenv_glyph $version_glyph ' '
   end
   __bobthefish_start_segment $__bobthefish_med_blue $__bobthefish_lt_grey --bold
   echo -n -s (basename "$VIRTUAL_ENV") ' '
