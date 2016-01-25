@@ -371,8 +371,9 @@ end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current python version'
   set -l python_version (readlink (which python))
-  switch "$python_version"
-    case 'python2*'
+  [ -z "$python_version" ]; and set python_version (which python)
+  switch (basename "$python_version")
+    case 'python' 'python2*'
       echo $__bobthefish_superscript_glyph[2]
     case 'python3*'
       echo $__bobthefish_superscript_glyph[3]
