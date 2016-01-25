@@ -27,73 +27,19 @@
 
 set -g __bobthefish_current_bg NONE
 
-# Powerline glyphs
-set __bobthefish_branch_glyph            \uE0A0
-set __bobthefish_ln_glyph                \uE0A1
-set __bobthefish_padlock_glyph           \uE0A2
-set __bobthefish_right_black_arrow_glyph \uE0B0
-set __bobthefish_right_arrow_glyph       \uE0B1
-set __bobthefish_left_black_arrow_glyph  \uE0B2
-set __bobthefish_left_arrow_glyph        \uE0B3
-
-# Additional glyphs
-set __bobthefish_detached_glyph          \u27A6
-set __bobthefish_nonzero_exit_glyph      '! '
-set __bobthefish_superuser_glyph         '$ '
-set __bobthefish_bg_job_glyph            '% '
-set __bobthefish_hg_glyph                \u263F
-
-# Python glyphs
-set __bobthefish_superscript_glyph       \u00B9 \u00B2 \u00B3
-set __bobthefish_virtualenv_glyph        \u25F0
-set __bobthefish_pypy_glyph              \u1D56
-
-# Vagrant glyphs
-set __bobthefish_vagrant_running_glyph   \u2191 # ↑ 'running'
-set __bobthefish_vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
-set __bobthefish_vagrant_aborted_glyph   \u2715 # ✕ 'aborted'
-set __bobthefish_vagrant_saved_glyph     \u21E1 # ⇡ 'saved'
-set __bobthefish_vagrant_unknown_glyph   '!'    # strange cases
-
-# Colors
-set __bobthefish_lt_green   addc10
-set __bobthefish_med_green  189303
-set __bobthefish_dk_green   0c4801
-
-set __bobthefish_lt_red     C99
-set __bobthefish_med_red    ce000f
-set __bobthefish_dk_red     600
-set __bobthefish_ruby_red   af0000
-
-set __bobthefish_slate_blue 255e87
-set __bobthefish_med_blue   005faf
-
-set __bobthefish_lt_orange  f6b117
-set __bobthefish_dk_orange  3a2a03
-
-set __bobthefish_dk_grey    333
-set __bobthefish_med_grey   999
-set __bobthefish_lt_grey    ccc
-
-set __bobthefish_dk_brown   4d2600
-set __bobthefish_med_brown  803F00
-set __bobthefish_lt_brown   BF5E00
-
-set __bobthefish_vagrant    48B4FB
-
 # ===========================
 # Helper methods
 # ===========================
 
-# function __bobthefish_in_git -d 'Check whether pwd is inside a git repo'
+# function __bobthefish_in_git -S -d 'Check whether pwd is inside a git repo'
 #   command which git > /dev/null 2>&1; and command git rev-parse --is-inside-work-tree >/dev/null 2>&1
 # end
 
-# function __bobthefish_in_hg -d 'Check whether pwd is inside a hg repo'
+# function __bobthefish_in_hg -S -d 'Check whether pwd is inside a hg repo'
 #   command which hg > /dev/null 2>&1; and command hg stat > /dev/null 2>&1
 # end
 
-function __bobthefish_git_branch -d 'Get the current git branch (or commitish)'
+function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
   if [ $status -gt 0 ]
     set -l branch (command git show-ref --head -s --abbrev | head -n1 ^/dev/null)
@@ -102,22 +48,22 @@ function __bobthefish_git_branch -d 'Get the current git branch (or commitish)'
   echo $ref | sed  "s#refs/heads/#$__bobthefish_branch_glyph #"
 end
 
-function __bobthefish_hg_branch -d 'Get the current hg branch'
+function __bobthefish_hg_branch -S -d 'Get the current hg branch'
   set -l branch (command hg branch ^/dev/null)
   set -l book (command hg book | grep \* | cut -d\  -f3)
   echo "$__bobthefish_branch_glyph $branch @ $book"
 end
 
-function __bobthefish_pretty_parent -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
+function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
   echo -n (dirname $current_dir) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
 end
 
-function __bobthefish_git_project_dir -d 'Print the current git project base directory'
+function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
   [ "$theme_display_git" = 'no' ]; and return
   command git rev-parse --show-toplevel ^/dev/null
 end
 
-function __bobthefish_hg_project_dir -d 'Print the current hg project base directory'
+function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
   [ "$theme_display_hg" = 'yes' ]; or return
   set d (pwd)
   while not [ $d = / ]
@@ -129,11 +75,11 @@ function __bobthefish_hg_project_dir -d 'Print the current hg project base direc
   end
 end
 
-function __bobthefish_project_pwd -a current_dir -d 'Print the working directory relative to project root'
+function __bobthefish_project_pwd -S -a current_dir -d 'Print the working directory relative to project root'
   echo "$PWD" | sed -e "s#$current_dir##g" -e 's#^/##'
 end
 
-function __bobthefish_git_ahead -d 'Print the ahead/behind state for the current branch'
+function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the current branch'
   if [ "$theme_display_git_ahead_verbose" = 'yes' ]
     __bobthefish_git_ahead_verbose
     return
@@ -142,7 +88,7 @@ function __bobthefish_git_ahead -d 'Print the ahead/behind state for the current
   command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0 && b > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}'
 end
 
-function __bobthefish_git_ahead_verbose -d 'Print a more verbose ahead/behind state for the current branch'
+function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind state for the current branch'
   set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
   if [ $status != 0 ]
     return
@@ -168,7 +114,7 @@ end
 # Segment functions
 # ===========================
 
-function __bobthefish_start_segment -d 'Start a prompt segment'
+function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set -l bg $argv[1]
   set -e argv[1]
   set -l fg $argv[1]
@@ -195,7 +141,7 @@ function __bobthefish_start_segment -d 'Start a prompt segment'
   set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -a current_dir -d 'Display a shortened form of a directory'
+function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened form of a directory'
   if [ -w "$current_dir" ]
     __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
   else
@@ -222,7 +168,7 @@ function __bobthefish_path_segment -a current_dir -d 'Display a shortened form o
   set_color normal
 end
 
-function __bobthefish_finish_segments -d 'Close open prompt segments'
+function __bobthefish_finish_segments -S -d 'Close open prompt segments'
   if [ -n $__bobthefish_current_bg -a $__bobthefish_current_bg != 'NONE' ]
     set_color -b normal
     set_color $__bobthefish_current_bg
@@ -237,7 +183,7 @@ end
 # Theme components
 # ===========================
 
-function __bobthefish_prompt_vagrant -d 'Display Vagrant status'
+function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" != 'yes' ]; and return
   which VBoxManage >/dev/null 2>&1; and set -l __vbox_installed yes
   if [ -f Vagrantfile -a "$__vbox_installed" = 'yes' ]
@@ -269,7 +215,7 @@ function __bobthefish_prompt_vagrant -d 'Display Vagrant status'
   end
 end
 
-function __bobthefish_prompt_status -d 'Display symbols for a non zero exit status, root and background jobs'
+function __bobthefish_prompt_status -S -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
   set -l superuser
   set -l bg_jobs
@@ -310,7 +256,7 @@ function __bobthefish_prompt_status -d 'Display symbols for a non zero exit stat
   end
 end
 
-function __bobthefish_prompt_user -d 'Display actual user if different from $default_user'
+function __bobthefish_prompt_user -S -d 'Display actual user if different from $default_user'
   if [ "$theme_display_user" = 'yes' ]
     if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
       __bobthefish_start_segment $__bobthefish_lt_grey $__bobthefish_slate_blue
@@ -319,7 +265,7 @@ function __bobthefish_prompt_user -d 'Display actual user if different from $def
   end
 end
 
-function __bobthefish_prompt_hg -a current_dir -d 'Display the actual hg state'
+function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
   set -l dirty (command hg stat; or echo -n '*')
 
   set -l flags "$dirty"
@@ -353,7 +299,7 @@ function __bobthefish_prompt_hg -a current_dir -d 'Display the actual hg state'
   end
 end
 
-function __bobthefish_prompt_git -a current_dir -d 'Display the actual git state'
+function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
@@ -403,11 +349,11 @@ function __bobthefish_prompt_git -a current_dir -d 'Display the actual git state
   end
 end
 
-function __bobthefish_prompt_dir -d 'Display a shortened form of the current directory'
+function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current directory'
   __bobthefish_path_segment "$PWD"
 end
 
-function __bobthefish_prompt_vi -d 'Display vi mode'
+function __bobthefish_prompt_vi -S -d 'Display vi mode'
   [ "$theme_display_vi" = 'yes' -a "$fish_bind_mode" != "$theme_display_vi_hide_mode" ]; or return
   switch $fish_bind_mode
     case default
@@ -423,7 +369,7 @@ function __bobthefish_prompt_vi -d 'Display vi mode'
   set_color normal
 end
 
-function __bobthefish_virtualenv_python_version -d 'Get current python version'
+function __bobthefish_virtualenv_python_version -S -d 'Get current python version'
   set -l python_version (readlink (which python))
   switch "$python_version"
     case 'python2*'
@@ -435,7 +381,7 @@ function __bobthefish_virtualenv_python_version -d 'Get current python version'
   end
 end
 
-function __bobthefish_prompt_virtualfish -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
+function __bobthefish_prompt_virtualfish -S -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
   [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" ]; and return
   set -l version_glyph (__bobthefish_virtualenv_python_version)
   if [ "$version_glyph" ]
@@ -447,7 +393,7 @@ function __bobthefish_prompt_virtualfish -d "Display activated virtual environme
   set_color normal
 end
 
-function __bobthefish_rvm_parse_ruby -a ruby_string scope -d 'Parse RVM Ruby string'
+function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby string'
   # Function arguments:
   # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
   # - 'default' or 'current'
@@ -458,7 +404,7 @@ function __bobthefish_rvm_parse_ruby -a ruby_string scope -d 'Parse RVM Ruby str
   [ "$__ruby_gemset" = "$__ruby" ]; and set -l __ruby_gemset global
 end
 
-function __bobthefish_rvm_info -d 'Current Ruby information from RVM'
+function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   # More `sed`/`grep`/`cut` magic...
   set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | \
     sed -e"s/'//g" | sed -e's/.*\///')
@@ -488,7 +434,7 @@ function __bobthefish_rvm_info -d 'Current Ruby information from RVM'
   set --erase --global __rvm_default_ruby_version
 end
 
-function __bobthefish_show_ruby -d 'Current Ruby (rvm/rbenv)'
+function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
   set -l ruby_version
   if which rvm-prompt >/dev/null 2>&1
     set ruby_version (__bobthefish_rvm_info)
@@ -504,7 +450,7 @@ function __bobthefish_show_ruby -d 'Current Ruby (rvm/rbenv)'
   set_color normal
 end
 
-function __bobthefish_prompt_rubies -d 'Display current Ruby information'
+function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
   [ "$theme_display_ruby" = 'no' ]; and return
   __bobthefish_show_ruby
 end
@@ -514,6 +460,60 @@ end
 # ===========================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
+  # Powerline glyphs
+  set -l __bobthefish_branch_glyph            \uE0A0
+  set -l __bobthefish_ln_glyph                \uE0A1
+  set -l __bobthefish_padlock_glyph           \uE0A2
+  set -l __bobthefish_right_black_arrow_glyph \uE0B0
+  set -l __bobthefish_right_arrow_glyph       \uE0B1
+  set -l __bobthefish_left_black_arrow_glyph  \uE0B2
+  set -l __bobthefish_left_arrow_glyph        \uE0B3
+
+  # Additional glyphs
+  set -l __bobthefish_detached_glyph          \u27A6
+  set -l __bobthefish_nonzero_exit_glyph      '! '
+  set -l __bobthefish_superuser_glyph         '$ '
+  set -l __bobthefish_bg_job_glyph            '% '
+  set -l __bobthefish_hg_glyph                \u263F
+
+  # Python glyphs
+  set -l __bobthefish_superscript_glyph       \u00B9 \u00B2 \u00B3
+  set -l __bobthefish_virtualenv_glyph        \u25F0
+  set -l __bobthefish_pypy_glyph              \u1D56
+
+  # Vagrant glyphs
+  set -l __bobthefish_vagrant_running_glyph   \u2191 # ↑ 'running'
+  set -l __bobthefish_vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
+  set -l __bobthefish_vagrant_aborted_glyph   \u2715 # ✕ 'aborted'
+  set -l __bobthefish_vagrant_saved_glyph     \u21E1 # ⇡ 'saved'
+  set -l __bobthefish_vagrant_unknown_glyph   '!'    # strange cases
+
+  # Colors
+  set -l __bobthefish_lt_green   addc10
+  set -l __bobthefish_med_green  189303
+  set -l __bobthefish_dk_green   0c4801
+
+  set -l __bobthefish_lt_red     C99
+  set -l __bobthefish_med_red    ce000f
+  set -l __bobthefish_dk_red     600
+  set -l __bobthefish_ruby_red   af0000
+
+  set -l __bobthefish_slate_blue 255e87
+  set -l __bobthefish_med_blue   005faf
+
+  set -l __bobthefish_lt_orange  f6b117
+  set -l __bobthefish_dk_orange  3a2a03
+
+  set -l __bobthefish_dk_grey    333
+  set -l __bobthefish_med_grey   999
+  set -l __bobthefish_lt_grey    ccc
+
+  set -l __bobthefish_dk_brown   4d2600
+  set -l __bobthefish_med_brown  803F00
+  set -l __bobthefish_lt_brown   BF5E00
+
+  set -l __bobthefish_vagrant    48B4FB
+
   __bobthefish_prompt_status
   __bobthefish_prompt_vi
   __bobthefish_prompt_vagrant
