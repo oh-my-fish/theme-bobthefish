@@ -204,6 +204,7 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
       -e "s#<poweroff>#$__bobthefish_vagrant_poweroff_glyph#g" \
       -e "s#<aborted>#$__bobthefish_vagrant_aborted_glyph#g" \
       -e "s#<saved>#$__bobthefish_vagrant_saved_glyph#g" \
+      -e "s#<stopping>#$__bobthefish_vagrant_stopping_glyph#g" \
       -e "s#<>#$__bobthefish_vagrant_unknown_glyph#g"
       )
     # Display status if any status
@@ -487,6 +488,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
   set -l __bobthefish_vagrant_aborted_glyph   \u2715 # ✕ 'aborted'
   set -l __bobthefish_vagrant_saved_glyph     \u21E1 # ⇡ 'saved'
+  set -l __bobthefish_vagrant_stopping_glyph  \u21E3 # ⇣ 'stopping'
   set -l __bobthefish_vagrant_unknown_glyph   '!'    # strange cases
 
   # Colors
