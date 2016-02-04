@@ -25,8 +25,6 @@
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g default_user your_normal_user
 
-set -g __bobthefish_current_bg NONE
-
 # ===========================
 # Helper methods
 # ===========================
@@ -123,21 +121,21 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set_color normal # clear out anything bold or underline...
   set_color -b $bg
   set_color $fg $argv
-  if [ "$__bobthefish_current_bg" = 'NONE' ]
-    # If there's no background, just start one
-    echo -n ' '
-  else
-    # If there's already a background...
-    if [ "$bg" = "$__bobthefish_current_bg" ]
-      # and it's the same color, draw a separator
+
+  switch "$__bobthefish_current_bg"
+    case ''
+      # If there's no background, just start one
+      echo -n ' '
+    case "$bg"
+      # If the background is already the same color, draw a separator
       echo -n "$__bobthefish_right_arrow_glyph "
-    else
+    case '*'
       # otherwise, draw the end of the previous segment and the start of the next
       set_color $__bobthefish_current_bg
       echo -n "$__bobthefish_right_black_arrow_glyph "
       set_color $fg $argv
-    end
   end
+
   set __bobthefish_current_bg $bg
 end
 
@@ -169,13 +167,14 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
 end
 
 function __bobthefish_finish_segments -S -d 'Close open prompt segments'
-  if [ -n $__bobthefish_current_bg -a $__bobthefish_current_bg != 'NONE' ]
+  if [ "$__bobthefish_current_bg" != '' ]
     set_color -b normal
     set_color $__bobthefish_current_bg
     echo -n "$__bobthefish_right_black_arrow_glyph "
     set_color normal
   end
-  set -g __bobthefish_current_bg NONE
+
+  set __bobthefish_current_bg
 end
 
 
@@ -519,6 +518,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_lt_brown   BF5E00
 
   set -l __bobthefish_vagrant    48B4FB
+
+  # Start each line with a blank slate
+  set -l __bobthefish_current_bg
 
   __bobthefish_prompt_status $last_status
   __bobthefish_prompt_vi
