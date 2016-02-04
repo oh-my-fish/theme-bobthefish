@@ -461,7 +461,7 @@ end
 # ===========================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
-  # Save the last status for later (to do this before the `set` calls below)
+  # Save the last status for later (do this before the `set` calls below)
   set -l last_status $status
 
   # Powerline glyphs
