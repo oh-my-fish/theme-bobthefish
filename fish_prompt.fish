@@ -216,13 +216,13 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   end
 end
 
-function __bobthefish_prompt_status -S -d 'Display symbols for a non zero exit status, root and background jobs'
+function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
   set -l superuser
   set -l bg_jobs
 
   # Last exit was nonzero
-  if [ $status -ne 0 ]
+  if [ $last_status -ne 0 ]
     set nonzero $__bobthefish_nonzero_exit_glyph
   end
 
@@ -462,6 +462,9 @@ end
 # ===========================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
+  # Save the last status for later (to do this before the `set` calls below)
+  set -l last_status $status
+
   # Powerline glyphs
   set -l __bobthefish_branch_glyph            \uE0A0
   set -l __bobthefish_ln_glyph                \uE0A1
@@ -517,7 +520,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   set -l __bobthefish_vagrant    48B4FB
 
-  __bobthefish_prompt_status
+  __bobthefish_prompt_status $last_status
   __bobthefish_prompt_vi
   __bobthefish_prompt_vagrant
   __bobthefish_prompt_user
