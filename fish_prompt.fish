@@ -36,11 +36,11 @@
 # ===========================
 
 # function __bobthefish_in_git -S -d 'Check whether pwd is inside a git repo'
-#   command which git > /dev/null 2>&1; and command git rev-parse --is-inside-work-tree >/dev/null 2>&1
+#   command which git > /dev/null ^&1; and command git rev-parse --is-inside-work-tree >/dev/null ^&1
 # end
 
 # function __bobthefish_in_hg -S -d 'Check whether pwd is inside a hg repo'
-#   command which hg > /dev/null 2>&1; and command hg stat > /dev/null 2>&1
+#   command which hg > /dev/null ^&1; and command hg stat > /dev/null ^&1
 # end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
@@ -206,7 +206,7 @@ end
 function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
   for id in __bobthefish_vagrant_ids
-    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+    set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
     switch "$vm_status"
       case 'running'
         set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
@@ -427,10 +427,10 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby 
   # Function arguments:
   # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
   # - 'default' or 'current'
-  set -l __ruby (echo $ruby_string | cut -d '@' -f 1 2>/dev/null)
-  set -g __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 2>/dev/null)
-  set -g __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 2>/dev/null)
-  set -g __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 2>/dev/null)
+  set -l __ruby (echo $ruby_string | cut -d '@' -f 1 ^/dev/null)
+  set -g __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 ^/dev/null)
+  set -g __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 ^/dev/null)
+  set -g __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 ^/dev/null)
   [ "$__ruby_gemset" = "$__ruby" ]; and set -l __ruby_gemset global
 end
 
@@ -472,7 +472,7 @@ function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
     set -q RBENV_ROOT; and set rbenv_root $RBENV_ROOT; or set rbenv_root ~/.rbenv
-    [ "$ruby_version" = (cat $rbenv_root/version 2>/dev/null; or echo 'system') ]; and return
+    [ "$ruby_version" = (cat $rbenv_root/version ^/dev/null; or echo 'system') ]; and return
   end
   [ -z "$ruby_version" ]; and return
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
