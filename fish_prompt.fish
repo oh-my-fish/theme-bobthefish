@@ -190,35 +190,59 @@ end
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" != 'yes' ]; and return
-  which VBoxManage >/dev/null 2>&1; and set -l __vbox_installed yes
-  if [ -f Vagrantfile -a "$__vbox_installed" = 'yes' ]
-    # Get machine UUIDs
-    set -e __vagrant_ids
-    set -e __vagrant_statuses
-    for m in .vagrant/machines/**/id
-      set -l __machine_id (cat $m)
-      set __vagrant_ids $__vagrant_ids $__machine_id
-    end
-    for i in $__vagrant_ids
-      set -l __vm_status (VBoxManage showvminfo --machinereadable $i 2>/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
-      set __vagrant_statuses "$__vagrant_statuses<$__vm_status>"
-    end
-    # Transform statuses to glyphs
-    set __vagrant_statuses ( echo -n $__vagrant_statuses | sed \
-      -e "s#<running>#$__bobthefish_vagrant_running_glyph#g" \
-      -e "s#<poweroff>#$__bobthefish_vagrant_poweroff_glyph#g" \
-      -e "s#<aborted>#$__bobthefish_vagrant_aborted_glyph#g" \
-      -e "s#<saved>#$__bobthefish_vagrant_saved_glyph#g" \
-      -e "s#<stopping>#$__bobthefish_vagrant_stopping_glyph#g" \
-      -e "s#<>#$__bobthefish_vagrant_unknown_glyph#g"
-      )
-    # Display status if any status
-    if [ "$__vagrant_statuses" != '' ]
-      __bobthefish_start_segment $__bobthefish_vagrant fff --bold
-      echo -n -s "$__vagrant_statuses "
-      set_color normal
+  if [ -f Vagrantfile ]
+    if type -q VBoxManage
+      __bobthefish_prompt_vagrant_vbox
+    else if type -q vmrun
+      __bobthefish_prompt_vagrant_vmware
     end
   end
+end
+
+function __bobthefish_vagrant_vmware_ids -S -d 'List Vagrant machine ids'
+  cat .vagrant/machines/**/id
+end
+
+function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
+  set -l vagrant_status
+  for id in __bobthefish_vagrant_ids
+    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+    switch "$vm_status"
+      case 'running'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+      case 'poweroff'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+      case 'aborted'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_aborted_glyph"
+      case 'saved'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+      case 'stopping'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
+      case ''
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
+    end
+  end
+  [ -z "$vagrant_status"]; and return
+
+  __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+  echo -n -s "$vagrant_status "
+  set_color normal
+end
+
+function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status'
+  set -l vagrant_status
+  for id in (__bobthefish_vagrant_ids)
+    if [ (pgrep -f "$id") ]
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+    else
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+    end
+  end
+  [ -z "$vagrant_status" ]; and return
+
+  __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+  echo -n -s "$vagrant_status "
+  set_color normal
 end
 
 function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'

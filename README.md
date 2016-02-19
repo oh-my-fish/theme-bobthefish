@@ -87,7 +87,7 @@ set -g default_user your_normal_user
 
 **Prompt options**
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
-- `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note, only VirtualBox provider is supported.
+- `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 
 [fish]:       https://github.com/fish-shell/fish-shell
 [screenshot]: http://i.0x7f.us/bobthefish.png
