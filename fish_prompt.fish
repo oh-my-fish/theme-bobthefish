@@ -10,6 +10,11 @@
 #
 #     https://github.com/Lokaltog/powerline-fonts
 #
+# For more advanced awesome, install a nerd fonts patched font (and be sure to
+# enable nerd fonts support with `set -g theme_nerd_fonts yes`):
+#
+#     https://github.com/ryanoasis/nerd-fonts
+#
 # You can override some default prompt options in your config.fish:
 #
 #     set -g theme_display_git no
@@ -23,6 +28,7 @@
 #     set -g theme_display_vi yes
 #     set -g theme_display_vi_hide_mode default
 #     set -g theme_avoid_ambiguous_glyphs yes
+#     set -g theme_nerd_fonts yes
 #     set -g default_user your_normal_user
 
 # ===========================
@@ -389,7 +395,6 @@ function __bobthefish_prompt_virtualfish -S -d "Display activated virtual enviro
     __bobthefish_start_segment $__bobthefish_med_blue $__bobthefish_lt_grey
     echo -n -s $__bobthefish_virtualenv_glyph $version_glyph ' '
   end
-  __bobthefish_start_segment $__bobthefish_med_blue $__bobthefish_lt_grey --bold
   echo -n -s (basename "$VIRTUAL_ENV") ' '
   set_color normal
 end
@@ -447,7 +452,7 @@ function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
   end
   [ -z "$ruby_version" ]; and return
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
-  echo -n -s $ruby_version ' '
+  echo -n -s $__bobthefish_ruby_glyph $ruby_version ' '
   set_color normal
 end
 
@@ -485,6 +490,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_virtualenv_glyph        \u25F0
   set -l __bobthefish_pypy_glyph              \u1D56
 
+  set -l __bobthefish_ruby_glyph              ''
+
   # Vagrant glyphs
   set -l __bobthefish_vagrant_running_glyph   \u2191 # ↑ 'running'
   set -l __bobthefish_vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
@@ -518,6 +525,11 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_lt_brown   BF5E00
 
   set -l __bobthefish_vagrant    48B4FB
+
+  if [ "$theme_nerd_fonts" = "yes" ]
+    set __bobthefish_virtualenv_glyph \uE73C ' '
+    set __bobthefish_ruby_glyph       \uE791 ' '
+  end
 
   # Start each line with a blank slate
   set -l __bobthefish_current_bg
