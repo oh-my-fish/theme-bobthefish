@@ -189,23 +189,21 @@ end
 # ===========================
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
-  [ "$theme_display_vagrant" != 'yes' ]; and return
-  if [ -f Vagrantfile ]
-    if type -q VBoxManage
-      __bobthefish_prompt_vagrant_vbox
-    else if grep vmware_fusion Vagrantfile >/dev/null ^&1
-      __bobthefish_prompt_vagrant_vmware
-    end
+  [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
+  if type -q VBoxManage
+    __bobthefish_prompt_vagrant_vbox
+  else if grep vmware_fusion Vagrantfile >/dev/null ^&1
+    __bobthefish_prompt_vagrant_vmware
   end
 end
 
-function __bobthefish_vagrant_vmware_ids -S -d 'List Vagrant machine ids'
+function __bobthefish_vagrant_ids -S -d 'List Vagrant machine ids'
   cat .vagrant/machines/**/id
 end
 
 function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
-  for id in __bobthefish_vagrant_ids
+  for id in (__bobthefish_vagrant_ids)
     set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
     switch "$vm_status"
       case 'running'
