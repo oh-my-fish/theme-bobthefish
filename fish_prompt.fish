@@ -193,7 +193,7 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   if [ -f Vagrantfile ]
     if type -q VBoxManage
       __bobthefish_prompt_vagrant_vbox
-    else if type -q vmrun
+    else if grep vmware_fusion Vagrantfile >/dev/null ^&1
       __bobthefish_prompt_vagrant_vmware
     end
   end
