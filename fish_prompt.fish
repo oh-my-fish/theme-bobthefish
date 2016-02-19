@@ -466,9 +466,9 @@ end
 
 function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
   set -l ruby_version
-  if which rvm-prompt >/dev/null 2>&1
+  if type -q rvm-prompt
     set ruby_version (__bobthefish_rvm_info)
-  else if which rbenv >/dev/null 2>&1
+  else if type -q rbenv
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
     set -q RBENV_ROOT; and set rbenv_root $RBENV_ROOT; or set rbenv_root ~/.rbenv
