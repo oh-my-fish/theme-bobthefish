@@ -4,7 +4,7 @@
 #
 # You will need a Powerline-patched font for this to work:
 #
-#     https://powerline.readthedocs.org/en/latest/fontpatching.html
+#     https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
 #
 # I recommend picking one of these:
 #
