@@ -91,7 +91,7 @@ set -g default_user your_normal_user
 
 [fish]:       https://github.com/fish-shell/fish-shell
 [screenshot]: http://i.0x7f.us/bobthefish.png
-[patching]:   https://powerline.readthedocs.org/en/latest/fontpatching.html
+[patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
 [fonts]:      https://github.com/Lokaltog/powerline-fonts
 [nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
 [agnoster]:   https://gist.github.com/agnoster/3712874
