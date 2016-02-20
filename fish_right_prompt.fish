@@ -7,13 +7,25 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
   if [ "$CMD_DURATION" -lt 5000 ]
     echo -ns $CMD_DURATION 'ms '
   else if [ "$CMD_DURATION" -lt 60000 ]
-    echo -ns (echo "scale=1;$CMD_DURATION/1000" | bc | sed 's/.0//') 's '
+    if type -q bc
+      echo -ns (echo "scale=1;$CMD_DURATION/1000" | bc | sed 's/.0//') 's '
+    else
+      printf '%.1fs ' (awk "BEGIN { print $CMD_DURATION / 1000 }")
+    end
   else if [ "$CMD_DURATION" -lt 3600000 ]
     set_color $fish_color_error
-    echo -ns (echo "scale=1;$CMD_DURATION/60000" | bc | sed 's/.0//') 'm '
+    if type -q bc
+      echo -ns (echo "scale=1;$CMD_DURATION/60000" | bc | sed 's/.0//') 'm '
+    else
+      printf '%.1fm ' (awk "BEGIN { print $CMD_DURATION / 60000 }")
+    end
   else
     set_color $fish_color_error
-    echo -ns (echo "scale=1;$CMD_DURATION/3600000" | bc | sed 's/.0//') 'h '
+    if type -q bc
+      echo -ns (echo "scale=1;$CMD_DURATION/3600000" | bc | sed 's/.0//') 'h '
+    else
+      printf '%.1fh ' (awk "BEGIN { print $CMD_DURATION / 3600000 }")
+    end
   end
 
   set_color $fish_color_autosuggestion[1]
