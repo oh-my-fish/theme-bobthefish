@@ -167,7 +167,7 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
   end
 
   [ "$parent" ]; and echo -n -s "$parent"
-  set_color $__bobthefish_blue --bold
+  set_color fff --bold
   echo -n "$directory "
   set_color normal
 end
@@ -222,7 +222,7 @@ function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant stat
   end
   [ -z "$vagrant_status"]; and return
 
-  __bobthefish_start_segment $__bobthefish_vagrant $__bobthefish_blue --bold
+  __bobthefish_start_segment $__bobthefish_vagrant fff --bold
   echo -n -s "$vagrant_status "
   set_color normal
 end
@@ -238,7 +238,7 @@ function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status
   end
   [ -z "$vagrant_status" ]; and return
 
-  __bobthefish_start_segment $__bobthefish_vagrant $__bobthefish_blue --bold
+  __bobthefish_start_segment $__bobthefish_vagrant fff --bold
   echo -n -s "$vagrant_status "
   set_color normal
 end
@@ -264,7 +264,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
   end
 
   if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
-    __bobthefish_start_segment $__bobthefish_blue 000
+    __bobthefish_start_segment fff 000
     if [ "$nonzero" ]
       set_color $__bobthefish_med_red --bold
       echo -n $__bobthefish_nonzero_exit_glyph
@@ -303,7 +303,7 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
   set -l flag_fg $__bobthefish_dk_green
   if [ "$dirty" ]
     set flag_bg $__bobthefish_med_red
-    set flag_fg $__bobthefish_blue
+    set flag_fg fff
   end
 
   __bobthefish_path_segment $current_dir
@@ -353,7 +353,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   set -l flag_fg $__bobthefish_dk_green
   if [ "$dirty" -o "$staged" ]
     set flag_bg $__bobthefish_med_red
-    set flag_fg $__bobthefish_blue
+    set flag_fg fff
   else if [ "$stashed" ]
     set flag_bg $__bobthefish_lt_orange
     set flag_fg $__bobthefish_dk_orange
@@ -534,7 +534,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   set -l __bobthefish_slate_blue 255e87
   set -l __bobthefish_med_blue   005faf
-  set -l __bobthefish_blue   fff
 
   set -l __bobthefish_lt_orange  f6b117
   set -l __bobthefish_dk_orange  3a2a03
