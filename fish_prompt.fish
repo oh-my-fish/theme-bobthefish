@@ -318,7 +318,7 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
   set -l project_pwd  (__bobthefish_project_pwd $current_dir)
   if [ "$project_pwd" ]
     if [ -w "$PWD" ]
-      __bobthefish_start_segment 333 999
+      __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
     else
       __bobthefish_start_segment $__bobthefish_med_red $__bobthefish_lt_red
     end
@@ -368,7 +368,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   set -l project_pwd (__bobthefish_project_pwd $current_dir)
   if [ "$project_pwd" ]
     if [ -w "$PWD" ]
-      __bobthefish_start_segment 333 999
+      __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
     else
       __bobthefish_start_segment $__bobthefish_med_red $__bobthefish_lt_red
     end
