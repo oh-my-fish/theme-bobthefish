@@ -198,7 +198,9 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
 end
 
 function __bobthefish_vagrant_ids -S -d 'List Vagrant machine ids'
-  cat .vagrant/machines/**/id
+  for id in .vagrant/machines/**/id
+    cat $id
+  end
 end
 
 function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
