@@ -433,10 +433,9 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby 
   # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
   # - 'default' or 'current'
   set -l __ruby (echo $ruby_string | cut -d '@' -f 1 ^/dev/null)
-  set -g __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 ^/dev/null)
-  set -g __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 ^/dev/null)
-  set -g __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 ^/dev/null)
-  [ "$__ruby_gemset" = "$__ruby" ]; and set -l __ruby_gemset global
+  set __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 ^/dev/null)
+  set __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 ^/dev/null)
+  set __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 ^/dev/null)
 end
 
 function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
@@ -444,6 +443,14 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | \
     sed -e"s/'//g" | sed -e's/.*\///')
   set -l __rvm_current_ruby (rvm-prompt i v g)
+
+  set -l __rvm_default_ruby_gemset
+  set -l __rvm_default_ruby_interpreter
+  set -l __rvm_default_ruby_version
+  set -l __rvm_current_ruby_gemset
+  set -l __rvm_current_ruby_interpreter
+  set -l __rvm_current_ruby_version
+
   # Parse default and current Rubies to global variables
   __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
   __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
@@ -461,12 +468,6 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
     rvm-prompt g;
   end
-  set --erase --global __rvm_current_ruby_gemset
-  set --erase --global __rvm_current_ruby_interpreter
-  set --erase --global __rvm_current_ruby_version
-  set --erase --global __rvm_default_ruby_gemset
-  set --erase --global __rvm_default_ruby_interpreter
-  set --erase --global __rvm_default_ruby_version
 end
 
 function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
