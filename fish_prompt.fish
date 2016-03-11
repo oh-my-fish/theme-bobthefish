@@ -70,7 +70,7 @@ end
 
 function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
   [ "$theme_display_hg" = 'yes' ]; or return
-  set d (pwd)
+  set -l d (pwd)
   while not [ $d = / ]
     if [ -e $d/.hg ]
       command hg root --cwd "$d" ^/dev/null
@@ -199,8 +199,9 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
 end
 
 function __bobthefish_vagrant_ids -S -d 'List Vagrant machine ids'
-  for id in .vagrant/machines/**/id
-    cat $id
+  for file in .vagrant/machines/**/id
+    read id <$file
+    echo $id
   end
 end
 
@@ -295,7 +296,9 @@ function __bobthefish_prompt_user -S -d 'Display actual user if different from $
   if [ "$theme_display_user" = 'yes' ]
     if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
       __bobthefish_start_segment $__bobthefish_lt_grey $__bobthefish_slate_blue
-      echo -n -s (whoami) '@' (hostname | cut -d . -f 1) ' '
+      set -l IFS .
+      hostname | read -l hostname __
+      echo -n -s (whoami) "@$hostname "
     end
   end
 end
@@ -432,17 +435,19 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby 
   # Function arguments:
   # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
   # - 'default' or 'current'
-  set -l __ruby (echo $ruby_string | cut -d '@' -f 1 ^/dev/null)
-  set __rvm_{$scope}_ruby_interpreter (echo $__ruby | cut -d '-' -f 1 ^/dev/null)
-  set __rvm_{$scope}_ruby_version (echo $__ruby | cut -d '-' -f 2 ^/dev/null)
-  set __rvm_{$scope}_ruby_gemset (echo $ruby_string | cut -d '@' -f 2 ^/dev/null)
+  set -l IFS @
+  echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
+  set IFS -
+  echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
+  set -e __ruby
+  set -e __
 end
 
 function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | \
-    sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
   set -l __rvm_current_ruby (rvm-prompt i v g)
+  [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
 
   set -l __rvm_default_ruby_gemset
   set -l __rvm_default_ruby_interpreter
@@ -455,18 +460,24 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
   __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
   # Show unobtrusive RVM prompt
-  if [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; return
+
   # If interpreter differs form default interpreter, show everything:
-  else if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]; rvm-prompt i v
-      else; rvm-prompt i v g; end
+  if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]
+      rvm-prompt i v
+    else
+      rvm-prompt i v g
+    end
   # If version differs form default version
   else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]; rvm-prompt v
-    else; rvm-prompt v g; end
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]
+      rvm-prompt v
+    else
+      rvm-prompt v g
+    end
   # If gemset differs form default or 'global' gemset, just show it
   else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
-    rvm-prompt g;
+    rvm-prompt g
   end
 end
 
@@ -477,8 +488,10 @@ function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
   else if type -q rbenv
     set ruby_version (rbenv version-name)
     # Don't show global ruby version...
-    set -q RBENV_ROOT; and set rbenv_root $RBENV_ROOT; or set rbenv_root ~/.rbenv
-    [ "$ruby_version" = (cat $rbenv_root/version ^/dev/null; or echo 'system') ]; and return
+    set -q RBENV_ROOT; or set -l RBENV_ROOT $HOME/.rbenv
+    read -l global_ruby_version <$RBENV_ROOT/version
+    [ "$global_ruby_version" ]; or set global_ruby_version system
+    [ "$ruby_version" = "$global_ruby_version" ]; and return
   end
   [ -z "$ruby_version" ]; and return
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
