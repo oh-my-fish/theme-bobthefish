@@ -29,6 +29,7 @@
 #     set -g theme_display_vi_hide_mode default
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_nerd_fonts yes
+#     set -g theme_show_exit_status yes
 #     set -g default_user your_normal_user
 
 # ===========================
@@ -269,7 +270,11 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
     __bobthefish_start_segment fff 000
     if [ "$nonzero" ]
       set_color $__bobthefish_med_red --bold
-      echo -n $__bobthefish_nonzero_exit_glyph
+      if [ "$theme_show_exit_status" = 'yes' ]
+      	echo -n $last_status' '
+      else
+      	echo -n $__bobthefish_nonzero_exit_glyph
+      end
     end
 
     if [ "$superuser" ]
