@@ -30,6 +30,7 @@ function __bobthefish_timestamp -S -d 'Show the current timestamp'
 end
 
 function fish_right_prompt -d 'bobthefish is all about the right prompt'
+  [ "$theme_display_right" = 'no' ]; and return
   set -l __bobthefish_left_arrow_glyph \uE0B3
 
   set_color $fish_color_autosuggestion[1]
