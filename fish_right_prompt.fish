@@ -19,6 +19,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
     echo -ns 'h '
   end
 
+  set_color $fish_color_normal
   set_color $fish_color_autosuggestion[1]
   echo -n $__bobthefish_left_arrow_glyph
 end
