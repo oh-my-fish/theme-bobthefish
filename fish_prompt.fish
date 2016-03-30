@@ -20,6 +20,7 @@
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
+#     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
@@ -67,7 +68,46 @@ end
 
 function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
   [ "$theme_display_git" = 'no' ]; and return
-  command git rev-parse --show-toplevel ^/dev/null
+  if [ "$theme_git_worktree_support" != 'yes' ]
+    command git rev-parse --show-toplevel ^/dev/null
+    return
+  end
+
+  set -l git_dir (command git rev-parse --git-dir ^/dev/null); or return
+
+  pushd $git_dir
+  set git_dir $PWD
+  popd
+
+  switch $PWD/
+    case $git_dir/\*
+      # Nothing works quite right if we're inside the git dir
+      # TODO: fix the underlying issues then re-enable the stuff below
+
+      # # if we're inside the git dir, sweet. just return that.
+      # set -l toplevel (command git rev-parse --show-toplevel ^/dev/null)
+      # if [ "$toplevel" ]
+      #   switch $git_dir/
+      #     case $toplevel/\*
+      #       echo $git_dir
+      #   end
+      # end
+      return
+  end
+
+  set -l project_dir (dirname $git_dir)
+
+  switch $PWD/
+    case $project_dir/\*
+      echo $project_dir
+      return
+  end
+
+  set project_dir (command git rev-parse --show-toplevel ^/dev/null)
+  switch $PWD/
+    case $project_dir/\*
+      echo $project_dir
+  end
 end
 
 function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
@@ -378,15 +418,72 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   echo -ns (__bobthefish_git_branch) $flags ' '
   set_color normal
 
-  set -l project_pwd (__bobthefish_project_pwd $current_dir)
-  if [ "$project_pwd" ]
-    if [ -w "$PWD" ]
-      __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
-    else
-      __bobthefish_start_segment $__bobthefish_med_red $__bobthefish_lt_red
+  if [ "$theme_git_worktree_support" != 'yes' ]
+    set -l project_pwd (__bobthefish_project_pwd $current_dir)
+    if [ "$project_pwd" ]
+      if [ -w "$PWD" ]
+        __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
+      else
+        __bobthefish_start_segment $__bobthefish_med_red $__bobthefish_lt_red
+      end
+
+      echo -ns $project_pwd ' '
+    end
+    return
+  end
+
+  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | sed -e 's#/$##')
+  set -l work_dir (command git rev-parse --show-toplevel ^/dev/null)
+
+  # only show work dir if it's a parent…
+  if [ "$work_dir" ]
+    switch $PWD/
+      case $work_dir/\*
+        set work_dir (echo $work_dir | sed -e "s#^$current_dir##")
+      case \*
+        set -e work_dir
+    end
+  end
+
+  if [ "$project_pwd" -o "$work_dir" ]
+    set -l bg_color $__bobthefish_dk_grey
+    set -l fg_color $__bobthefish_med_grey
+    if not [ -w "$PWD" ]
+      set bg_color $__bobthefish_med_red
+      set fg_color $__bobthefish_lt_red
+    end
+
+    __bobthefish_start_segment $bg_color $fg_color
+
+    # handle work_dir != project dir
+    if [ "$work_dir" ]
+      set -l work_parent (dirname $work_dir | sed -e 's#^/##')
+      if [ "$work_parent" ]
+        set_color --background $bg_color $fg_color
+        echo -n "$work_parent/"
+      end
+      set_color fff --bold
+      echo -n (basename $work_dir)
+      set_color --background $bg_color $fg_color
+      [ "$project_pwd" ]
+        and echo -n '/'
     end
 
     echo -ns $project_pwd ' '
+  else
+    set project_pwd (echo $PWD | sed -e "s#^$current_dir##" -e 's#^/##')
+    if [ "$project_pwd" ]
+      set -l bg_color $__bobthefish_dk_grey
+      set -l fg_color $__bobthefish_med_grey
+      if not [ -w "$PWD" ]
+        set bg_color $__bobthefish_med_red
+        set fg_color $__bobthefish_lt_red
+      end
+
+      __bobthefish_start_segment $bg_color $fg_color
+
+      echo -ns $project_pwd ' '
+    end
   end
 end
 

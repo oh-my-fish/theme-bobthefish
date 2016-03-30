@@ -63,6 +63,7 @@ You can override some of the following default options in your `config.fish`:
 set -g theme_display_git no
 set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
+set -g theme_git_worktree_support yes
 set -g theme_display_vagrant yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
@@ -90,6 +91,7 @@ set -g default_user your_normal_user
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
+- `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
 
 [fish]:       https://github.com/fish-shell/fish-shell
 [screenshot]: https://cloud.githubusercontent.com/assets/53660/14413486/a5300f2c-ff30-11e5-9852-dd0643834a40.gif
