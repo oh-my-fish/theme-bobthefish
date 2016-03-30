@@ -8,15 +8,15 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
     echo -ns $CMD_DURATION 'ms '
   else if [ "$CMD_DURATION" -lt 60000 ]
     math "scale=1;$CMD_DURATION/1000" | sed 's/\\.0$//'
-    echo -ns 's '
+    echo -n 's '
   else if [ "$CMD_DURATION" -lt 3600000 ]
     set_color $fish_color_error
     math "scale=1;$CMD_DURATION/60000" | sed 's/\\.0$//'
-    echo -ns 'm '
+    echo -n 'm '
   else
     set_color $fish_color_error
     math "scale=2;$CMD_DURATION/3600000" | sed 's/\\.0$//'
-    echo -ns 'h '
+    echo -n 'h '
   end
 
   set_color $fish_color_normal
@@ -25,7 +25,9 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
 end
 
 function __bobthefish_timestamp -S -d 'Show the current timestamp'
-  set -q theme_date_format; or set -l theme_date_format "+%c"
+  set -q theme_date_format
+    or set -l theme_date_format "+%c"
+
   echo -n ' '
   date $theme_date_format
 end
