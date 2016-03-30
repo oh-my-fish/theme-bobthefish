@@ -57,7 +57,7 @@ end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
   set -l branch (command hg branch ^/dev/null)
-  set -l book (command hg book | grep \* | cut -d\  -f3)
+  set -l book (command hg book | command grep \* | cut -d\  -f3)
   echo "$__bobthefish_branch_glyph $branch @ $book"
 end
 
@@ -99,8 +99,8 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
   set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
   [ $status != 0 ]; and return
 
-  set -l behind (count (for arg in $commits; echo $arg; end | grep '^<'))
-  set -l ahead (count (for arg in $commits; echo $arg; end | grep -v '^<'))
+  set -l behind (count (for arg in $commits; echo $arg; end | command grep '^<'))
+  set -l ahead (count (for arg in $commits; echo $arg; end | command grep -v '^<'))
 
   switch "$ahead $behind"
     case '' # no upstream
@@ -147,11 +147,15 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
 end
 
 function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened form of a directory'
-  if [ -w "$current_dir" ]
-    __bobthefish_start_segment $__bobthefish_dk_grey $__bobthefish_med_grey
-  else
-    __bobthefish_start_segment $__bobthefish_dk_red $__bobthefish_lt_red
+  set -l bg_color $__bobthefish_dk_grey
+  set -l fg_color $__bobthefish_med_grey
+
+  if not [ -w "$current_dir" ]
+    set bg_color $__bobthefish_dk_red
+    set fg_color $__bobthefish_lt_red
   end
+
+  __bobthefish_start_segment $bg_color $fg_color
 
   set -l directory
   set -l parent
@@ -208,7 +212,7 @@ end
 function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
   for id in (__bobthefish_vagrant_ids)
-    set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+    set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
     switch "$vm_status"
       case 'running'
         set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
@@ -342,7 +346,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   set -l ahead   (__bobthefish_git_ahead)
 
   set -l new ''
-  set -l show_untracked (git config --bool bash.showUntrackedFiles)
+  set -l show_untracked (command git config --bool bash.showUntrackedFiles)
   if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
     set new (command git ls-files --other --exclude-standard --directory --no-empty-directory)
     if [ "$new" ]
