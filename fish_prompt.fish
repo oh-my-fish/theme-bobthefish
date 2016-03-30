@@ -595,12 +595,22 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   set -l git_root (__bobthefish_git_project_dir)
   set -l hg_root  (__bobthefish_hg_project_dir)
-  if [ (echo "$hg_root" | wc -c) -gt (echo "$git_root" | wc -c) ]
-    __bobthefish_prompt_hg $hg_root
+
+  if [ "$git_root" -a "$hg_root" ]
+    # only show the closest parent
+    switch $git_root
+      case $hg_root\*
+        __bobthefish_prompt_git $git_root
+      case \*
+        __bobthefish_prompt_hg $hg_root
+    end
   else if [ "$git_root" ]
     __bobthefish_prompt_git $git_root
+  else if [ "$hg_root" ]
+    __bobthefish_prompt_hg $hg_root
   else
     __bobthefish_prompt_dir
   end
+
   __bobthefish_finish_segments
 end
