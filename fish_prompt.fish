@@ -182,10 +182,10 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
     set_color -b normal
     set_color $__bobthefish_current_bg
     echo -ns $__bobthefish_right_black_arrow_glyph ' '
-    set_color normal
   end
 
   set __bobthefish_current_bg
+  set_color normal
 end
 
 
