@@ -92,7 +92,7 @@ set -g default_user your_normal_user
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
 
 [fish]:       https://github.com/fish-shell/fish-shell
-[screenshot]: http://i.0x7f.us/bobthefish.png
+[screenshot]: https://cloud.githubusercontent.com/assets/53660/14413486/a5300f2c-ff30-11e5-9852-dd0643834a40.gif
 [patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
 [fonts]:      https://github.com/Lokaltog/powerline-fonts
 [nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
