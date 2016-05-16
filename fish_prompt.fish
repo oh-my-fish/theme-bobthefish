@@ -620,22 +620,22 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l last_status $status
 
   # Powerline glyphs
-  set -l __bobthefish_branch_glyph            ''
-  set -l __bobthefish_ln_glyph                ''
-  set -l __bobthefish_padlock_glyph           ''
-  set -l __bobthefish_right_black_arrow_glyph ''
-  set -l __bobthefish_right_arrow_glyph       ''
-  set -l __bobthefish_left_black_arrow_glyph  ''
-  set -l __bobthefish_left_arrow_glyph        ''
+  set -l __bobthefish_branch_glyph            \uE0A0
+  set -l __bobthefish_ln_glyph                \uE0A1
+  set -l __bobthefish_padlock_glyph           \uE0A2
+  set -l __bobthefish_right_black_arrow_glyph \uE0B0
+  set -l __bobthefish_right_arrow_glyph       \uE0B1
+  set -l __bobthefish_left_black_arrow_glyph  \uE0B2
+  set -l __bobthefish_left_arrow_glyph        \uE0B3
 
-  if [ "$theme_powerline_fonts" != "no" ]
-    set __bobthefish_branch_glyph            \uE0A0
-    set __bobthefish_ln_glyph                \uE0A1
-    set __bobthefish_padlock_glyph           \uE0A2
-    set __bobthefish_right_black_arrow_glyph \uE0B0
-    set __bobthefish_right_arrow_glyph       \uE0B1
-    set __bobthefish_left_black_arrow_glyph  \uE0B2
-    set __bobthefish_left_arrow_glyph        \uE0B3
+  if [ "$theme_powerline_fonts" = "no" ]
+    set __bobthefish_branch_glyph            ''
+    set __bobthefish_ln_glyph                ''
+    set __bobthefish_padlock_glyph           ''
+    set __bobthefish_right_black_arrow_glyph ''
+    set __bobthefish_right_arrow_glyph       ''
+    set __bobthefish_left_black_arrow_glyph  ''
+    set __bobthefish_left_arrow_glyph        ''
   end
 
   # Additional glyphs
