@@ -20,7 +20,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
   end
 
   set_color $fish_color_normal
-  set_color $fish_color_autosuggestion[1]
+  set_color $fish_color_autosuggestion
   echo -n $__bobthefish_left_arrow_glyph
 end
 
@@ -35,7 +35,7 @@ end
 function fish_right_prompt -d 'bobthefish is all about the right prompt'
   set -l __bobthefish_left_arrow_glyph \uE0B3
 
-  set_color $fish_color_autosuggestion[1]
+  set_color $fish_color_autosuggestion
 
   __bobthefish_cmd_duration
   __bobthefish_timestamp
