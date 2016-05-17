@@ -404,10 +404,10 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
 
   set -l flag_bg $__bobthefish_lt_green
   set -l flag_fg $__bobthefish_dk_green
-  if [ "$dirty" -o "$staged" ]
+  if [ "$dirty" ]
     set flag_bg $__bobthefish_med_red
     set flag_fg fff
-  else if [ "$stashed" ]
+  else if [ "$staged" ]
     set flag_bg $__bobthefish_lt_orange
     set flag_fg $__bobthefish_dk_orange
   end
