@@ -629,7 +629,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_left_arrow_glyph        \uE0B3
 
   if [ "$theme_powerline_fonts" = "no" ]
-    set __bobthefish_branch_glyph            ''
+    set __bobthefish_branch_glyph            '\u2387'
     set __bobthefish_ln_glyph                ''
     set __bobthefish_padlock_glyph           ''
     set __bobthefish_right_black_arrow_glyph ''
