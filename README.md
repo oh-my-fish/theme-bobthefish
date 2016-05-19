@@ -12,7 +12,10 @@ Be sure to have Oh My Fish installed. Then just:
 
     omf install bobthefish
 
-You will probably need a [Powerline-patched font][patching] for this to work.
+You will need a [Powerline-patched font][patching] for this to work, unless you enable the compatibility fallback option:
+
+    set -g theme_powerline_fonts no
+
 [I recommend picking one of these][fonts]. For more advanced awesome, install a [nerd fonts patched font][nerd-fonts], and enable nerd fonts support:
 
     set -g theme_nerd_fonts yes
@@ -76,6 +79,7 @@ set -g theme_title_display_path no
 set -g theme_title_use_abbreviated_path no
 set -g theme_date_format "+%a %H:%M"
 set -g theme_avoid_ambiguous_glyphs yes
+set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
 set -g theme_show_exit_status yes
 set -g default_user your_normal_user

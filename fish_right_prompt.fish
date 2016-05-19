@@ -34,6 +34,9 @@ end
 
 function fish_right_prompt -d 'bobthefish is all about the right prompt'
   set -l __bobthefish_left_arrow_glyph \uE0B3
+  if [ "$theme_powerline_fonts" = "no" ]
+    set __bobthefish_left_arrow_glyph '<'
+  end
 
   set_color $fish_color_autosuggestion
 
