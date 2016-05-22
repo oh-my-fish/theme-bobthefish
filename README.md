@@ -4,7 +4,7 @@
 
 [![Oh My Fish](https://img.shields.io/badge/Framework-Oh_My_Fish-blue.svg?style=flat)](https://github.com/oh-my-fish/oh-my-fish) [![MIT License](https://img.shields.io/github/license/oh-my-fish/theme-bobthefish.svg?style=flat)](/LICENSE.md) [![Slack Status](https://oh-my-fish-slack.herokuapp.com/badge.svg)](https://oh-my-fish-slack.herokuapp.com)
 
-![bobthefish][screenshot]
+![bobthefish][screencast]
 
 ### Installation
 
@@ -98,7 +98,7 @@ set -g default_user your_normal_user
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
 
 [fish]:       https://github.com/fish-shell/fish-shell
-[screenshot]: https://cloud.githubusercontent.com/assets/53660/14413486/a5300f2c-ff30-11e5-9852-dd0643834a40.gif
+[screencast]: https://cloud.githubusercontent.com/assets/53660/15454890/5649a9a6-1ff9-11e6-9bab-ac1f9278f0cb.gif
 [patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
 [fonts]:      https://github.com/Lokaltog/powerline-fonts
 [nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
