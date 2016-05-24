@@ -41,7 +41,7 @@ This theme is based loosely on [agnoster][agnoster].
  * Current vi mode
      * _You'll need to `set -g theme_display_vi yes` to enable_
  * `User@Host` (unless you're the default user)
- * Current RVM or rbenv (Ruby) version
+ * Current RVM, rbenv or chruby (Ruby) version
  * Current virtualenv (Python) version
      * _If you use virtualenv, you will probably need to disable the default virtualenv prompt, since it doesn't play nice with fish: `set -x VIRTUAL_ENV_DISABLE_PROMPT 1`_
  * Abbreviated parent directory
