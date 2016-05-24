@@ -599,6 +599,8 @@ function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
       or set global_ruby_version system
 
     [ "$ruby_version" = "$global_ruby_version" ]; and return
+  else if type -q chruby
+    set ruby_version $RUBY_VERSION
   end
   [ -z "$ruby_version" ]; and return
   __bobthefish_start_segment $__bobthefish_ruby_red $__bobthefish_lt_grey --bold
