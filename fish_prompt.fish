@@ -292,6 +292,14 @@ function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status
   set_color normal
 end
 
+function __bobthefish_prompt_docker -S
+    if set -q DOCKER_MACHINE_NAME
+        __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+        echo -ns $DOCKER_MACHINE_NAME ' '
+    end
+    set_color normal
+end
+
 function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
   set -l superuser
@@ -699,6 +707,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_status $last_status
   __bobthefish_prompt_vi
   __bobthefish_prompt_vagrant
+  __bobthefish_prompt_docker
   __bobthefish_prompt_user
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
