@@ -608,15 +608,15 @@ end
 # ===========================
 
 function __bobthefish_display_colors -d 'Print example prompts using the current color scheme'
-  set -g __bobthefish_display_colors 1
+  set -g __bobthefish_display_colors
 end
 
 function __bobthefish_maybe_display_colors -S
-  if test -z $__bobthefish_display_colors
+  if not set -q __bobthefish_display_colors
     return
   end
 
-  set -g __bobthefish_display_colors
+  set -e __bobthefish_display_colors
 
   echo
   set_color normal
