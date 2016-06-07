@@ -293,10 +293,9 @@ function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status
 end
 
 function __bobthefish_prompt_docker -S
-    if set -q DOCKER_MACHINE_NAME
-        __bobthefish_start_segment $__bobthefish_vagrant fff --bold
-        echo -ns $DOCKER_MACHINE_NAME ' '
-    end
+    [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]; and return
+    __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+    echo -ns $DOCKER_MACHINE_NAME ' '
     set_color normal
 end
 

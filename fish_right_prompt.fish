@@ -25,6 +25,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
 end
 
 function __bobthefish_timestamp -S -d 'Show the current timestamp'
+  [ "$theme_display_date" = "no" ]; and return
   set -q theme_date_format
     or set -l theme_date_format "+%c"
 
@@ -41,5 +42,6 @@ function fish_right_prompt -d 'bobthefish is all about the right prompt'
   set_color $fish_color_autosuggestion
 
   __bobthefish_cmd_duration
+  __bobthefish_timestamp
   set_color normal
 end
