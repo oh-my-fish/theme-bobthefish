@@ -763,31 +763,41 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       # Do not set any variables in this section.
 
       # If you want to create your own color scheme, set `theme_color_scheme` to
-      # `user` and define the following variables in your fish startup file. Use
-      # `__bobthefish_display_colors` to easily see what these variables are
-      # used for.
+      # `user` and define the `__color_*` variables listed below in your fish
+      # startup file (`$OMF_CONFIG/init.fish`, or similar).
 
       # The value for each variable is an argument to pass to `set_color -b`.
-      # See See the color schemes below for examples.
+      # You can copy the commented code below as a base for your custom colors.
+      # Use `__bobthefish_display_colors` at the command line to easily see what
+      # these variables are used for.
+
+      # See the built-in color schemes below for more examples.
+
+      # # Example bobthefish color scheme:
+      # set -g theme_color_scheme user
       #
-      # - `__color_initial_segment_exit`
-      # - `__color_initial_segment_su`
-      # - `__color_initial_segment_jobs`
-      # - `__color_path`
-      # - `__color_path_basename`
-      # - `__color_path_nowrite`
-      # - `__color_path_nowrite_basename`
-      # - `__color_repo`
-      # - `__color_repo_work_tree`
-      # - `__color_repo_dirty`
-      # - `__color_repo_staged`
-      # - `__color_vi_mode_default`
-      # - `__color_vi_mode_insert`
-      # - `__color_vi_mode_visual`
-      # - `__color_vagrant`
-      # - `__color_username`
-      # - `__color_rvm`
-      # - `__color_virtualfish`
+      # set -g __color_initial_segment_exit  ffffff ce000f --bold
+      # set -g __color_initial_segment_su    ffffff 189303 --bold
+      # set -g __color_initial_segment_jobs  ffffff 255e87 --bold
+      #
+      # set -g __color_path                  333333 999999
+      # set -g __color_path_basename         333333 ffffff --bold
+      # set -g __color_path_nowrite          660000 cc9999
+      # set -g __color_path_nowrite_basename 660000 cc9999 --bold
+      #
+      # set -g __color_repo                  addc10 0c4801
+      # set -g __color_repo_work_tree        addc10 ffffff --bold
+      # set -g __color_repo_dirty            ce000f ffffff
+      # set -g __color_repo_staged           f6b117 3a2a03
+      #
+      # set -g __color_vi_mode_default       999999 333333 --bold
+      # set -g __color_vi_mode_insert        189303 333333 --bold
+      # set -g __color_vi_mode_visual        f6b117 3a2a03 --bold
+      #
+      # set -g __color_vagrant               48b4fb ffffff --bold
+      # set -g __color_username              cccccc 255e87
+      # set -g __color_rvm                   af0000 cccccc --bold
+      # set -g __color_virtualfish           005faf cccccc --bold
 
     case 'terminal' 'terminal-dark*'
       set -l colorfg black
