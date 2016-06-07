@@ -908,8 +908,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
       set __color_path                     $grey $white
       set __color_path_basename            $grey $white --bold
-      set __color_path_nowrite             $orange $grey
-      set __color_path_nowrite_basename    $orange $grey --bold
+      set __color_path_nowrite             $grey $red
+      set __color_path_nowrite_basename    $grey $red --bold
 
       set __color_repo                     $green $grey
       set __color_repo_work_tree           $green $grey --bold
@@ -949,17 +949,17 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_initial_segment_su       $base02 $base0B --bold
       set __color_initial_segment_jobs     $base02 $base0D --bold
 
-      set __color_path                     $base05 $base02
-      set __color_path_basename            $base05 $base01 --bold
-      set __color_path_nowrite             $base0A $base02
-      set __color_path_nowrite_basename    $base0A $base01 --bold
+      set __color_path                     $base06 $base02
+      set __color_path_basename            $base06 $base01 --bold
+      set __color_path_nowrite             $base06 $base08
+      set __color_path_nowrite_basename    $base06 $base08 --bold
 
       set __color_repo                     $base0B $colorfg
       set __color_repo_work_tree           $base0B $colorfg --bold
       set __color_repo_dirty               $base08 $colorfg
       set __color_repo_staged              $base09 $colorfg
 
-      set __color_vi_mode_default          $base05 $colorfg --bold
+      set __color_vi_mode_default          $base04 $colorfg --bold
       set __color_vi_mode_insert           $base0B $colorfg --bold
       set __color_vi_mode_visual           $base09 $colorfg --bold
 
@@ -994,8 +994,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
       set __color_path                     $base02 $base05
       set __color_path_basename            $base02 $base06 --bold
-      set __color_path_nowrite             $base0A $base02
-      set __color_path_nowrite_basename    $base0A $base01 --bold
+      set __color_path_nowrite             $base02 $base08
+      set __color_path_nowrite_basename    $base02 $base08 --bold
 
       set __color_repo                     $base0B $colorfg
       set __color_repo_work_tree           $base0B $colorfg --bold
