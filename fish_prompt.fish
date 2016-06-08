@@ -294,7 +294,7 @@ end
 
 function __bobthefish_prompt_docker -S -d 'Show docker machine name'
     [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]; and return
-    __bobthefish_start_segment $__bobthefish_vagrant fff --bold
+    __bobthefish_start_segment $__color_vagrant
     echo -ns $DOCKER_MACHINE_NAME ' '
     set_color normal
 end
