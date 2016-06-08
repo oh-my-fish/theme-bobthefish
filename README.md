@@ -68,12 +68,14 @@ set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
 set -g theme_git_worktree_support yes
 set -g theme_display_vagrant yes
+set -g theme_display_docker_machine no
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_ruby no
 set -g theme_display_user yes
 set -g theme_display_vi yes
 set -g theme_display_vi_hide_mode default
+set -g theme_display_date no
 set -g theme_title_display_process yes
 set -g theme_title_display_path no
 set -g theme_title_use_abbreviated_path no
