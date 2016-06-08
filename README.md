@@ -83,6 +83,7 @@ set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
 set -g theme_show_exit_status yes
 set -g default_user your_normal_user
+set -g theme_color_scheme dark
 ```
 
 **Title options**
@@ -96,6 +97,55 @@ set -g default_user your_normal_user
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
+
+**Color scheme options**
+
+You can use the function `__bobthefish_display_colors` to preview the prompts in
+the current theme.
+
+Set `theme_color_scheme` in a terminal session or in your fish startup files to
+one of the following options to change the prompt colors.
+
+- `dark`. The default bobthefish theme.
+- `light`. A lighter version of the default theme.
+- `solarized` (or `solarized-dark`), `solarized-light`. Dark and light variants
+  of Solarized.
+- `base16` (or `base16-dark`), `base16-light`. Dark and light variants of the
+  default Base16 theme.
+- `zenburn`. An adaptation of Zenburn.
+
+Some of these may not look right if your terminal does not support 24 bit color,
+in which case you can try one of the `terminal` schemes (below). However, if
+you're using Solarized, Base16 (default), or Zenburn in your terminal and the
+terminal *does* support 24 bit color, the built in schemes will look nicer.
+
+There are several scheme that use whichever colors you currently have loaded
+into your terminal. The advantage of using the schemes that fall through to the
+terminal colors is that they automatically adapt to something acceptable
+whenever you change the 16 colors in your terminal profile.
+- `terminal` (or `terminal-dark` or `terminal-dark-black`)
+- `terminal-dark-white`. Same as `terminal`, but use white as the foreground
+  color on top of colored segments (in case your colors are very dark).
+- `terminal-light` (or `terminal-light-white`)
+- `terminal-light-black`. Same as `terminal-light`, but use black as the
+  foreground color on top of colored segments (in case your colors are very
+  bright).
+
+For some terminal themes, like dark base16 themes, the path segments in the
+prompt will be indistinguishable from the background. In those cases, try one of
+the following variations; they are identical to the `terminal` schemes except
+for using bright black (`brgrey`) and dull white (`grey`) in the place of black
+and bright white.
+- `terminal2` (or `terminal2-dark` or `terminal2-dark-black`)
+- `terminal2-dark-white`
+- `terminal2-light` (or `terminal2-light-white`)
+- `terminal2-light-black`
+
+Finally, you can specify your very own color scheme by setting
+`theme_color_scheme` to `user`. In that case, you also need to define some
+variables to set the colors of the prompt. See the "Colors" section of
+`fish_prompt.fish` for details.
+
 
 [fish]:       https://github.com/fish-shell/fish-shell
 [screencast]: https://cloud.githubusercontent.com/assets/53660/15454890/5649a9a6-1ff9-11e6-9bab-ac1f9278f0cb.gif
