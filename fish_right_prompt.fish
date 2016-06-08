@@ -21,7 +21,6 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
 
   set_color $fish_color_normal
   set_color $fish_color_autosuggestion
-  echo -n $__bobthefish_left_arrow_glyph
 end
 
 function __bobthefish_timestamp -S -d 'Show the current timestamp'
@@ -29,6 +28,7 @@ function __bobthefish_timestamp -S -d 'Show the current timestamp'
   set -q theme_date_format
     or set -l theme_date_format "+%c"
 
+  echo -n $__bobthefish_left_arrow_glyph
   echo -n ' '
   date $theme_date_format
 end
