@@ -22,6 +22,7 @@
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
+#     set -g theme_display_docker_machine no
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
@@ -33,6 +34,7 @@
 #     set -g theme_nerd_fonts yes
 #     set -g theme_show_exit_status yes
 #     set -g default_user your_normal_user
+#     set -g theme_color_scheme dark
 
 # ===========================
 # Helper methods
