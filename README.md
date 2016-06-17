@@ -106,14 +106,14 @@ set -g theme_color_scheme dark
 
 **Color scheme options**
 
-You can use the function `__bobthefish_display_colors` to preview the prompts in
-the current theme.
-
 | ![dark][dark]           | ![light][light]                     |
 |-------------------------|-------------------------------------|
 | ![solarized][solarized] | ![solarized-light][solarized-light] |
 | ![base16][base16]       | ![base16-light][base16-light]       |
 | ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
+
+You can use the function `__bobthefish_display_colors` to preview the prompts in
+the current theme.
 
 Set `theme_color_scheme` in a terminal session or in your fish startup files to
 one of the following options to change the prompt colors.
