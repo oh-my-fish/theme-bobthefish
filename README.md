@@ -6,6 +6,7 @@
 
 ![bobthefish][screencast]
 
+
 ### Installation
 
 Be sure to have Oh My Fish installed. Then just:
@@ -22,6 +23,7 @@ You will need a [Powerline-patched font][patching] for this to work, unless you 
 
 This theme is based loosely on [agnoster][agnoster].
 
+
 ### Features
 
  * A helpful, but not too distracting, greeting.
@@ -31,6 +33,7 @@ This theme is based loosely on [agnoster][agnoster].
  * An abbreviated path which doesn't abbreviate the name of the current project.
  * All the things you need to know about Git in a glance.
  * Visual indication that you can't write to the current directory.
+
 
 ### The Prompt
 
@@ -57,6 +60,7 @@ This theme is based loosely on [agnoster][agnoster].
      * Unpulled _and_ unpushed commits (**`±`**)
      * _Note that not all of these have been implemented for hg yet :)_
  * Abbreviated project-relative path
+
 
 ### Configuration
 
@@ -104,6 +108,12 @@ set -g theme_color_scheme dark
 
 You can use the function `__bobthefish_display_colors` to preview the prompts in
 the current theme.
+
+| ![dark][dark]           | ![light][light]                     |
+|-------------------------|-------------------------------------|
+| ![solarized][solarized] | ![solarized-light][solarized-light] |
+| ![base16][base16]       | ![base16-light][base16-light]       |
+| ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
 
 Set `theme_color_scheme` in a terminal session or in your fish startup files to
 one of the following options to change the prompt colors.
@@ -155,3 +165,12 @@ variables to set the colors of the prompt. See the "Colors" section of
 [fonts]:      https://github.com/Lokaltog/powerline-fonts
 [nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
 [agnoster]:   https://gist.github.com/agnoster/3712874
+
+[dark]:            https://cloud.githubusercontent.com/assets/53660/16141569/ee2bbe4a-3411-11e6-85dc-3d9b0226e833.png "dark"
+[light]:           https://cloud.githubusercontent.com/assets/53660/16141570/f106afc6-3411-11e6-877d-fc2a8f6d3175.png "light"
+[solarized]:       https://cloud.githubusercontent.com/assets/53660/16141572/f7724032-3411-11e6-8771-b43769e7afec.png "solarized"
+[solarized-light]: https://cloud.githubusercontent.com/assets/53660/16141575/fbed8036-3411-11e6-92e9-90da6d45f94b.png "solarized-light"
+[base16]:          https://cloud.githubusercontent.com/assets/53660/16141577/0134763a-3412-11e6-9cca-6040d39c8fd4.png "base16"
+[base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
+[zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
+[terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
