@@ -2,6 +2,7 @@
 #     set -g theme_date_format "+%a %H:%M"
 
 function __bobthefish_cmd_duration -S -d 'Show command duration'
+  [ "$theme_display_cmd_duration" = "no" ]; and return
   [ "$CMD_DURATION" -lt 100 ]; and return
 
   if [ "$CMD_DURATION" -lt 5000 ]

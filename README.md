@@ -80,6 +80,7 @@ set -g theme_display_user yes
 set -g theme_display_vi yes
 set -g theme_display_vi_hide_mode default
 set -g theme_display_date no
+set -g theme_display_cmd_duration yes
 set -g theme_title_display_process yes
 set -g theme_title_display_path no
 set -g theme_title_use_abbreviated_path no
