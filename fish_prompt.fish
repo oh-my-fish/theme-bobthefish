@@ -238,15 +238,24 @@ end
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
-  if type -q VBoxManage
-    __bobthefish_prompt_vagrant_vbox
-  else if grep vmware_fusion Vagrantfile >/dev/null ^&1
-    __bobthefish_prompt_vagrant_vmware
+  set provider (__bobthefish_vagrant_provider)
+  switch "$provider"
+    case 'virtualbox'
+      __bobthefish_prompt_vagrant_vbox
+    case 'vmware_fusion'
+      __bobthefish_prompt_vagrant_vmware
+    case 'parallels'
+      __bobthefish_prompt_vagrant_parallels
   end
 end
 
-function __bobthefish_vagrant_ids -S -d 'List Vagrant machine ids'
-  for file in .vagrant/machines/**/id
+function __bobthefish_vagrant_provider -S -d 'Get (first) Vagrant provider'
+  set -l first_provider (ls -1d .vagrant/machines/*/* | head -1)
+  echo $first_provider | sed -e 's/.*\/\(\w*\)/\1/'
+end
+
+function __bobthefish_vagrant_ids -S -a provider -d 'List Vagrant machine ids'
+  for file in .vagrant/machines/*/$provider/id
     read id <$file
     echo $id
   end
@@ -254,7 +263,7 @@ end
 
 function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
-  for id in (__bobthefish_vagrant_ids)
+  for id in (__bobthefish_vagrant_ids "virtualbox")
     set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
     switch "$vm_status"
       case 'running'
@@ -280,11 +289,37 @@ end
 
 function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status'
   set -l vagrant_status
-  for id in (__bobthefish_vagrant_ids)
+  for id in (__bobthefish_vagrant_ids "vmware_fusion")
     if [ (pgrep -f "$id") ]
       set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
     else
       set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+    end
+  end
+  [ -z "$vagrant_status" ]; and return
+
+  __bobthefish_start_segment $__color_vagrant
+  echo -ns $vagrant_status ' '
+  set_color normal
+end
+
+function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant status'
+  set -l vagrant_status
+  for id in (__bobthefish_vagrant_ids "parallels")
+    set -l vm_status (prlctl list $id -o status ^/dev/null | command tail -1)
+    switch "$vm_status"
+      case 'running'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+      case 'stopped'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+      case 'paused'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+      case 'suspended'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+      case 'stopping'
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
+      case ''
+        set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
     end
   end
   [ -z "$vagrant_status" ]; and return
