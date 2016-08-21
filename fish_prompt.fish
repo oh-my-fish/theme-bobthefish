@@ -20,6 +20,7 @@
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
+#     set -g theme_display_git_tag yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -53,7 +54,12 @@
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
   if [ $status -gt 0 ]
-    set -l branch (command git show-ref --head -s --abbrev | head -n1 ^/dev/null)
+    set -l branch
+    if [ "$theme_display_git_tag" = 'yes' ]
+      set branch (command git describe --tags ^/dev/null)
+    else
+      set branch (command git show-ref --head -s --abbrev | head -n1 ^/dev/null)
+    end
     set ref "$__bobthefish_detached_glyph $branch"
   end
   echo $ref | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
