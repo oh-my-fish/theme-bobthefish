@@ -238,47 +238,59 @@ end
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
-  set -l provider (__bobthefish_vagrant_provider)
-  switch "$provider"
-    case 'virtualbox'
-      __bobthefish_prompt_vagrant_vbox
-    case 'vmware_fusion'
-      __bobthefish_prompt_vagrant_vmware
-    case 'parallels'
-      __bobthefish_prompt_vagrant_parallels
+  for machine in (__bobthefish_vagrant_machines)
+    set -l provider (__bobthefish_vagrant_provider $machine)
+    set -l id (__bobthefish_vagrant_id $machine $provider)
+    if [ ! -z "$id" ]
+      switch "$provider"
+        case 'virtualbox'
+          __bobthefish_prompt_vagrant_vbox $id
+        case 'vmware_fusion'
+          __bobthefish_prompt_vagrant_vmware $id
+        case 'parallels'
+          __bobthefish_prompt_vagrant_parallels $id
+      end
+    end
   end
 end
 
-function __bobthefish_vagrant_provider -S -d 'Get (first) Vagrant provider'
-  set -l first_provider (ls -1d .vagrant/machines/*/* | head -1)
-  echo $first_provider | sed -e 's/.*\/\(\w*\)/\1/'
+function __bobthefish_vagrant_machines -S -d 'List all Vagrant machines'
+  for machine in .vagrant/machines/*
+    echo $machine | command sed -e 's/.*\/\(\w*\)/\1/'
+  end
 end
 
-function __bobthefish_vagrant_ids -S -a provider -d 'List Vagrant machine ids'
-  for file in .vagrant/machines/*/$provider/id
-    read id <$file
+function __bobthefish_vagrant_provider -S -a machine -d 'Get Vagrant provider for <machine>'
+  for provider in .vagrant/machines/$machine/*
+    if [ -e $provider/id ]
+      echo $provider/id | command sed -ne 's/.vagrant\/machines\/'$machine'\/\(.*\)\/id/\1/p'
+    end
+  end
+end
+
+function __bobthefish_vagrant_id -S -a machine -a provider -d 'List Vagrant machine id'
+  if [ -n "$provider" ]
+    read id < .vagrant/machines/$machine/$provider/id
     echo $id
   end
 end
 
-function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant status'
+function __bobthefish_prompt_vagrant_vbox -S -a id -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
-  for id in (__bobthefish_vagrant_ids "virtualbox")
-    set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
-    switch "$vm_status"
-      case 'running'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
-      case 'poweroff'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
-      case 'aborted'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_aborted_glyph"
-      case 'saved'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
-      case 'stopping'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
-      case ''
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
-    end
+  set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+  switch "$vm_status"
+    case 'running'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+    case 'poweroff'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+    case 'aborted'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_aborted_glyph"
+    case 'saved'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+    case 'stopping'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
+    case ''
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
   end
   [ -z "$vagrant_status" ]; and return
 
@@ -287,14 +299,12 @@ function __bobthefish_prompt_vagrant_vbox -S -d 'Display VirtualBox Vagrant stat
   set_color normal
 end
 
-function __bobthefish_prompt_vagrant_vmware -S -d 'Display VMWare Vagrant status'
+function __bobthefish_prompt_vagrant_vmware -S -a id -d 'Display VMWare Vagrant status'
   set -l vagrant_status
-  for id in (__bobthefish_vagrant_ids "vmware_fusion")
-    if [ (pgrep -f "$id") ]
-      set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
-    else
-      set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
-    end
+  if [ (pgrep -f "$id") ]
+    set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+  else
+    set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
   end
   [ -z "$vagrant_status" ]; and return
 
@@ -305,22 +315,20 @@ end
 
 function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant status'
   set -l vagrant_status
-  for id in (__bobthefish_vagrant_ids "parallels")
-    set -l vm_status (prlctl list $id -o status ^/dev/null | command tail -1)
-    switch "$vm_status"
-      case 'running'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
-      case 'stopped'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
-      case 'paused'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
-      case 'suspended'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
-      case 'stopping'
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
-      case ''
-        set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
-    end
+  set -l vm_status (prlctl list $id -o status ^/dev/null | command tail -1)
+  switch "$vm_status"
+    case 'running'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_running_glyph"
+    case 'stopped'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_poweroff_glyph"
+    case 'paused'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+    case 'suspended'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_saved_glyph"
+    case 'stopping'
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_stopping_glyph"
+    case ''
+      set vagrant_status "$vagrant_status$__bobthefish_vagrant_unknown_glyph"
   end
   [ -z "$vagrant_status" ]; and return
 
