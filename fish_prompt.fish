@@ -1173,8 +1173,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set -g __color_path_nowrite          $red[1] $fg[2]
       set -g __color_path_nowrite_basename $red[1] $fg[2] --bold
 
-      set -g __color_repo                  $yellow[2] $bg[1]
-      set -g __color_repo_work_tree        $yellow[2] $fg[2] --bold
+      set -g __color_repo                  $green[2] $bg[1]
+      set -g __color_repo_work_tree        $green[2] $fg[2] --bold
       set -g __color_repo_dirty            $red[2] $fg[2]
       set -g __color_repo_staged           $yellow[1] $bg[1]
 
