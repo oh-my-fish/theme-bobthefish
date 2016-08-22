@@ -238,7 +238,7 @@ end
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
-  set provider (__bobthefish_vagrant_provider)
+  set -l provider (__bobthefish_vagrant_provider)
   switch "$provider"
     case 'virtualbox'
       __bobthefish_prompt_vagrant_vbox
