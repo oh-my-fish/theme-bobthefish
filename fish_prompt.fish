@@ -737,6 +737,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   # Additional glyphs
   set -l __bobthefish_detached_glyph          \u27A6
+  set -l __bobthefish_tag_glyph               \u2302
   set -l __bobthefish_nonzero_exit_glyph      '! '
   set -l __bobthefish_superuser_glyph         '$ '
   set -l __bobthefish_bg_job_glyph            '% '
