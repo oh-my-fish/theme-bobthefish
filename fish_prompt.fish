@@ -242,40 +242,21 @@ end
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
-  for machine in (__bobthefish_vagrant_machines)
-    set -l provider (__bobthefish_vagrant_provider $machine)
-    set -l id (__bobthefish_vagrant_id $machine $provider)
+
+  # .vagrant/machines/$machine/$provider/id
+  for file in .vagrant/machines/*/*/id
+    read -l id <$file
+
     if [ ! -z "$id" ]
-      switch "$provider"
-        case 'virtualbox'
+      switch "$file"
+        case '*/virtualbox/id'
           __bobthefish_prompt_vagrant_vbox $id
-        case 'vmware_fusion'
+        case '*/vmware_fusion/id'
           __bobthefish_prompt_vagrant_vmware $id
-        case 'parallels'
+        case '*/parallels/id'
           __bobthefish_prompt_vagrant_parallels $id
       end
     end
-  end
-end
-
-function __bobthefish_vagrant_machines -S -d 'List all Vagrant machines'
-  for machine in .vagrant/machines/*
-    echo $machine | command sed -e 's/.*\/\(\w*\)/\1/'
-  end
-end
-
-function __bobthefish_vagrant_provider -S -a machine -d 'Get Vagrant provider for <machine>'
-  for provider in .vagrant/machines/$machine/*
-    if [ -e $provider/id ]
-      echo $provider/id | command sed -ne 's/.vagrant\/machines\/'$machine'\/\(.*\)\/id/\1/p'
-    end
-  end
-end
-
-function __bobthefish_vagrant_id -S -a machine -a provider -d 'List Vagrant machine id'
-  if [ -n "$provider" ]
-    read id < .vagrant/machines/$machine/$provider/id
-    echo $id
   end
 end
 
