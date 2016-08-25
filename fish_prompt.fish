@@ -726,22 +726,10 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   # Powerline glyphs
   set -l __bobthefish_branch_glyph            \uE0A0
-  set -l __bobthefish_ln_glyph                \uE0A1
-  set -l __bobthefish_padlock_glyph           \uE0A2
   set -l __bobthefish_right_black_arrow_glyph \uE0B0
   set -l __bobthefish_right_arrow_glyph       \uE0B1
   set -l __bobthefish_left_black_arrow_glyph  \uE0B2
   set -l __bobthefish_left_arrow_glyph        \uE0B3
-
-  if [ "$theme_powerline_fonts" = "no" ]
-    set __bobthefish_branch_glyph            \u2387
-    set __bobthefish_ln_glyph                ''
-    set __bobthefish_padlock_glyph           ''
-    set __bobthefish_right_black_arrow_glyph ''
-    set __bobthefish_right_arrow_glyph       ''
-    set __bobthefish_left_black_arrow_glyph  ''
-    set __bobthefish_left_arrow_glyph        ''
-  end
 
   # Additional glyphs
   set -l __bobthefish_detached_glyph          \u27A6
@@ -764,6 +752,31 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_vagrant_saved_glyph     \u21E1 # ⇡ 'saved'
   set -l __bobthefish_vagrant_stopping_glyph  \u21E3 # ⇣ 'stopping'
   set -l __bobthefish_vagrant_unknown_glyph   '!'    # strange cases
+
+  # Disable Powerline fonts
+  if [ "$theme_powerline_fonts" = "no" ]
+    set __bobthefish_branch_glyph            \u2387
+    set __bobthefish_right_black_arrow_glyph ''
+    set __bobthefish_right_arrow_glyph       ''
+    set __bobthefish_left_black_arrow_glyph  ''
+    set __bobthefish_left_arrow_glyph        ''
+  end
+
+  # Use prettier Nerd Fonts glyphs
+  if [ "$theme_nerd_fonts" = "yes" ]
+    set __bobthefish_branch_glyph     \uF418
+    set __bobthefish_detached_glyph   \uF417
+    set __bobthefish_tag_glyph        \uF412
+
+    set __bobthefish_virtualenv_glyph \uE73C ' '
+    set __bobthefish_ruby_glyph       \uE791 ' '
+
+    set __bobthefish_vagrant_running_glyph  \uF431 # ↑ 'running'
+    set __bobthefish_vagrant_poweroff_glyph \uF433 # ↓ 'poweroff'
+    set __bobthefish_vagrant_aborted_glyph  \uF468 # ✕ 'aborted'
+    set __bobthefish_vagrant_unknown_glyph  \uF421 # strange cases
+  end
+
 
   # Colors
 
@@ -1187,11 +1200,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_username                 $grey[1] $blue[3]
       set __color_rvm                      $ruby_red $grey[1] --bold
       set __color_virtualfish              $blue[2] $grey[1] --bold
-  end
-
-  if [ "$theme_nerd_fonts" = "yes" ]
-    set __bobthefish_virtualenv_glyph \uE73C ' '
-    set __bobthefish_ruby_glyph       \uE791 ' '
   end
 
   # Start each line with a blank slate
