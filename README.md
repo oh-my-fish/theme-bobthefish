@@ -162,7 +162,7 @@ variables to set the colors of the prompt. See the "Colors" section of
 
 
 [fish]:       https://github.com/fish-shell/fish-shell
-[screencast]: https://cloud.githubusercontent.com/assets/53660/15454890/5649a9a6-1ff9-11e6-9bab-ac1f9278f0cb.gif
+[screencast]: https://cloud.githubusercontent.com/assets/53660/18028510/f16f6b2c-6c35-11e6-8eb9-9f23ea3cce2e.gif
 [patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
 [fonts]:      https://github.com/Lokaltog/powerline-fonts
 [nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
