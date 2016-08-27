@@ -126,6 +126,7 @@ one of the following options to change the prompt colors.
 - `base16` (or `base16-dark`), `base16-light`. Dark and light variants of the
   default Base16 theme.
 - `zenburn`. An adaptation of Zenburn.
+- `gruvbox`. An adaptation of gruvbox.
 
 Some of these may not look right if your terminal does not support 24 bit color,
 in which case you can try one of the `terminal` schemes (below). However, if
