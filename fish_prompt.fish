@@ -53,7 +53,7 @@
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   if [ "$theme_display_git_latest_tag" = 'yes' ]
-    set -l latest_tag_value (command git for-each-ref --sort committerdate --format '%(refname)' refs/tags | sed s#refs/tags/## | tr -d ' ' | tail -1)
+    set -l latest_tag_value (command git describe --abbrev=0 --tags 2> /dev/null)
     if [ "$latest_tag_value" != '' ]
       set latest_tag " $__bobthefish_latest_tag_glyph$latest_tag_value"
     end
