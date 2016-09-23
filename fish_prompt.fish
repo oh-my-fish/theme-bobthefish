@@ -20,6 +20,7 @@
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
+#     set -g theme_display_git_latest_tag no
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -51,16 +52,23 @@
 # end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
+  if [ "$theme_display_git_latest_tag" = 'yes' ]
+    set -l latest_tag_value (command git for-each-ref --sort committerdate --format '%(refname)' refs/tags | sed s#refs/tags/## | tr -d ' ' | tail -1)
+    if [ "$latest_tag_value" != '' ]
+      set latest_tag " $__bobthefish_latest_tag_glyph$latest_tag_value"
+    end
+  end
+
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
-    and echo $ref | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
+    and echo "$ref$latest_tag" | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
     and return
 
   set -l tag (command git describe --tags --exact-match ^/dev/null)
-    and echo "$__bobthefish_tag_glyph $tag"
+    and echo "$__bobthefish_tag_glyph $tag$latest_tag"
     and return
 
   set -l branch (command git show-ref --head -s --abbrev | head -n1 ^/dev/null)
-  echo "$__bobthefish_detached_glyph $branch"
+  echo "$__bobthefish_detached_glyph $branch$latest_tag"
 end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
@@ -762,6 +770,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   # Additional glyphs
   set -l __bobthefish_detached_glyph          \u27A6
   set -l __bobthefish_tag_glyph               \u2302
+  set -l __bobthefish_latest_tag_glyph        \u205D
   set -l __bobthefish_nonzero_exit_glyph      '! '
   set -l __bobthefish_superuser_glyph         '$ '
   set -l __bobthefish_bg_job_glyph            '% '
