@@ -98,6 +98,7 @@ set -g theme_color_scheme dark
 - `theme_title_use_abbreviated_path`. Default is `yes`. This means your home directory will be displayed as `~` and `/usr/local` as `/u/local`. Set it to `no` if you prefer full paths in title.
 
 **Prompt options**
+
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
@@ -157,6 +158,32 @@ Finally, you can specify your very own color scheme by setting
 `theme_color_scheme` to `user`. In that case, you also need to define some
 variables to set the colors of the prompt. See the "Colors" section of
 `fish_prompt.fish` for details.
+
+
+### Overrides
+
+You can disable the theme default greeting, vi mode prompt, right prompt, or title entirely — or override with your own — by adding custom functions to `~/.config/fish/functions`:
+
+- `~/.config/fish/functions/fish_greeting.fish`
+- `~/.config/fish/functions/fish_mode_prompt.fish`
+- `~/.config/fish/functions/fish_right_prompt.fish`
+- `~/.config/fish/functions/fish_title.fish`
+
+To disable them completely, use an empty function:
+
+```fish
+function fish_right_prompt; end
+```
+
+… Or copy one from your favorite theme, make up something of your own, or copy/paste a bobthefish default function and modify it to your taste!
+
+```fish
+function fish_greeting
+  set_color $fish_color_autosuggestion
+  echo "I'm completely operational, and all my circuits are functioning perfectly."
+  set_color normal
+end
+```
 
 
 [fish]:       https://github.com/fish-shell/fish-shell
