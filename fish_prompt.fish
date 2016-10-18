@@ -538,12 +538,16 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current python version'
-  set -l python_version_out (python --version 2>&1)
-  set -l python_version (echo $python_version_out | grep --only-matching 'Python .' | grep --only-matching '.$')
-  if echo $python_version_out | grep -q 'PyPy'
-    echo $__bobthefish_pypy_glyph
+  switch (python --version ^&1)
+    case 'Python 2*PyPy*'
+      echo $__bobthefish_pypy_glyph
+    case 'Python 3*PyPy*'
+      echo -s $__bobthefish_pypy_glyph $__bobthefish_superscript_glyph[3]
+    case 'Python 2*'
+      echo $__bobthefish_superscript_glyph[2]
+    case 'Python 3*'
+      echo $__bobthefish_superscript_glyph[3]
   end
-  echo $__bobthefish_superscript_glyph[$python_version]
 end
 
 function __bobthefish_prompt_virtualfish -S -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
