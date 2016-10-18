@@ -27,8 +27,7 @@
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
-#     set -g theme_display_vi yes
-#     set -g theme_display_vi_hide_mode default
+#     set -g theme_display_vi no
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
@@ -520,7 +519,7 @@ function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current 
 end
 
 function __bobthefish_prompt_vi -S -d 'Display vi mode'
-  [ "$theme_display_vi" = 'yes' -a "$fish_bind_mode" != "$theme_display_vi_hide_mode" ]; or return
+  [ "$theme_display_vi" != 'no' -a "$fish_key_bindings" = 'fish_vi_key_bindings' ]; or return
   switch $fish_bind_mode
     case default
       __bobthefish_start_segment $__color_vi_mode_default
@@ -528,6 +527,9 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
     case insert
       __bobthefish_start_segment $__color_vi_mode_insert
       echo -n 'I '
+    case replace-one
+      __bobthefish_start_segment $__color_vi_mode_insert
+      echo -n 'R '
     case visual
       __bobthefish_start_segment $__color_vi_mode_visual
       echo -n 'V '
