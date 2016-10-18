@@ -89,6 +89,7 @@ set -g theme_nerd_fonts yes
 set -g theme_show_exit_status yes
 set -g default_user your_normal_user
 set -g theme_color_scheme dark
+set -g theme_right_prompt yes
 ```
 
 **Title options**
@@ -103,6 +104,7 @@ set -g theme_color_scheme dark
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
+- `theme_right_prompt`. Use `no` to remove the right side prompt.
 
 **Color scheme options**
 
