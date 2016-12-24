@@ -757,9 +757,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   # Save the last status for later (do this before the `set` calls below)
   set -l last_status $status
 
-  # hg settings
-  set -l theme_hg_ignored_dirs $HOME
-
   # Powerline glyphs
   set -l __bobthefish_branch_glyph            \uE0A0
   set -l __bobthefish_right_black_arrow_glyph \uE0B0
