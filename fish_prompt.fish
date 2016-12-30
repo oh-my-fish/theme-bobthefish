@@ -34,6 +34,8 @@
 #     set -g theme_show_exit_status yes
 #     set -g default_user your_normal_user
 #     set -g theme_color_scheme dark
+#     set -g fish_prompt_pwd_dir_length 0
+#     set -g theme_project_dir_length 1
 
 # ===========================
 # Helper methods
@@ -69,7 +71,24 @@ function __bobthefish_hg_branch -S -d 'Get the current hg branch'
 end
 
 function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
-  echo -n (dirname $current_dir) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
+  set -q fish_prompt_pwd_dir_length
+    or set -l fish_prompt_pwd_dir_length 1
+
+  # Replace $HOME with ~
+  set -l real_home ~
+  set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (dirname $current_dir))
+
+  if [ $parent_dir = "/" ]
+    echo -n /
+    return
+  end
+
+  if [ $fish_prompt_pwd_dir_length -eq 0 ]
+    echo -n "$parent_dir/"
+    return
+  end
+
+  string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
 end
 
 function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
@@ -129,7 +148,17 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
 end
 
 function __bobthefish_project_pwd -S -a current_dir -d 'Print the working directory relative to project root'
-  echo "$PWD" | sed -e "s#$current_dir##g" -e 's#^/##'
+  set -q theme_project_dir_length
+    or set -l theme_project_dir_length 0
+
+  set -l project_dir (string replace -r '^'"$current_dir"'($|/)' '' $PWD)
+
+  if [ $theme_project_dir_length -eq 0 ]
+    echo -n $project_dir
+    return
+  end
+
+  string replace -ar '(\.?[^/]{'"$theme_project_dir_length"'})[^/]*/' '$1/' $project_dir
 end
 
 function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the current branch'
@@ -213,7 +242,6 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
       set directory '~'
     case '*'
       set parent    (__bobthefish_pretty_parent "$current_dir")
-      set parent    "$parent/"
       set directory (basename "$current_dir")
   end
 
