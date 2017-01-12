@@ -442,13 +442,19 @@ function __bobthefish_prompt_user -S -d 'Display actual user if different from $
   end
 
   if [ "$theme_display_hostname" = 'yes' ]
-      __bobthefish_start_segment $__color_hostname
       set -l IFS .
       hostname | read -l hostname __
       if [ "$theme_display_user" = 'yes' ]
         echo -ns '@' $hostname
+      else
+        __bobthefish_start_segment $__color_hostname
+        echo -ns $hostname
+      end
   end
-  echo -ns ' '
+
+  if [ "$theme_display_user" = 'yes' -o "$theme_display_hostname" = 'yes' ]
+      echo -ns ' '
+  end
 end
 
 function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
