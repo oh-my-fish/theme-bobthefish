@@ -822,9 +822,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   # Use prettier Nerd Fonts glyphs
   if [ "$theme_nerd_fonts" = "yes" ]
-    set __bobthefish_branch_glyph     \uF418
-    set __bobthefish_detached_glyph   \uF417
-    set __bobthefish_tag_glyph        \uF412
+    set __bobthefish_branch_glyph     \uE725
+    set __bobthefish_detached_glyph   \uE729
+    set __bobthefish_tag_glyph        \uF02B
 
     set __bobthefish_virtualenv_glyph \uE73C ' '
     set __bobthefish_ruby_glyph       \uE791 ' '
