@@ -1162,7 +1162,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set -l cyan    2aa198
       set -l green   859900
 
-      set colorfg $base3
+      set colorfg $base03
 
       set __color_initial_segment_exit     $base2 $red --bold
       set __color_initial_segment_su       $base2 $green --bold
