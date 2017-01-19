@@ -566,7 +566,7 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current python version'
-  switch (python --version ^&1)
+  switch (python --version ^| tr '\n' ' ')
     case 'Python 2*PyPy*'
       echo $__bobthefish_pypy_glyph
     case 'Python 3*PyPy*'
