@@ -398,7 +398,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
   end
 end
 
-function __bobthefish_prompt_user -S -d 'Display actual user if different from $default_user'
+function __bobthefish_prompt_user -S -d 'Display actual user if different from $default_user in a prompt segment'
   if [ "$theme_display_user" = 'yes' ]
     if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
       __bobthefish_start_segment $__color_username
