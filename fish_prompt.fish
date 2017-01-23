@@ -51,6 +51,16 @@
 #     and command hg stat > /dev/null ^&1
 # end
 
+function __bobthefish_dir_length -d "Toggle Directory length in prompt"
+    set -q fish_prompt_pwd_dir_length; or set -l fish_prompt_pwd_dir_length 0
+    if [ $fish_prompt_pwd_dir_length -eq 0 ]
+        set -U fish_prompt_pwd_dir_length 1
+    else
+        set -U fish_prompt_pwd_dir_length 0
+    end
+    commandline -f repaint
+end
+
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
     and echo $ref | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
