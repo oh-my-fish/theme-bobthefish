@@ -167,7 +167,30 @@ function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the curr
     return
   end
 
-  command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null | awk '/>/ {a += 1} /</ {b += 1} {if (a > 0 && b > 0) nextfile} END {if (a > 0 && b > 0) print "±"; else if (a > 0) print "+"; else if (b > 0) print "-"}'
+  set -l ahead 0
+  set -l behind 0
+  for line in (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
+    switch "$line"
+      case '>*'
+        if [ $behind -eq 1 ]
+          echo '±'
+          return
+        end
+        set ahead 1
+      case '<*'
+        if [ $ahead -eq 1 ]
+          echo '±'
+          return
+        end
+        set behind 1
+    end
+  end
+
+  if [ $ahead -eq 1 ]
+    echo '+'
+  else if [ $behind -eq 1 ]
+    echo '-'
+  end
 end
 
 function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind state for the current branch'
