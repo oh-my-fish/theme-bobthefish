@@ -53,7 +53,7 @@
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
-    and echo $ref | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
+    and string replace 'refs/heads/' "$__bobthefish_branch_glyph " $ref
     and return
 
   set -l tag (command git describe --tags --exact-match ^/dev/null)
@@ -492,14 +492,15 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     return
   end
 
-  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | sed -e 's#/$##')
+  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | string replace -r '/$' '')
   set -l work_dir (command git rev-parse --show-toplevel ^/dev/null)
 
   # only show work dir if it's a parent…
   if [ "$work_dir" ]
     switch $PWD/
       case $work_dir/\*
-        set work_dir (echo $work_dir | sed -e "s#^$current_dir##")
+        string match "$current_dir*" $work_dir
+          and set work_dir (string sub -s (string length $current_dir) $work_dir)
       case \*
         set -e work_dir
     end
@@ -515,7 +516,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
 
     # handle work_dir != project dir
     if [ "$work_dir" ]
-      set -l work_parent (dirname $work_dir | sed -e 's#^/##')
+      set -l work_parent (dirname $work_dir | string replace -r '^/' '')
       if [ "$work_parent" ]
         echo -n "$work_parent/"
       end
@@ -528,7 +529,11 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
 
     echo -ns $project_pwd ' '
   else
-    set project_pwd (echo $PWD | sed -e "s#^$current_dir##" -e 's#^/##')
+    set project_pwd $PWD
+    string match "$current_dir*" $project_pwd
+      and set project_pwd (string sub -s (string length $current_dir) $current_dir)
+    set project_pwd (string replace -r '^/' '' $project_pwd)
+
     if [ "$project_pwd" ]
       set -l colors $color_path
       if not [ -w "$PWD" ]
