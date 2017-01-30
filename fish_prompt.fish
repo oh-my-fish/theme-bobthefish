@@ -200,19 +200,18 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set -l fg $argv[1]
   set -e argv[1]
 
-  set_color normal # clear out anything bold or underline...
-  set_color -b $bg
-  set_color $fg $argv
-
   switch "$__bobthefish_current_bg"
     case ''
       # If there's no background, just start one
+      set_color -b $bg
+      set_color $fg $argv
       echo -n ' '
     case "$bg"
       # If the background is already the same color, draw a separator
       echo -ns $__bobthefish_right_arrow_glyph ' '
     case '*'
       # otherwise, draw the end of the previous segment and the start of the next
+      set_color -b $bg
       set_color $__bobthefish_current_bg
       echo -ns $__bobthefish_right_black_arrow_glyph ' '
       set_color $fg $argv
