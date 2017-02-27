@@ -383,7 +383,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
     and set nonzero $__bobthefish_nonzero_exit_glyph
 
   # if superuser (uid == 0)
-  [ (id -u $USER) -eq 0 ]
+  [ (id -u) -eq 0 ]
     and set superuser $__bobthefish_superuser_glyph
 
   # Jobs display
@@ -404,7 +404,12 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
 
     if [ "$superuser" ]
       set_color normal
-      set_color -b $__color_initial_segment_su
+      if [ -z "$FAKEROOTKEY" ]
+        set_color -b $__color_initial_segment_su
+      else
+        set_color -b $__color_initial_segment_exit
+      end
+
       echo -n $__bobthefish_superuser_glyph
     end
 
