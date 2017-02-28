@@ -522,8 +522,8 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   if [ "$work_dir" ]
     switch $PWD/
       case $work_dir/\*
-        string match "$current_dir*" $work_dir
-          and set work_dir (string sub -s (string length $current_dir) $work_dir)
+        string match "$current_dir*" $work_dir >/dev/null
+          and set work_dir (string sub -s (math 1 + (string length $current_dir)) $work_dir)
       case \*
         set -e work_dir
     end
@@ -555,14 +555,14 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     echo -ns $project_pwd ' '
   else
     set project_pwd $PWD
-    string match "$current_dir*" $project_pwd
-      and set project_pwd (string sub -s (string length $current_dir) $current_dir)
+    string match "$current_dir*" $project_pwd >/dev/null
+      and set project_pwd (string sub -s (math 1 + (string length $current_dir)) $project_pwd)
     set project_pwd (string replace -r '^/' '' $project_pwd)
 
     if [ "$project_pwd" ]
-      set -l colors $color_path
+      set -l colors $__color_path
       if not [ -w "$PWD" ]
-        set colors $color_path_nowrite
+        set colors $__color_path_nowrite
       end
 
       __bobthefish_start_segment $colors
@@ -893,7 +893,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       # set -g __color_path_nowrite_basename 660000 cc9999 --bold
       #
       # set -g __color_repo                  addc10 0c4801
-      # set -g __color_repo_work_tree        addc10 ffffff --bold
+      # set -g __color_repo_work_tree        333333 ffffff --bold
       # set -g __color_repo_dirty            ce000f ffffff
       # set -g __color_repo_staged           f6b117 3a2a03
       #
@@ -919,7 +919,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    magenta $colorfg --bold
 
       set __color_repo                     green $colorfg
-      set __color_repo_work_tree           green $colorfg --bold
+      set __color_repo_work_tree           black $colorfg --bold
       set __color_repo_dirty               brred $colorfg
       set __color_repo_staged              yellow $colorfg
 
@@ -945,7 +945,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    magenta $colorfg --bold
 
       set __color_repo                     green $colorfg
-      set __color_repo_work_tree           green $colorfg --bold
+      set __color_repo_work_tree           white $colorfg --bold
       set __color_repo_dirty               brred $colorfg
       set __color_repo_staged              yellow $colorfg
 
@@ -971,7 +971,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    magenta $colorfg --bold
 
       set __color_repo                     green $colorfg
-      set __color_repo_work_tree           green $colorfg --bold
+      set __color_repo_work_tree           brgrey $colorfg --bold
       set __color_repo_dirty               brred $colorfg
       set __color_repo_staged              yellow $colorfg
 
@@ -997,7 +997,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    magenta $colorfg --bold
 
       set __color_repo                     green $colorfg
-      set __color_repo_work_tree           green $colorfg --bold
+      set __color_repo_work_tree           grey $colorfg --bold
       set __color_repo_dirty               brred $colorfg
       set __color_repo_staged              yellow $colorfg
 
@@ -1029,7 +1029,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $grey $red --bold
 
       set __color_repo                     $green $grey
-      set __color_repo_work_tree           $green $grey --bold
+      set __color_repo_work_tree           $grey $grey --bold
       set __color_repo_dirty               $red $grey
       set __color_repo_staged              $yellow $grey
 
@@ -1072,7 +1072,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $base06 $base08 --bold
 
       set __color_repo                     $base0B $colorfg
-      set __color_repo_work_tree           $base0B $colorfg --bold
+      set __color_repo_work_tree           $base06 $colorfg --bold
       set __color_repo_dirty               $base08 $colorfg
       set __color_repo_staged              $base09 $colorfg
 
@@ -1115,7 +1115,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $base02 $base08 --bold
 
       set __color_repo                     $base0B $colorfg
-      set __color_repo_work_tree           $base0B $colorfg --bold
+      set __color_repo_work_tree           $base02 $colorfg --bold
       set __color_repo_dirty               $base08 $colorfg
       set __color_repo_staged              $base09 $colorfg
 
@@ -1158,7 +1158,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $base2 $orange --bold
 
       set __color_repo                     $green $colorfg
-      set __color_repo_work_tree           $green $colorfg --bold
+      set __color_repo_work_tree           $base2 $colorfg --bold
       set __color_repo_dirty               $red $colorfg
       set __color_repo_staged              $yellow $colorfg
 
@@ -1201,7 +1201,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $base02 $orange --bold
 
       set __color_repo                     $green $colorfg
-      set __color_repo_work_tree           $green $colorfg --bold
+      set __color_repo_work_tree           $base02 $colorfg --bold
       set __color_repo_dirty               $red $colorfg
       set __color_repo_staged              $yellow $colorfg
 
@@ -1237,7 +1237,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $red[1] $red[3] --bold
 
       set __color_repo                     $green[1] $green[3]
-      set __color_repo_work_tree           $green[1] $white --bold
+      set __color_repo_work_tree           $grey[1] $white --bold
       set __color_repo_dirty               $red[2] $white
       set __color_repo_staged              $orange[1] $orange[3]
 
@@ -1272,7 +1272,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set -g __color_path_nowrite_basename $red[1] $fg[2] --bold
 
       set -g __color_repo                  $green[2] $bg[1]
-      set -g __color_repo_work_tree        $green[2] $fg[2] --bold
+      set -g __color_repo_work_tree        $bg[1] $fg[2] --bold
       set -g __color_repo_dirty            $red[2] $fg[2]
       set -g __color_repo_staged           $yellow[1] $bg[1]
 
@@ -1308,7 +1308,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_path_nowrite_basename    $red[3] $red[1] --bold
 
       set __color_repo                     $green[1] $green[3]
-      set __color_repo_work_tree           $green[1] $white --bold
+      set __color_repo_work_tree           $grey[3] $white --bold
       set __color_repo_dirty               $red[2] $white
       set __color_repo_staged              $orange[1] $orange[3]
 
