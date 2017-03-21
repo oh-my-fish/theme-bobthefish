@@ -19,6 +19,7 @@
 #
 #     set -g theme_display_git no
 #     set -g theme_display_git_untracked no
+#     set -g theme_display_git_stashed no
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
@@ -468,8 +469,12 @@ end
 function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
-  set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
   set -l ahead   (__bobthefish_git_ahead)
+
+  set -l stashed ''
+  if [ "$theme_display_git_stashed" != 'no' ]
+    set stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n '$')
+  end
 
   set -l new ''
   set -l show_untracked (command git config --bool bash.showUntrackedFiles)
