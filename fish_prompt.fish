@@ -678,10 +678,11 @@ function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
     set -q RBENV_ROOT
       or set -l RBENV_ROOT $HOME/.rbenv
 
-    read -l global_ruby_version <$RBENV_ROOT/version
+    [ -e "$RBENV_ROOT/version" ]
+      and read -l global_ruby_version <"$RBENV_ROOT/version"
 
     [ "$global_ruby_version" ]
-      or set global_ruby_version system
+      or set -l global_ruby_version system
 
     [ "$ruby_version" = "$global_ruby_version" ]; and return
   else if type -q chruby
