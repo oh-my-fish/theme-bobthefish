@@ -408,9 +408,9 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
       set_color normal
       set_color -b $__color_initial_segment_exit
       if [ "$theme_show_exit_status" = 'yes' ]
-      	echo -ns $last_status ' '
+        echo -ns $last_status ' '
       else
-      	echo -n $__bobthefish_nonzero_exit_glyph
+        echo -n $__bobthefish_nonzero_exit_glyph
       end
     end
 
