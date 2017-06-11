@@ -36,6 +36,9 @@
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
+#     set -g theme_newline_cursor yes
+#     set -g theme_newline_cursor_arrow_glyph no
+#     set -g theme_newline_cursor_top_arrow_glyph no
 
 # ===========================
 # Helper methods
@@ -276,7 +279,16 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
   if [ "$__bobthefish_current_bg" != '' ]
     set_color normal
     set_color $__bobthefish_current_bg
-    echo -ns $__bobthefish_right_black_arrow_glyph ' '
+    if not [ "$theme_newline_cursor_top_arrow_glyph" = 'no' ]
+      echo -ns $__bobthefish_right_black_arrow_glyph
+    end
+    if [ "$theme_newline_cursor" = 'yes' ]
+      echo -ens "\n"
+    end
+    if not [ "$theme_newline_cursor_arrow_glyph" = 'no' ]
+      echo -ns "$__bobthefish_right_black_arrow_glyph"
+    end
+    echo -n ' '
   end
 
   set_color normal
