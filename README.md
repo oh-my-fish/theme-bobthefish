@@ -42,8 +42,6 @@ This theme is based loosely on [agnoster][agnoster].
      * Background jobs (**`%`**)
      * You currently have superpowers (**`$`**)
      * Cursor on newline
-       * Prefix newline with right arrow glyph
-       * Keep right arrow glyph on live above newline
  * Current vi mode
  * `User@Host` (unless you're the default user)
  * Current RVM, rbenv or chruby (Ruby) version
@@ -96,8 +94,6 @@ set -g theme_color_scheme dark
 set -g fish_prompt_pwd_dir_length 0
 set -g theme_project_dir_length 1
 set -g theme_newline_cursor yes
-set -g theme_newline_cursor_arrow_glyph no
-set -g theme_newline_cursor_top_arrow_glyph no
 ```
 
 **Title options**
@@ -116,8 +112,6 @@ set -g theme_newline_cursor_top_arrow_glyph no
 - `fish_prompt_pwd_dir_length`. bobthefish respects the Fish `$fish_prompt_pwd_dir_length` setting to abbreviate the prompt path. Set to `0` to show the full path, `1` (default) to show only the first character of each parent directory name, or any other number to show up to that many characters.
 - `theme_project_dir_length`. The same as `$fish_prompt_pwd_dir_length`, but for the path relative to the current project root. Defaults to `0`; set to any other number to show an abbreviated path.
 - `theme_newline_cursor`. Use `yes` to have cursor start on a new line. By default the prompt is only one line. When working with long directories it may be preferrend to have cursor on the next line.
-- `theme_newline_cursor_arrow_glyph`. Use `no` have the new line start with a blank space. By default, the default right arrow glyph will be used followed by a single space (' '). Note that this space is required to have a correctly functioning right prompt.
-- `theme_newline_cursor_top_arrow_glyph`. Use `no` to remove the right arrow glyph on the original (top) command prompt line. By default, the right arrow glyph will be used.
 
 **Color scheme options**
 
