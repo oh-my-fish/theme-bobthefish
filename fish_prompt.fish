@@ -36,6 +36,7 @@
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
+#     set -g theme_newline_cursor yes
 
 # ===========================
 # Helper methods
@@ -279,6 +280,16 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
     echo -ns $__bobthefish_right_black_arrow_glyph ' '
   end
 
+  if [ "$theme_newline_cursor" = 'yes' ]
+    echo -ens "\n"
+    set_color $fish_color_autosuggestion
+    if [ "$theme_powerline_fonts" = "no" ]
+      echo -ns '> '
+    else
+      echo -ns "$__bobthefish_right_arrow_glyph "
+    end
+  end
+
   set_color normal
   set __bobthefish_current_bg
 end
@@ -396,9 +407,9 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
       set_color normal
       set_color -b $__color_initial_segment_exit
       if [ "$theme_show_exit_status" = 'yes' ]
-      	echo -ns $last_status ' '
+        echo -ns $last_status ' '
       else
-      	echo -n $__bobthefish_nonzero_exit_glyph
+        echo -n $__bobthefish_nonzero_exit_glyph
       end
     end
 
@@ -466,15 +477,15 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
 end
 
 function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
-  set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n "$__bobthefish_git_dirty_glyph")
-  set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n "$__bobthefish_git_staged_glyph")
+  set -l dirty   (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+  set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_staged_glyph")
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$__bobthefish_git_stashed_glyph")
   set -l ahead   (__bobthefish_git_ahead)
 
   set -l new ''
-  set -l show_untracked (command git config --bool bash.showUntrackedFiles)
+  set -l show_untracked (command git config --bool bash.showUntrackedFiles ^/dev/null)
   if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
-    set new (command git ls-files --other --exclude-standard --directory --no-empty-directory)
+    set new (command git ls-files --other --exclude-standard --directory --no-empty-directory ^/dev/null)
     if [ "$new" ]
       set new "$__bobthefish_git_untracked_glyph"
     end
