@@ -884,18 +884,18 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     # set __bobthefish_git_dirty_glyph      \uF069 '' # nf-fa-asterisk
     # set __bobthefish_git_dirty_glyph      \uF41E '' # nf-oct-star
     # set __bobthefish_git_dirty_glyph      \uF44F '' # nf-oct-code
-    set __bobthefish_git_dirty_glyph      \uF448 '' # nf-oct-pencil 
+    set __bobthefish_git_dirty_glyph      \uF448 '' # nf-oct-pencil
 
     # set __bobthefish_git_staged_glyph     \uF49B '' # nf-oct-watch
-    # set __bobthefish_git_staged_glyph     \uF417 '' # nf-oct-git_commit 
-    set __bobthefish_git_staged_glyph     \uF0C7 '' # nf-fa-save 
+    # set __bobthefish_git_staged_glyph     \uF417 '' # nf-oct-git_commit
+    set __bobthefish_git_staged_glyph     \uF0C7 '' # nf-fa-save
 
     # set __bobthefish_git_stashed_glyph    \uF435 '' # nf-oct-pin
     set __bobthefish_git_stashed_glyph    \uF0C6 '' # nf-fa-paperclip
 
-    # set __bobthefish_git_untracked_glyph     \uF141 '' # nf-fa-ellipsis_h
-    # set __bobthefish_git_untracked_glyph     \uF425 '' # nf-oct-tools 
-    set __bobthefish_git_untracked_glyph     \uF128 '' # nf-fa-question 
+    # set __bobthefish_git_untracked_glyph  \uF141 '' # nf-fa-ellipsis_h
+    # set __bobthefish_git_untracked_glyph  \uF425 '' # nf-oct-tools
+    set __bobthefish_git_untracked_glyph  \uF128 '' # nf-fa-question
 
     set __bobthefish_git_ahead_glyph      \uF47B # nf-oct-chevron_up
     set __bobthefish_git_behind_glyph     \uF47C # nf-oct-chevron_down
