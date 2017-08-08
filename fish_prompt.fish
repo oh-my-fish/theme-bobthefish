@@ -586,6 +586,7 @@ end
 function __bobthefish_prompt_vi -S -d 'Display vi mode'
   [ "$theme_display_vi" != 'no' ]; or return
   [ "$fish_key_bindings" = 'fish_vi_key_bindings' \
+    -o "$fish_key_bindings" = 'hybrid_bindings' \
     -o "$fish_key_bindings" = 'fish_hybrid_key_bindings' \
     -o "$theme_display_vi" = 'force' ]; or return
   switch $fish_bind_mode
