@@ -8,15 +8,15 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
   if [ "$CMD_DURATION" -lt 5000 ]
     echo -ns $CMD_DURATION 'ms'
   else if [ "$CMD_DURATION" -lt 60000 ]
-    math "scale=1;$CMD_DURATION/1000" | string replace -r '\\.0$' ''
+    math -s1 "$CMD_DURATION/1000" | string replace -r '\\.0$' ''
     echo -n 's'
   else if [ "$CMD_DURATION" -lt 3600000 ]
     set_color $fish_color_error
-    math "scale=1;$CMD_DURATION/60000" | string replace -r '\\.0$' ''
+    math -s1 "$CMD_DURATION/60000" | string replace -r '\\.0$' ''
     echo -n 'm'
   else
     set_color $fish_color_error
-    math "scale=2;$CMD_DURATION/3600000" | string replace -r '\\.0$' ''
+    math -s2 "$CMD_DURATION/3600000" | string replace -r '(\\.0)?0$' ''
     echo -n 'h'
   end
 
