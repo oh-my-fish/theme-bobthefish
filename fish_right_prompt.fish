@@ -39,7 +39,8 @@ function __bobthefish_pretty_ms -S -a ms interval -d 'Millisecond formatting for
   end
 
   switch $FISH_VERSION
-    case 2.\*
+    # Fish 2.3 and lower doesn't know about the -s argument to math.
+    case 2.0.\* 2.1.\* 2.2.\* 2.3.\*
       math "scale=$scale;$ms/$interval_ms" | string replace -r '\\.?0*$' $interval
     case \*
       math -s$scale "$ms/$interval_ms" | string replace -r '\\.?0*$' $interval
