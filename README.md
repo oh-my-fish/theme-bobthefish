@@ -170,6 +170,9 @@ variables to set the colors of the prompt. See the "Colors" section of
 `fish_prompt.fish` for details.
 
 
+**VCS options**
+- `set -g theme_vcs_ignore_paths /some/path/* /some/other/path`. Tells bobthefish to ignore paths for Git or Mercurial. Supports glob patterns.
+
 ### Overrides
 
 You can disable the theme default greeting, vi mode prompt, right prompt, or title entirely — or override with your own — by adding custom functions to `~/.config/fish/functions`:
