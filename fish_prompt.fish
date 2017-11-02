@@ -671,6 +671,15 @@ function __bobthefish_prompt_virtualfish -S -d "Display activated virtual enviro
   echo -ns (basename "$VIRTUAL_ENV") ' '
 end
 
+function __bobthefish_prompt_virtualgo -S -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
+  [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]; and return
+  __bobthefish_start_segment $__color_virtualfish
+  echo -ns $__bobthefish_go_glyph
+  echo -ns (basename "$VIRTUALGO") ' '
+  set_color normal
+end
+
+
 function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby string'
   # Function arguments:
   # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
@@ -926,6 +935,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     set __bobthefish_virtualenv_glyph \uE73C ' '
     set __bobthefish_ruby_glyph       \uE791 ' '
+    set __bobthefish_go_glyph         \uE627 ' '
 
     set __bobthefish_vagrant_running_glyph  \uF431 # ↑ 'running'
     set __bobthefish_vagrant_poweroff_glyph \uF433 # ↓ 'poweroff'
@@ -1436,6 +1446,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_user
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
+  __bobthefish_prompt_virtualgo
 
   set -l git_root (__bobthefish_git_project_dir)
   set -l hg_root  (__bobthefish_hg_project_dir)
