@@ -36,7 +36,7 @@
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
-#     set -g theme_newline_cursor yes | clean
+#     set -g theme_newline_cursor yes
 
 # ===========================
 # Helper methods
