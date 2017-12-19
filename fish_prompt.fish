@@ -984,7 +984,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       # set -g __color_vi_mode_visual        f6b117 3a2a03 --bold
       #
       # set -g __color_vagrant               48b4fb ffffff --bold
-      # set -g __color_username              cccccc 255e87
+      # set -g __color_username              cccccc 255e87 --bold
       # set -g __color_hostname              cccccc 255e87
       # set -g __color_rvm                   af0000 cccccc --bold
       # set -g __color_virtualfish           005faf cccccc --bold
@@ -1011,7 +1011,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           bryellow $colorfg --bold
 
       set __color_vagrant                  brcyan $colorfg
-      set __color_username                 white black
+      set __color_username                 white black --bold
       set __color_hostname                 white black
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
@@ -1038,7 +1038,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           bryellow $colorfg --bold
 
       set __color_vagrant                  brcyan $colorfg
-      set __color_username                 black white
+      set __color_username                 black white --bold
       set __color_hostname                 black white
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
@@ -1065,7 +1065,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           bryellow $colorfg --bold
 
       set __color_vagrant                  brcyan $colorfg
-      set __color_username                 brgrey white
+      set __color_username                 brgrey white --bold
       set __color_hostname                 brgrey white
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
@@ -1092,7 +1092,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           bryellow $colorfg --bold
 
       set __color_vagrant                  brcyan $colorfg
-      set __color_username                 grey black
+      set __color_username                 grey black --bold
       set __color_hostname                 grey black
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
@@ -1125,7 +1125,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $yellow $grey --bold
 
       set __color_vagrant                  $blue $green --bold
-      set __color_username                 $grey $blue
+      set __color_username                 $grey $blue --bold
       set __color_hostname                 $grey $blue
       set __color_rvm                      $red $grey --bold
       set __color_virtualfish              $blue $grey --bold
@@ -1169,7 +1169,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $base09 $colorfg --bold
 
       set __color_vagrant                  $base0C $colorfg --bold
-      set __color_username                 $base02 $base0D
+      set __color_username                 $base02 $base0D --bold
       set __color_hostname                 $base02 $base0D
       set __color_rvm                      $base08 $colorfg --bold
       set __color_virtualfish              $base0D $colorfg --bold
@@ -1213,7 +1213,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $base09 $colorfg --bold
 
       set __color_vagrant                  $base0C $colorfg --bold
-      set __color_username                 $base02 $base0D
+      set __color_username                 $base02 $base0D --bold
       set __color_hostname                 $base02 $base0D
       set __color_rvm                      $base08 $colorfg --bold
       set __color_virtualfish              $base0D $colorfg --bold
@@ -1257,7 +1257,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $yellow $colorfg --bold
 
       set __color_vagrant                  $violet $colorfg --bold
-      set __color_username                 $base2 $blue
+      set __color_username                 $base2 $blue --bold
       set __color_hostname                 $base2 $blue
       set __color_rvm                      $red $colorfg --bold
       set __color_virtualfish              $cyan $colorfg --bold
@@ -1301,7 +1301,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $yellow $colorfg --bold
 
       set __color_vagrant                  $violet $colorfg --bold
-      set __color_username                 $base02 $blue
+      set __color_username                 $base02 $blue --bold
       set __color_hostname                 $base02 $blue
       set __color_rvm                      $red $colorfg --bold
       set __color_virtualfish              $cyan $colorfg --bold
@@ -1338,7 +1338,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set __color_vagrant                  $blue[1] $white --bold
-      set __color_username                 $grey[1] $blue[3]
+      set __color_username                 $grey[1] $blue[3] --bold
       set __color_hostname                 $grey[1] $blue[3]
       set __color_rvm                      $ruby_red $grey[1] --bold
       set __color_virtualfish              $blue[2] $grey[1] --bold
@@ -1374,7 +1374,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set -g __color_vi_mode_visual        $yellow[1] $bg[2] --bold
 
       set -g __color_vagrant               $blue[2] $fg[2] --bold
-      set -g __color_username              $fg[3] $blue[2]
+      set -g __color_username              $fg[3] $blue[2] --bold
       set -g __color_hostname              $fg[3] $blue[2]
       set -g __color_rvm                   $red[2] $fg[2] --bold
       set -g __color_virtualfish           $blue[2] $fg[2] --bold
@@ -1411,7 +1411,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set __color_vagrant                  $blue[1] $white --bold
-      set __color_username                 $grey[1] $blue[3]
+      set __color_username                 $grey[1] $blue[3] --bold
       set __color_hostname                 $grey[1] $blue[3]
       set __color_rvm                      $ruby_red $grey[1] --bold
       set __color_virtualfish              $blue[2] $grey[1] --bold
