@@ -456,27 +456,34 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a 
 end
 
 function __bobthefish_prompt_user -S -d 'Display actual user if different from $default_user in a prompt segment'
-  if [ "$theme_display_user" = 'yes' ]
-    if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
-      __bobthefish_start_segment $__color_username
-      echo -ns (whoami)
+  [ "$theme_display_user" = 'yes' -o -n "$SSH_CLIENT" -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
+    and set -l display_user
+  [ "$theme_display_hostname" = 'yes' -o -n "$SSH_CLIENT" ]
+    and set -l display_hostname
+
+  if set -q display_user
+    __bobthefish_start_segment $__color_username
+    echo -ns (whoami)
+  end
+
+  if set -q display_hostname
+    set -l IFS .
+    hostname | read -l hostname __
+    if set -q display_user
+      # reset colors without starting a new segment...
+      # (so we can have a bold username and non-bold hostname)
+      set_color normal
+      set_color -b $__color_hostname[1] $__color_hostname[2..-1]
+      echo -ns '@' $hostname
+    else
+      __bobthefish_start_segment $__color_hostname
+      echo -ns $hostname
     end
   end
 
-  if [ "$theme_display_hostname" = 'yes' ]
-      set -l IFS .
-      hostname | read -l hostname __
-      if [ "$theme_display_user" = 'yes' ]
-        echo -ns '@' $hostname
-      else
-        __bobthefish_start_segment $__color_hostname
-        echo -ns $hostname
-      end
-  end
-
-  if [ "$theme_display_user" = 'yes' -o "$theme_display_hostname" = 'yes' ]
-      echo -ns ' '
-  end
+  set -q display_user
+    or set -q displayed_hostname
+    and echo -ns ' '
 end
 
 function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
