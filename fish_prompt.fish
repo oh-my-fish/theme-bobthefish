@@ -93,17 +93,21 @@ function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directo
 end
 
 function __ignore_vcs_dir -d 'Identifies if dir is to be ignored for VCS highlighting'
-  for path_ in $theme_vcs_ignore_paths
-    if [ (string match (realpath $path_ ^/dev/null) (realpath $PWD ^/dev/null)) ]
-      echo 1
-      break
-    end
+  for p in $theme_vcs_ignore_paths
+    set ignore_path (realpath $p ^/dev/null)
+    string match $ignore_path $PWD >/dev/null
+      or string match $ignore_path'/*' $PWD >/dev/null
+      and echo 1
+      and return
   end
 end
 
 function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
   [ "$theme_display_git" = 'no' ]; and return
-  [ (__ignore_vcs_dir) ]; and return
+
+  set -q theme_vcs_ignore_paths
+    and [ (__ignore_vcs_dir) ]
+    and return
 
   if [ "$theme_git_worktree_support" != 'yes' ]
     command git rev-parse --show-toplevel ^/dev/null
@@ -149,7 +153,10 @@ end
 
 function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
   [ "$theme_display_hg" = 'yes' ]; or return
-  [ (__ignore_vcs_dir) ]; and return
+
+  set -q theme_vcs_ignore_paths
+    and [ (__ignore_vcs_dir) ]
+    and return
 
   set -l d $PWD
   while not [ $d = / ]

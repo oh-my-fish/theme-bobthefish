@@ -171,7 +171,7 @@ variables to set the colors of the prompt. See the "Colors" section of
 
 
 **VCS options**
-- `set -g theme_vcs_ignore_paths /some/path/* /some/other/path`. Tells bobthefish to ignore paths for Git or Mercurial. Supports glob patterns.
+- `set -g theme_vcs_ignore_paths /some/path /some/other/path{foo,bar}`. Ignore project paths for Git or Mercurial. Supports glob patterns.
 
 ### Overrides
 
