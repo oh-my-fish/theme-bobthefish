@@ -617,7 +617,7 @@ end
 
 function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environment'
   [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]; and return
-  __bobthefish_start_segment $__color_virtualfish
+  __bobthefish_start_segment $__color_virtualgo
   echo -ns $__bobthefish_go_glyph
   echo -ns (basename "$VIRTUALGO") ' '
   set_color normal
@@ -908,6 +908,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_pypy_glyph              \u1D56
 
   set -l __bobthefish_ruby_glyph              ''
+  set -l __bobthefish_go_glyph                ''
 
   # Vagrant glyphs
   set -l __bobthefish_vagrant_running_glyph   \u2191 # ↑ 'running'
@@ -945,7 +946,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     set __bobthefish_virtualenv_glyph \uE73C ' '
     set __bobthefish_ruby_glyph       \uE791 ' '
-    set __bobthefish_go_glyph         \uE627 ' '
+    set __bobthefish_go_glyph         \uE626 ' '
 
     set __bobthefish_vagrant_running_glyph  \uF431 # ↑ 'running'
     set __bobthefish_vagrant_poweroff_glyph \uF433 # ↓ 'poweroff'
@@ -1015,6 +1016,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       # set -g __color_hostname              cccccc 255e87
       # set -g __color_rvm                   af0000 cccccc --bold
       # set -g __color_virtualfish           005faf cccccc --bold
+      # set -g __color_virtualgo             005faf cccccc --bold
 
     case 'terminal' 'terminal-dark*'
       set -l colorfg black
@@ -1042,6 +1044,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 white black
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
+      set __color_virtualgo                brblue $colorfg --bold
 
     case 'terminal-light*'
       set -l colorfg white
@@ -1069,6 +1072,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 black white
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
+      set __color_virtualgo                brblue $colorfg --bold
 
     case 'terminal2' 'terminal2-dark*'
       set -l colorfg black
@@ -1096,6 +1100,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 brgrey white
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
+      set __color_virtualgo                brblue $colorfg --bold
 
     case 'terminal2-light*'
       set -l colorfg white
@@ -1123,6 +1128,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 grey black
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
+      set __color_virtualgo                brblue $colorfg --bold
 
     case 'zenburn'
       set -l grey   333333 # a bit darker than normal zenburn grey
@@ -1156,6 +1162,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $grey $blue
       set __color_rvm                      $red $grey --bold
       set __color_virtualfish              $blue $grey --bold
+      set __color_virtualgo                $blue $grey --bold
 
     case 'base16-light'
       set -l base00 181818
@@ -1200,6 +1207,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $base02 $base0D
       set __color_rvm                      $base08 $colorfg --bold
       set __color_virtualfish              $base0D $colorfg --bold
+      set __color_virtualgo                $base0D $colorfg --bold
 
     case 'base16' 'base16-dark'
       set -l base00 181818
@@ -1244,6 +1252,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $base02 $base0D
       set __color_rvm                      $base08 $colorfg --bold
       set __color_virtualfish              $base0D $colorfg --bold
+      set __color_virtualgo                $base0D $colorfg --bold
 
     case 'solarized-light'
       set -l base03  002b36
@@ -1288,6 +1297,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $base2 $blue
       set __color_rvm                      $red $colorfg --bold
       set __color_virtualfish              $cyan $colorfg --bold
+      set __color_virtualgo                $cyan $colorfg --bold
 
     case 'solarized' 'solarized-dark'
       set -l base03  002b36
@@ -1332,6 +1342,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $base02 $blue
       set __color_rvm                      $red $colorfg --bold
       set __color_virtualfish              $cyan $colorfg --bold
+      set __color_virtualgo                $cyan $colorfg --bold
 
     case 'light'
       #               light  medium dark
@@ -1369,6 +1380,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $grey[1] $blue[3]
       set __color_rvm                      $ruby_red $grey[1] --bold
       set __color_virtualfish              $blue[2] $grey[1] --bold
+      set __color_virtualgo                $blue[2] $grey[1] --bold
 
     case 'gruvbox'
       #               light  medium  dark  darkest
@@ -1405,6 +1417,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname              $fg[3] $blue[2]
       set __color_rvm                   $red[2] $fg[2] --bold
       set __color_virtualfish           $blue[2] $fg[2] --bold
+      set __color_virtualgo             $blue[2] $fg[2] --bold
 
     case '*' # default dark theme
       #               light  medium dark
@@ -1442,6 +1455,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_hostname                 $grey[1] $blue[3]
       set __color_rvm                      $ruby_red $grey[1] --bold
       set __color_virtualfish              $blue[2] $grey[1] --bold
+      set __color_virtualgo                $blue[2] $grey[1] --bold
   end
 
   # Start each line with a blank slate
