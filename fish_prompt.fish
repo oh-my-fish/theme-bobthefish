@@ -24,6 +24,7 @@
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
 #     set -g theme_display_hg yes
+#     set -g theme_hg_ignored_dirs
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
@@ -159,7 +160,8 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     and return
 
   set -l d $PWD
-  while not [ $d = / ]
+  set stop_on_dirs / $theme_hg_ignored_dirs
+  while not contains $d $stop_on_dirs
     if [ -e $d/.hg ]
       command hg root --cwd "$d" ^/dev/null
       return
@@ -466,6 +468,8 @@ function __bobthefish_prompt_user -S -d 'Display actual user if different from $
 end
 
 function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
+  set -x HGRCPATH ''  # Disable hg plugins
+  set -x HGPLAIN 1    # Ensure parsable output of hg
   set -l dirty (command hg stat; or echo -n '*')
 
   set -l flags "$dirty"
