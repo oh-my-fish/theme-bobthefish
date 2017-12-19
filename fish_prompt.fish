@@ -39,19 +39,10 @@
 #     set -g theme_project_dir_length 1
 #     set -g theme_newline_cursor yes
 
-# ===========================
+
+# ==============================
 # Helper methods
-# ===========================
-
-# function __bobthefish_in_git -S -d 'Check whether pwd is inside a git repo'
-#   command which git > /dev/null ^&1
-#     and command git rev-parse --is-inside-work-tree >/dev/null ^&1
-# end
-
-# function __bobthefish_in_hg -S -d 'Check whether pwd is inside a hg repo'
-#   command which hg > /dev/null ^&1
-#     and command hg stat > /dev/null ^&1
-# end
+# ==============================
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
@@ -93,7 +84,7 @@ function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directo
   string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
 end
 
-function __ignore_vcs_dir -d 'Identifies if dir is to be ignored for VCS highlighting'
+function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
   for p in $theme_vcs_ignore_paths
     set ignore_path (realpath $p ^/dev/null)
     string match $ignore_path $PWD >/dev/null
@@ -107,7 +98,7 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
   [ "$theme_display_git" = 'no' ]; and return
 
   set -q theme_vcs_ignore_paths
-    and [ (__ignore_vcs_dir) ]
+    and [ (__bobthefish_ignore_vcs_dir) ]
     and return
 
   if [ "$theme_git_worktree_support" != 'yes' ]
@@ -156,7 +147,7 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
   [ "$theme_display_hg" = 'yes' ]; or return
 
   set -q theme_vcs_ignore_paths
-    and [ (__ignore_vcs_dir) ]
+    and [ (__bobthefish_ignore_vcs_dir) ]
     and return
 
   set -l d $PWD
@@ -235,9 +226,10 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
   end
 end
 
-# ===========================
+
+# ==============================
 # Segment functions
-# ===========================
+# ==============================
 
 function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set -l bg $argv[1]
@@ -318,9 +310,84 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
 end
 
 
-# ===========================
-# Theme components
-# ===========================
+# ==============================
+# Status and input mode segments
+# ==============================
+
+function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a non-zero exit status, root user, and background jobs'
+  set -l nonzero
+  set -l superuser
+  set -l bg_jobs
+
+  # Last exit was nonzero
+  [ $last_status -ne 0 ]
+    and set nonzero $__bobthefish_nonzero_exit_glyph
+
+  # if superuser (uid == 0)
+  [ (id -u) -eq 0 ]
+    and set superuser $__bobthefish_superuser_glyph
+
+  # Jobs display
+  [ (jobs -l | wc -l) -gt 0 ]
+    and set bg_jobs $__bobthefish_bg_job_glyph
+
+  if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
+    __bobthefish_start_segment $__color_initial_segment_exit
+    if [ "$nonzero" ]
+      set_color normal
+      set_color -b $__color_initial_segment_exit
+      if [ "$theme_show_exit_status" = 'yes' ]
+        echo -ns $last_status ' '
+      else
+        echo -n $__bobthefish_nonzero_exit_glyph
+      end
+    end
+
+    if [ "$superuser" ]
+      set_color normal
+      if [ -z "$FAKEROOTKEY" ]
+        set_color -b $__color_initial_segment_su
+      else
+        set_color -b $__color_initial_segment_exit
+      end
+
+      echo -n $__bobthefish_superuser_glyph
+    end
+
+    if [ "$bg_jobs" ]
+      set_color normal
+      set_color -b $__color_initial_segment_jobs
+      echo -n $__bobthefish_bg_job_glyph
+    end
+  end
+end
+
+function __bobthefish_prompt_vi -S -d 'Display vi mode'
+  [ "$theme_display_vi" != 'no' ]; or return
+  [ "$fish_key_bindings" = 'fish_vi_key_bindings' \
+    -o "$fish_key_bindings" = 'hybrid_bindings' \
+    -o "$fish_key_bindings" = 'fish_hybrid_key_bindings' \
+    -o "$theme_display_vi" = 'yes' ]; or return
+  switch $fish_bind_mode
+    case default
+      __bobthefish_start_segment $__color_vi_mode_default
+      echo -n 'N '
+    case insert
+      __bobthefish_start_segment $__color_vi_mode_insert
+      echo -n 'I '
+    case replace-one
+      __bobthefish_start_segment $__color_vi_mode_insert
+      echo -n 'R '
+    case visual
+      __bobthefish_start_segment $__color_vi_mode_visual
+      echo -n 'V '
+  end
+end
+
+
+# ==============================
+# Container and VM segments
+# ==============================
 
 function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
   [ "$theme_display_vagrant" = 'yes' -a -f Vagrantfile ]; or return
@@ -401,61 +468,18 @@ function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant 
   echo -ns $vagrant_status ' '
 end
 
-function __bobthefish_prompt_docker -S -d 'Show docker machine name'
-    [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]; and return
-    __bobthefish_start_segment $__color_vagrant
-    echo -ns $DOCKER_MACHINE_NAME ' '
+function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
+  [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]; and return
+  __bobthefish_start_segment $__color_vagrant
+  echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
-function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
-  set -l nonzero
-  set -l superuser
-  set -l bg_jobs
 
-  # Last exit was nonzero
-  [ $last_status -ne 0 ]
-    and set nonzero $__bobthefish_nonzero_exit_glyph
+# ==============================
+# User / hostname info segments
+# ==============================
 
-  # if superuser (uid == 0)
-  [ (id -u) -eq 0 ]
-    and set superuser $__bobthefish_superuser_glyph
-
-  # Jobs display
-  [ (jobs -l | wc -l) -gt 0 ]
-    and set bg_jobs $__bobthefish_bg_job_glyph
-
-  if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
-    __bobthefish_start_segment $__color_initial_segment_exit
-    if [ "$nonzero" ]
-      set_color normal
-      set_color -b $__color_initial_segment_exit
-      if [ "$theme_show_exit_status" = 'yes' ]
-        echo -ns $last_status ' '
-      else
-        echo -n $__bobthefish_nonzero_exit_glyph
-      end
-    end
-
-    if [ "$superuser" ]
-      set_color normal
-      if [ -z "$FAKEROOTKEY" ]
-        set_color -b $__color_initial_segment_su
-      else
-        set_color -b $__color_initial_segment_exit
-      end
-
-      echo -n $__bobthefish_superuser_glyph
-    end
-
-    if [ "$bg_jobs" ]
-      set_color normal
-      set_color -b $__color_initial_segment_jobs
-      echo -n $__bobthefish_bg_job_glyph
-    end
-  end
-end
-
-function __bobthefish_prompt_user -S -d 'Display actual user if different from $default_user in a prompt segment'
+function __bobthefish_prompt_user -S -d 'Display current user and hostname'
   [ "$theme_display_user" = 'yes' -o -n "$SSH_CLIENT" -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
   [ "$theme_display_hostname" = 'yes' -o -n "$SSH_CLIENT" ]
@@ -485,6 +509,124 @@ function __bobthefish_prompt_user -S -d 'Display actual user if different from $
     or set -q displayed_hostname
     and echo -ns ' '
 end
+
+
+# ==============================
+# Virtual environment segments
+# ==============================
+
+function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby string'
+  # Function arguments:
+  # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
+  # - 'default' or 'current'
+  set -l IFS @
+  echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
+  set IFS -
+  echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
+  set -e __ruby
+  set -e __
+end
+
+function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
+  # More `sed`/`grep`/`cut` magic...
+  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_current_ruby (rvm-prompt i v g)
+  [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
+
+  set -l __rvm_default_ruby_gemset
+  set -l __rvm_default_ruby_interpreter
+  set -l __rvm_default_ruby_version
+  set -l __rvm_current_ruby_gemset
+  set -l __rvm_current_ruby_interpreter
+  set -l __rvm_current_ruby_version
+
+  # Parse default and current Rubies to global variables
+  __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
+  __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
+  # Show unobtrusive RVM prompt
+
+  # If interpreter differs form default interpreter, show everything:
+  if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]
+      rvm-prompt i v
+    else
+      rvm-prompt i v g
+    end
+  # If version differs form default version
+  else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
+    if [ "$__rvm_current_ruby_gemset" = 'global' ]
+      rvm-prompt v
+    else
+      rvm-prompt v g
+    end
+  # If gemset differs form default or 'global' gemset, just show it
+  else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
+    rvm-prompt g
+  end
+end
+
+function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
+  [ "$theme_display_ruby" = 'no' ]; and return
+
+  set -l ruby_version
+  if type -q rvm-prompt
+    set ruby_version (__bobthefish_rvm_info)
+  else if type -q rbenv
+    set ruby_version (rbenv version-name)
+    # Don't show global ruby version...
+    set -q RBENV_ROOT
+      or set -l RBENV_ROOT $HOME/.rbenv
+
+    [ -e "$RBENV_ROOT/version" ]
+      and read -l global_ruby_version <"$RBENV_ROOT/version"
+
+    [ "$global_ruby_version" ]
+      or set -l global_ruby_version system
+
+    [ "$ruby_version" = "$global_ruby_version" ]; and return
+  else if type -q chruby
+    set ruby_version $RUBY_VERSION
+  end
+  [ -z "$ruby_version" ]; and return
+  __bobthefish_start_segment $__color_rvm
+  echo -ns $__bobthefish_ruby_glyph $ruby_version ' '
+end
+
+function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
+  switch (python --version ^| tr '\n' ' ')
+    case 'Python 2*PyPy*'
+      echo $__bobthefish_pypy_glyph
+    case 'Python 3*PyPy*'
+      echo -s $__bobthefish_pypy_glyph $__bobthefish_superscript_glyph[3]
+    case 'Python 2*'
+      echo $__bobthefish_superscript_glyph[2]
+    case 'Python 3*'
+      echo $__bobthefish_superscript_glyph[3]
+  end
+end
+
+function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
+  [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" ]; and return
+  set -l version_glyph (__bobthefish_virtualenv_python_version)
+  if [ "$version_glyph" ]
+    __bobthefish_start_segment $__color_virtualfish
+    echo -ns $__bobthefish_virtualenv_glyph $version_glyph ' '
+  end
+  echo -ns (basename "$VIRTUAL_ENV") ' '
+end
+
+function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environment'
+  [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]; and return
+  __bobthefish_start_segment $__color_virtualfish
+  echo -ns $__bobthefish_go_glyph
+  echo -ns (basename "$VIRTUALGO") ' '
+  set_color normal
+end
+
+
+# ==============================
+# VCS segments
+# ==============================
 
 function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
   set -l dirty (command hg stat; or echo -n '*')
@@ -626,143 +768,10 @@ function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current 
   __bobthefish_path_segment "$PWD"
 end
 
-function __bobthefish_prompt_vi -S -d 'Display vi mode'
-  [ "$theme_display_vi" != 'no' ]; or return
-  [ "$fish_key_bindings" = 'fish_vi_key_bindings' \
-    -o "$fish_key_bindings" = 'hybrid_bindings' \
-    -o "$fish_key_bindings" = 'fish_hybrid_key_bindings' \
-    -o "$theme_display_vi" = 'yes' ]; or return
-  switch $fish_bind_mode
-    case default
-      __bobthefish_start_segment $__color_vi_mode_default
-      echo -n 'N '
-    case insert
-      __bobthefish_start_segment $__color_vi_mode_insert
-      echo -n 'I '
-    case replace-one
-      __bobthefish_start_segment $__color_vi_mode_insert
-      echo -n 'R '
-    case visual
-      __bobthefish_start_segment $__color_vi_mode_visual
-      echo -n 'V '
-  end
-end
 
-function __bobthefish_virtualenv_python_version -S -d 'Get current python version'
-  switch (python --version ^| tr '\n' ' ')
-    case 'Python 2*PyPy*'
-      echo $__bobthefish_pypy_glyph
-    case 'Python 3*PyPy*'
-      echo -s $__bobthefish_pypy_glyph $__bobthefish_superscript_glyph[3]
-    case 'Python 2*'
-      echo $__bobthefish_superscript_glyph[2]
-    case 'Python 3*'
-      echo $__bobthefish_superscript_glyph[3]
-  end
-end
-
-function __bobthefish_prompt_virtualfish -S -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
-  [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" ]; and return
-  set -l version_glyph (__bobthefish_virtualenv_python_version)
-  if [ "$version_glyph" ]
-    __bobthefish_start_segment $__color_virtualfish
-    echo -ns $__bobthefish_virtualenv_glyph $version_glyph ' '
-  end
-  echo -ns (basename "$VIRTUAL_ENV") ' '
-end
-
-function __bobthefish_prompt_virtualgo -S -d "Display activated virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself)"
-  [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]; and return
-  __bobthefish_start_segment $__color_virtualfish
-  echo -ns $__bobthefish_go_glyph
-  echo -ns (basename "$VIRTUALGO") ' '
-  set_color normal
-end
-
-
-function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby string'
-  # Function arguments:
-  # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
-  # - 'default' or 'current'
-  set -l IFS @
-  echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
-  set IFS -
-  echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
-  set -e __ruby
-  set -e __
-end
-
-function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
-  # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
-  set -l __rvm_current_ruby (rvm-prompt i v g)
-  [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
-
-  set -l __rvm_default_ruby_gemset
-  set -l __rvm_default_ruby_interpreter
-  set -l __rvm_default_ruby_version
-  set -l __rvm_current_ruby_gemset
-  set -l __rvm_current_ruby_interpreter
-  set -l __rvm_current_ruby_version
-
-  # Parse default and current Rubies to global variables
-  __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
-  __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
-  # Show unobtrusive RVM prompt
-
-  # If interpreter differs form default interpreter, show everything:
-  if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]
-      rvm-prompt i v
-    else
-      rvm-prompt i v g
-    end
-  # If version differs form default version
-  else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]
-      rvm-prompt v
-    else
-      rvm-prompt v g
-    end
-  # If gemset differs form default or 'global' gemset, just show it
-  else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
-    rvm-prompt g
-  end
-end
-
-function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
-  set -l ruby_version
-  if type -q rvm-prompt
-    set ruby_version (__bobthefish_rvm_info)
-  else if type -q rbenv
-    set ruby_version (rbenv version-name)
-    # Don't show global ruby version...
-    set -q RBENV_ROOT
-      or set -l RBENV_ROOT $HOME/.rbenv
-
-    [ -e "$RBENV_ROOT/version" ]
-      and read -l global_ruby_version <"$RBENV_ROOT/version"
-
-    [ "$global_ruby_version" ]
-      or set -l global_ruby_version system
-
-    [ "$ruby_version" = "$global_ruby_version" ]; and return
-  else if type -q chruby
-    set ruby_version $RUBY_VERSION
-  end
-  [ -z "$ruby_version" ]; and return
-  __bobthefish_start_segment $__color_rvm
-  echo -ns $__bobthefish_ruby_glyph $ruby_version ' '
-end
-
-function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
-  [ "$theme_display_ruby" = 'no' ]; and return
-  __bobthefish_show_ruby
-end
-
-# ===========================
+# ==============================
 # Debugging functions
-# ===========================
+# ==============================
 
 function __bobthefish_display_colors -d 'Print example prompts using the current color scheme'
   set -g __bobthefish_display_colors
@@ -869,9 +878,10 @@ function __bobthefish_maybe_display_colors -S
 
 end
 
-# ===========================
+
+# ==============================
 # Apply theme
-# ===========================
+# ==============================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   # Save the last status for later (do this before the `set` calls below)
@@ -1437,17 +1447,26 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   # Start each line with a blank slate
   set -l __bobthefish_current_bg
 
+  # Internal: used for testing color schemes
   __bobthefish_maybe_display_colors
 
+  # Status flags and input mode
   __bobthefish_prompt_status $last_status
   __bobthefish_prompt_vi
+
+  # Containers and VMs
   __bobthefish_prompt_vagrant
   __bobthefish_prompt_docker
+
+  # User / hostname info
   __bobthefish_prompt_user
+
+  # Virtual environments
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
   __bobthefish_prompt_virtualgo
 
+  # VCS
   set -l git_root (__bobthefish_git_project_dir)
   set -l hg_root  (__bobthefish_hg_project_dir)
 
