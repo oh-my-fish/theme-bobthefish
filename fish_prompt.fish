@@ -778,10 +778,7 @@ function __bobthefish_display_colors -d 'Print example prompts using the current
 end
 
 function __bobthefish_maybe_display_colors -S
-  if not set -q __bobthefish_display_colors
-    return
-  end
-
+  set -q __bobthefish_display_colors; or return
   set -e __bobthefish_display_colors
 
   echo
@@ -795,7 +792,7 @@ function __bobthefish_maybe_display_colors -S
   echo -n jobs '% '
   __bobthefish_finish_segments
   set_color normal
-  echo -n "(<- color_initial_segment)"
+  echo -n "(<- initial_segment)"
   echo
 
   __bobthefish_start_segment $__color_path
@@ -817,8 +814,7 @@ function __bobthefish_maybe_display_colors -S
   set_color -b $__color_path_basename
   echo -ns basename ' '
   __bobthefish_start_segment $__color_repo
-  echo -ns $__bobthefish_branch_glyph ' '
-  echo -n "color-repo "
+  echo -n "$__bobthefish_branch_glyph repo $__bobthefish_git_stashed_glyph "
   __bobthefish_finish_segments
   echo
 
@@ -827,8 +823,7 @@ function __bobthefish_maybe_display_colors -S
   set_color -b $__color_path_basename
   echo -ns basename ' '
   __bobthefish_start_segment $__color_repo_dirty
-  echo -ns $__bobthefish_branch_glyph ' '
-  echo -n "color-repo-dirty "
+  echo -n "$__bobthefish_tag_glyph repo_dirty $__bobthefish_git_dirty_glyph "
   __bobthefish_finish_segments
   echo
 
@@ -837,8 +832,7 @@ function __bobthefish_maybe_display_colors -S
   set_color -b $__color_path_basename
   echo -ns basename ' '
   __bobthefish_start_segment $__color_repo_staged
-  echo -ns $__bobthefish_branch_glyph ' '
-  echo -n "color-repo-staged "
+  echo -n "$__bobthefish_detached_glyph repo_staged $__bobthefish_git_staged_glyph "
   __bobthefish_finish_segments
   echo
 
@@ -854,26 +848,30 @@ function __bobthefish_maybe_display_colors -S
   echo
 
   __bobthefish_start_segment $__color_vagrant
-  echo -n color_vagrant ' '
+  echo -ns $__bobthefish_vagrant_running_glyph ' ' vagrant ' '
   __bobthefish_finish_segments
   echo
 
   __bobthefish_start_segment $__color_username
-  echo -n color_username ' '
-  __bobthefish_finish_segments
-  echo
-
-  __bobthefish_start_segment $__color_hostname
-  echo -n color_hostname ' '
+  echo -n username
+  set_color normal
+  set_color -b $__color_hostname[1] $__color_hostname[2..-1]
+  echo -ns @hostname ' '
   __bobthefish_finish_segments
   echo
 
   __bobthefish_start_segment $__color_rvm
-  echo -n color_rvm ' '
+  echo -ns $__bobthefish_ruby_glyph rvm ' '
   __bobthefish_finish_segments
+
   __bobthefish_start_segment $__color_virtualfish
-  echo -ns color_virtualfish ' '
+  echo -ns $__bobthefish_virtualenv_glyph virtualfish ' '
   __bobthefish_finish_segments
+
+  __bobthefish_start_segment $__color_virtualgo
+  echo -ns $__bobthefish_go_glyph virtualgo ' '
+  __bobthefish_finish_segments
+
   echo -e "\n"
 
 end
