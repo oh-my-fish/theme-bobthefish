@@ -328,7 +328,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     and set superuser $__bobthefish_superuser_glyph
 
   # Jobs display
-  [ (jobs -l | wc -l) -gt 0 ]
+  jobs -p >/dev/null
     and set bg_jobs $__bobthefish_bg_job_glyph
 
   if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
