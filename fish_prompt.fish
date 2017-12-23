@@ -323,8 +323,14 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
   [ $last_status -ne 0 ]
     and set nonzero $__bobthefish_nonzero_exit_glyph
 
-  # if superuser (uid == 0)
-  [ (id -u) -eq 0 ]
+  # If superuser (uid == 0)
+  #
+  # Note that iff the current user is root and '/' is not writeable by root this
+  # will be wrong. But I can't think of a single reason that would happen, and
+  # this way is 99.5% faster to check it this way, so that's a tradeoff I'm
+  # willing to make.
+  [ -w / ]
+    and [ (id -u) -eq 0 ]
     and set superuser $__bobthefish_superuser_glyph
 
   # Jobs display
