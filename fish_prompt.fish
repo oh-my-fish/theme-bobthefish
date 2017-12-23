@@ -394,9 +394,9 @@ function __bobthefish_prompt_vagrant -S -d 'Display Vagrant status'
 
   # .vagrant/machines/$machine/$provider/id
   for file in .vagrant/machines/*/*/id
-    read -l id <$file
+    read -l id <"$file"
 
-    if [ ! -z "$id" ]
+    if [ -n "$id" ]
       switch "$file"
         case '*/virtualbox/id'
           __bobthefish_prompt_vagrant_vbox $id
