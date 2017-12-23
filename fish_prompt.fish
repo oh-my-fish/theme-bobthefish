@@ -493,9 +493,23 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
 end
 
 function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
-    [ "$theme_display_k8s_context" = 'no' -o ! -f ~/.kube/config ]; and return
-    __bobthefish_start_segment $__color_k8s
-    echo -ns (grep current-context ~/.kube/config | awk '{print $2}') ' '
+  [ "$theme_display_k8s_context" = 'no' ]; and return
+
+  set -l config_paths "$HOME/.kube/config"
+  [ -n "$KUBECONFIG" ]
+    and set config_paths (string split ':' "$KUBECONFIG") $config_paths
+
+  for file in $config_paths
+    [ -f "$file" ]; or continue
+
+    while read -l key val
+      if [ "$key" = 'current-context:' ]
+        __bobthefish_start_segment $__color_k8s
+        echo -ns $val ' '
+        return
+      end
+    end < $file
+  end
 end
 
 
