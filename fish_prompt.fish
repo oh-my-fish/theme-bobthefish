@@ -44,6 +44,14 @@
 # Helper methods
 # ==============================
 
+function __bobthefish_basename -d 'basically basename, but faster'
+  string replace -r '^.*/' '' -- $argv
+end
+
+function __bobthefish_dirname -d 'basically dirname, but faster'
+  string replace -r '/[^/]+/?$' '' -- $argv
+end
+
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null)
     and string replace 'refs/heads/' "$__bobthefish_branch_glyph " $ref
@@ -69,9 +77,10 @@ function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directo
 
   # Replace $HOME with ~
   set -l real_home ~
-  set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (dirname $current_dir))
+  set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (__bobthefish_dirname $current_dir))
 
-  if [ $parent_dir = "/" ]
+  # Must check whether `$parent_dir = /` if using native dirname
+  if [ -z "$parent_dir" ]
     echo -n /
     return
   end
@@ -128,7 +137,7 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
       return
   end
 
-  set -l project_dir (dirname $git_dir)
+  set -l project_dir (__bobthefish_dirname $git_dir)
 
   switch $PWD/
     case $project_dir/\*
@@ -151,12 +160,13 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     and return
 
   set -l d $PWD
-  while not [ $d = / ]
+  # Must check whether `$d = /` if using native dirname
+  while not [ -z "$d" ]
     if [ -e $d/.hg ]
       command hg root --cwd "$d" ^/dev/null
       return
     end
-    set d (dirname $d)
+    set d (__bobthefish_dirname $d)
   end
 end
 
@@ -278,7 +288,7 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
       set directory '~'
     case '*'
       set parent    (__bobthefish_pretty_parent "$current_dir")
-      set directory (basename "$current_dir")
+      set directory (__bobthefish_basename "$current_dir")
   end
 
   echo -n $parent
@@ -737,13 +747,13 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
 
     # handle work_dir != project dir
     if [ "$work_dir" ]
-      set -l work_parent (dirname $work_dir | string replace -r '^/' '')
+      set -l work_parent (__bobthefish_dirname $work_dir)
       if [ "$work_parent" ]
         echo -n "$work_parent/"
       end
       set_color normal
       set_color -b $__color_repo_work_tree
-      echo -n (basename $work_dir)
+      echo -n (__bobthefish_basename $work_dir)
       set_color normal
       set_color -b $colors
       [ "$project_pwd" ]
