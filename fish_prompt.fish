@@ -604,8 +604,8 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
   else if type -q chruby
     set ruby_version $RUBY_VERSION
   else if type -q asdf
-    set -l asdf_current_ruby (asdf current ruby ^/dev/null); or return
-    read -l asdf_ruby_version asdf_provenance -- $asdf_current_ruby
+    asdf current ruby ^/dev/null | read -l asdf_ruby_version asdf_provenance
+      or return
 
     # If asdf changes their ruby version provenance format, update this to match
     [ "$asdf_provenance" = "(set by $HOME/.tool-versions)" ]; and return
