@@ -723,7 +723,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     return
   end
 
-  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | string replace -r '/$' '')
+  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | string trim --right --chars=/)
   set -l work_dir (command git rev-parse --show-toplevel ^/dev/null)
 
   # only show work dir if it's a parent…
@@ -765,7 +765,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     set project_pwd $PWD
     string match "$current_dir*" $project_pwd >/dev/null
       and set project_pwd (string sub -s (math 1 + (string length $current_dir)) $project_pwd)
-    set project_pwd (string replace -r '^/' '' $project_pwd)
+    set project_pwd (string trim --left --chars=/ -- $project_pwd)
 
     if [ "$project_pwd" ]
       set -l colors $__color_path
