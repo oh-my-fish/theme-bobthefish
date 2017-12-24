@@ -297,7 +297,7 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
 end
 
 function __bobthefish_finish_segments -S -d 'Close open prompt segments'
-  if [ "$__bobthefish_current_bg" != '' ]
+  if [ -n "$__bobthefish_current_bg" ]
     set_color normal
     set_color $__bobthefish_current_bg
     echo -ns $__bobthefish_right_black_arrow_glyph ' '
