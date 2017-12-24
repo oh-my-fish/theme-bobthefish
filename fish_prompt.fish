@@ -96,10 +96,11 @@ end
 function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
   for p in $theme_vcs_ignore_paths
     set ignore_path (realpath $p ^/dev/null)
-    string match $ignore_path $PWD >/dev/null
-      or string match $ignore_path'/*' $PWD >/dev/null
-      and echo 1
-      and return
+    switch $PWD/
+      case $ignore_path/\*
+        echo 1
+        return
+    end
   end
 end
 
