@@ -393,7 +393,7 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
     case insert
       __bobthefish_start_segment $__color_vi_mode_insert
       echo -n 'I '
-    case replace-one
+    case replace_one replace-one
       __bobthefish_start_segment $__color_vi_mode_insert
       echo -n 'R '
     case visual
