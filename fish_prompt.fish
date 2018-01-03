@@ -544,7 +544,7 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
   end
 
   set -q display_user
-    or set -q displayed_hostname
+    or set -q display_hostname
     and echo -ns ' '
 end
 
