@@ -504,8 +504,11 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
 
     while read -l key val
       if [ "$key" = 'current-context:' ]
+        set -l context (string trim -c '"\' ' -- $val)
+        [ -z "$context" ]; and return
+
         __bobthefish_start_segment $__color_k8s
-        echo -ns $val ' '
+        echo -ns $context ' '
         return
       end
     end < $file
