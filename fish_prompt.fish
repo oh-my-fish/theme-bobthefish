@@ -18,6 +18,7 @@
 # You can override some default prompt options in your config.fish:
 #
 #     set -g theme_display_git no
+#     set -g theme_display_git_dirty no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_git_worktree_support yes
@@ -711,17 +712,26 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
 end
 
 function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
-  set -l dirty   (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+  set -l dirty ''
+  if [ "$theme_display_git_dirty" != 'no' ]
+    set -l show_dirty (command git config --bool bash.showDirtyState ^/dev/null)
+    if [ "$show_dirty" != 'false' ]
+      set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+    end
+  end
+
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_staged_glyph")
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$__bobthefish_git_stashed_glyph")
   set -l ahead   (__bobthefish_git_ahead)
 
   set -l new ''
-  set -l show_untracked (command git config --bool bash.showUntrackedFiles ^/dev/null)
-  if [ "$theme_display_git_untracked" != 'no' -a "$show_untracked" != 'false' ]
-    set new (command git ls-files --other --exclude-standard --directory --no-empty-directory ^/dev/null)
-    if [ "$new" ]
-      set new "$__bobthefish_git_untracked_glyph"
+  if [ "$theme_display_git_untracked" != 'no' ]
+    set -l show_untracked (command git config --bool bash.showUntrackedFiles ^/dev/null)
+    if [ "$show_untracked" != 'false' ]
+      set new (command git ls-files --other --exclude-standard --directory --no-empty-directory ^/dev/null)
+      if [ "$new" ]
+        set new "$__bobthefish_git_untracked_glyph"
+      end
     end
   end
 

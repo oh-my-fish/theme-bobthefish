@@ -68,6 +68,7 @@ You can override some of the following default options in your `config.fish`:
 
 ```fish
 set -g theme_display_git no
+set -g theme_display_git_dirty no
 set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
 set -g theme_git_worktree_support yes
