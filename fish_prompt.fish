@@ -163,12 +163,12 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     and return
 
   set -l d $PWD
-  # Must check whether `$d = /` if using native dirname
   while not [ -z "$d" ]
     if [ -e $d/.hg ]
       command hg root --cwd "$d" ^/dev/null
       return
     end
+    [ "$d" = '/' ]; and return
     set d (__bobthefish_dirname $d)
   end
 end
