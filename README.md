@@ -114,7 +114,7 @@ set -g theme_newline_cursor yes
 - `theme_display_k8s_context`. By default the current kubernetes context is shown (`> kubectl config current-context`). Use `no` to hide the context.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
-- `fish_prompt_pwd_dir_length`. bobthefish respects the Fish `$fish_prompt_pwd_dir_length` setting to abbreviate the prompt path. Set to `0` to show the full path, `1` (default) to show only the first character of each parent directory name, or any other number to show up to that many characters.
+- `fish_prompt_pwd_dir_length`. bobthefish respects the Fish `$fish_prompt_pwd_dir_length` setting to abbreviate the prompt path. Set to `-1` to show basename, `0` to show the full path, `1` (default) to show only the first character of each parent directory name, or any other number to show up to that many characters.
 - `theme_project_dir_length`. The same as `$fish_prompt_pwd_dir_length`, but for the path relative to the current project root. Defaults to `0`; set to any other number to show an abbreviated path.
 - `theme_newline_cursor`. Use `yes` to have cursor start on a new line. By default the prompt is only one line. When working with long directories it may be preferrend to have cursor on the next line. Setting this to `clean` instead of `yes` suppresses the caret on the new line.
 

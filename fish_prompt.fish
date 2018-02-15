@@ -90,8 +90,10 @@ function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directo
   if [ $fish_prompt_pwd_dir_length -eq 0 ]
     echo -n "$parent_dir/"
     return
+  else if [ $fish_prompt_pwd_dir_length -eq -1 ]
+    echo -n (__bobthefish_basename "$parent_dir/")
+    return
   end
-
   string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
 end
 
