@@ -934,7 +934,7 @@ function __bobthefish_maybe_display_colors -S
   echo -ns $__bobthefish_virtualenv_glyph virtualfish ' '
   __bobthefish_finish_segments
 
-   __bobthefish_start_segment $__color_virtualgo
+  __bobthefish_start_segment $__color_virtualgo
   echo -ns $__bobthefish_go_glyph virtualgo ' '
   __bobthefish_finish_segments
 
@@ -1148,7 +1148,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_rvm                      brmagenta $colorfg --bold
       set __color_virtualfish              brblue $colorfg --bold
       set __color_virtualgo                brblue $colorfg --bold
-      set __color_desk                brblue $colorfg --bold
+      set __color_desk                     brblue $colorfg --bold
 
     case 'terminal2' 'terminal2-dark*'
       set -l colorfg black
@@ -1431,7 +1431,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
       set __color_rvm                      $red $colorfg --bold
       set __color_virtualfish              $cyan $colorfg --bold
       set __color_virtualgo                $cyan $colorfg --bold
-      set __color_desk                $cyan $colorfg --bold
+      set __color_desk                     $cyan $colorfg --bold
 
     case 'light'
       #               light  medium dark
