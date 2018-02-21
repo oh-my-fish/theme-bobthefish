@@ -21,6 +21,7 @@
 #     set -g theme_display_git_dirty no
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
+#     set -g theme_display_git_dirty_verbose yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -239,6 +240,12 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
   end
 end
 
+function __bobthefish_git_dirty_verbose -S -d 'Print a more verbose dirty state for the current working tree'
+  set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print "+" added "/-" removed }')
+  [ $status != 0 ]; and return
+
+  echo "$changes "
+end
 
 # ==============================
 # Segment functions
@@ -717,6 +724,9 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     set -l show_dirty (command git config --bool bash.showDirtyState ^/dev/null)
     if [ "$show_dirty" != 'false' ]
       set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+      if [ "$dirty" -a "$theme_display_git_dirty_verbose" = 'yes' ]
+        set dirty "$dirty"(__bobthefish_git_dirty_verbose)
+      end
     end
   end
 
