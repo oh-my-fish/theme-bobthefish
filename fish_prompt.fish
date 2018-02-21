@@ -340,7 +340,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
   #
   # Note that iff the current user is root and '/' is not writeable by root this
   # will be wrong. But I can't think of a single reason that would happen, and
-  # this way is 99.5% faster to check it this way, so that's a tradeoff I'm
+  # it is literally 99.5% faster to check it this way, so that's a tradeoff I'm
   # willing to make.
   [ -w / ]
     and [ (id -u) -eq 0 ]
