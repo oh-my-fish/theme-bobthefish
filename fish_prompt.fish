@@ -723,10 +723,9 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   if [ "$theme_display_git_dirty" != 'no' ]
     set -l show_dirty (command git config --bool bash.showDirtyState ^/dev/null)
     if [ "$show_dirty" != 'false' ]
-      if [ "$theme_display_git_dirty_verbose" = 'yes' ]
-        set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph"(__bobthefish_git_dirty_verbose))
-      else
-        set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+      set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$__bobthefish_git_dirty_glyph")
+      if [ "$dirty" -a "$theme_display_git_dirty_verbose" = 'yes' ]
+        set dirty "$dirty"(__bobthefish_git_dirty_verbose)
       end
     end
   end
