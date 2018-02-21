@@ -222,7 +222,7 @@ end
 
 function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind state for the current branch'
   set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
-  [ $status != 0 ]; and return
+    or return
 
   set -l behind (count (for arg in $commits; echo $arg; end | command grep '^<'))
   set -l ahead (count (for arg in $commits; echo $arg; end | command grep -v '^<'))
@@ -242,7 +242,7 @@ end
 
 function __bobthefish_git_dirty_verbose -S -d 'Print a more verbose dirty state for the current working tree'
   set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print "+" added "/-" removed }')
-  [ $status != 0 ]; and return
+    or return
 
   echo "$changes "
 end
