@@ -22,6 +22,7 @@
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_display_git_dirty_verbose yes
+#     set -g theme_display_git_master_branch no
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -56,9 +57,14 @@ function __bobthefish_dirname -d 'basically dirname, but faster'
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
-  set -l ref (command git symbolic-ref HEAD ^/dev/null)
-    and string replace 'refs/heads/' "$__bobthefish_branch_glyph " $ref
-    and return
+  set -l ref (command git symbolic-ref HEAD ^/dev/null); and begin
+    [ "$theme_display_git_master_branch" = 'no' -a "$ref" = 'refs/heads/master' ]
+      and echo $__bobthefish_branch_glyph
+      and return
+
+    string replace 'refs/heads/' "$__bobthefish_branch_glyph " $ref
+      and return
+  end
 
   set -l tag (command git describe --tags --exact-match ^/dev/null)
     and echo "$__bobthefish_tag_glyph $tag"
