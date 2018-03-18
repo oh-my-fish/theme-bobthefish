@@ -32,6 +32,7 @@
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
 #     set -g theme_display_hostname yes
+#     set -g theme_display_ssh yes
 #     set -g theme_display_vi no
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
@@ -535,9 +536,9 @@ end
 # ==============================
 
 function __bobthefish_prompt_user -S -d 'Display current user and hostname'
-  [ "$theme_display_user" = 'yes' -o -n "$SSH_CLIENT" -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
+  [ "$theme_display_user" = 'yes' -o \( "$theme_display_ssh" = 'yes' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
-  [ "$theme_display_hostname" = 'yes' -o -n "$SSH_CLIENT" ]
+  [ "$theme_display_hostname" = 'yes' -o \( "$theme_display_ssh" = 'yes' -a -n "$SSH_CLIENT" \) ]
     and set -l display_hostname
 
   if set -q display_user
