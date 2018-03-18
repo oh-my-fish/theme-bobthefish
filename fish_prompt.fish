@@ -32,7 +32,7 @@
 #     set -g theme_display_ruby no
 #     set -g theme_display_user yes
 #     set -g theme_display_hostname yes
-#     set -g theme_display_ssh yes
+#     set -g theme_display_ssh no
 #     set -g theme_display_vi no
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
