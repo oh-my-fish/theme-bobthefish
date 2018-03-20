@@ -583,8 +583,13 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby 
 end
 
 function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
+  # look for rvm install path
+  [ -z "$__rvm_install_path" -a -n "$rvm_path"             ] ; and set -Ux __rvm_install_path "$rvm_path"
+  [ -z "$__rvm_install_path" -a -d /usr/local/rvm          ] ; and set -Ux __rvm_install_path /usr/local/rvm
+  [ -z "$__rvm_install_path" -o ! -d "$__rvm_install_path" ] ; and set -Ux __rvm_install_path ~/.rvm
+  
   # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_default_ruby (grep GEM_HOME "$__rvm_install_path"/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
   set -l __rvm_current_ruby (rvm-prompt i v g)
   [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
 
