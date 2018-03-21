@@ -1031,7 +1031,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set __bobthefish_detached_glyph   \uF417
     set __bobthefish_tag_glyph        \uF412
 
-    set __bobthefish_virtualenv_glyph \uE73C ' '
+    set __bobthefish_virtualenv_glyph \uE73C
     set __bobthefish_ruby_glyph       \uE791 ' '
     set __bobthefish_go_glyph         \uE626 ' '
 
