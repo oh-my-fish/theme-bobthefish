@@ -22,7 +22,7 @@
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_display_git_dirty_verbose yes
-#     set -g theme_display_git_master_branch no
+#     set -g theme_display_git_master_branch yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -58,7 +58,7 @@ end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
   set -l ref (command git symbolic-ref HEAD ^/dev/null); and begin
-    [ "$theme_display_git_master_branch" = 'no' -a "$ref" = 'refs/heads/master' ]
+    [ "$theme_display_git_master_branch" != 'yes' -a "$ref" = 'refs/heads/master' ]
       and echo $__bobthefish_branch_glyph
       and return
 
