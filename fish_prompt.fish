@@ -586,9 +586,9 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
   # look for rvm install path
   set -q rvm_path
     or set -l rvm_path ~/.rvm /usr/local/rvm
-  
+
   # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default ^/dev/null | sed -e"s/'//g" | sed -e's/.*\///')
   set -l __rvm_current_ruby (rvm-prompt i v g)
   [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
 
