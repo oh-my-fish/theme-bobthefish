@@ -1,4 +1,4 @@
-function fish_greeting -d "what's up, fish?"
+function fish_greeting -d "What's up, fish?"
   set_color $fish_color_autosuggestion
   uname -nmsr
   uptime

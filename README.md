@@ -71,6 +71,8 @@ set -g theme_display_git no
 set -g theme_display_git_dirty no
 set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
+set -g theme_display_git_dirty_verbose yes
+set -g theme_display_git_master_branch yes
 set -g theme_git_worktree_support yes
 set -g theme_display_vagrant yes
 set -g theme_display_docker_machine no
@@ -78,8 +80,8 @@ set -g theme_display_k8s_context yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_ruby no
-set -g theme_display_user yes
-set -g theme_display_hostname yes
+set -g theme_display_user ssh
+set -g theme_display_hostname ssh
 set -g theme_display_vi no
 set -g theme_display_date no
 set -g theme_display_cmd_duration yes
@@ -112,6 +114,8 @@ set -g theme_newline_cursor yes
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. By default the current kubernetes context is shown (`> kubectl config current-context`). Use `no` to hide the context.
+- `theme_display_user`. If set to `yes`, display username always, if set to `ssh`, only when an SSH-Session is detected, if set to no, never.
+- `theme_display_hostname`. Same behaviour as `theme_display`.
 - `theme_show_exit_status`. Set this option to yes to have the prompt show the last exit code if it was non_zero instead of just the exclamation mark.
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
 - `fish_prompt_pwd_dir_length`. bobthefish respects the Fish `$fish_prompt_pwd_dir_length` setting to abbreviate the prompt path. Set to `0` to show the full path, `1` (default) to show only the first character of each parent directory name, or any other number to show up to that many characters.
@@ -126,8 +130,8 @@ set -g theme_newline_cursor yes
 | ![base16][base16]       | ![base16-light][base16-light]       |
 | ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
 
-You can use the function `__bobthefish_display_colors` to preview the prompts in
-the current theme.
+You can use the function `bobthefish_display_colors` to preview the prompts in
+any color scheme.
 
 Set `theme_color_scheme` in a terminal session or in your fish startup files to
 one of the following options to change the prompt colors.
