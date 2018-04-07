@@ -33,13 +33,9 @@ function fish_title
       and echo ' '
       and __display_path
   else
-      if [ "$theme_title_display_path" != 'no' ]
-        __display_path
-        echo ' '
-      end
-
       if [ $_ != 'fish' ]
         echo $argv[1]
-      end
+      else
+        __display_path
   end
 end
