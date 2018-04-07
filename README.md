@@ -86,6 +86,7 @@ set -g theme_display_vi no
 set -g theme_display_date no
 set -g theme_display_cmd_duration yes
 set -g theme_title_display_process yes
+set -g theme_title_display_command no
 set -g theme_title_display_path no
 set -g theme_title_display_user yes
 set -g theme_title_use_abbreviated_path no
@@ -104,6 +105,7 @@ set -g theme_newline_cursor yes
 **Title options**
 
 - `theme_title_display_process`. By default theme doesn't show current process name in terminal title. If you want to show it, just set to `yes`.
+- `theme_title_display_command`. Use `yes` to show current running command in title (this overrides whatever value `theme_title_display_process` has).
 - `theme_title_display_path`. Use `no` to hide current working directory from title.
 - `theme_title_display_user`. Set to `yes` to show the current user in the tab title (unless you're the default user).
 - `theme_title_use_abbreviated_path`. Default is `yes`. This means your home directory will be displayed as `~` and `/usr/local` as `/u/local`. Set it to `no` if you prefer full paths in title.
