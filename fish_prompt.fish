@@ -29,6 +29,7 @@
 #     set -g theme_display_k8s_context no
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
+#     set -g theme_display_conda no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
@@ -683,6 +684,16 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
   echo -ns (basename "$VIRTUAL_ENV") ' '
 end
 
+function __bobthefish_prompt_conda -S -d "Display current conda envrionment."
+  [ "$theme_display_conda" = 'no' -o -z "$CONDA_DEFAULT_ENV" ]; and return
+  set -l version_glyph (__bobthefish_virtualenv_python_version)
+  if [ "$version_glyph" ]
+    __bobthefish_start_segment $color_virtualfish
+    echo -ns $virtualenv_glyph $version_glyph ' '
+  end
+  echo -ns (basename "$CONDA_DEFAULT_ENV") ' '
+end
+
 function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environment'
   [ "$theme_display_virtualgo" = 'no' -o -z "$VIRTUALGO" ]; and return
   __bobthefish_start_segment $color_virtualgo
@@ -887,6 +898,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_desk
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
+  __bobthefish_prompt_conda
   __bobthefish_prompt_virtualgo
 
   # VCS
