@@ -891,7 +891,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   __bobthefish_prompt_desk
   __bobthefish_prompt_rubies
   __bobthefish_prompt_virtualfish
-  __bobthefish_prompt_conda
   __bobthefish_prompt_virtualgo
 
   # VCS
