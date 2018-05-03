@@ -57,7 +57,7 @@ function __bobthefish_dirname -d 'basically dirname, but faster'
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
-  set -l ref (command git symbolic-ref HEAD ^/dev/null); and begin
+  set -l ref (command git symbolic-ref HEAD 2>/dev/null); and begin
     [ "$theme_display_git_master_branch" != 'yes' -a "$ref" = 'refs/heads/master' ]
       and echo $branch_glyph
       and return
@@ -66,16 +66,16 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
       and return
   end
 
-  set -l tag (command git describe --tags --exact-match ^/dev/null)
+  set -l tag (command git describe --tags --exact-match 2>/dev/null)
     and echo "$tag_glyph $tag"
     and return
 
-  set -l branch (command git show-ref --head -s --abbrev | head -n1 ^/dev/null)
+  set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
   echo "$detached_glyph $branch"
 end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
-  set -l branch (command hg branch ^/dev/null)
+  set -l branch (command hg branch 2>/dev/null)
   set -l book (command hg book | command grep \* | cut -d\  -f3)
   echo "$branch_glyph $branch @ $book"
 end
@@ -104,7 +104,7 @@ end
 
 function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
   for p in $theme_vcs_ignore_paths
-    set ignore_path (realpath $p ^/dev/null)
+    set ignore_path (realpath $p 2>/dev/null)
     switch $PWD/
       case $ignore_path/\*
         echo 1
@@ -121,11 +121,11 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
     and return
 
   if [ "$theme_git_worktree_support" != 'yes' ]
-    command git rev-parse --show-toplevel ^/dev/null
+    command git rev-parse --show-toplevel 2>/dev/null
     return
   end
 
-  set -l git_dir (command git rev-parse --git-dir ^/dev/null); or return
+  set -l git_dir (command git rev-parse --git-dir 2>/dev/null); or return
 
   pushd $git_dir
   set git_dir $PWD
@@ -137,7 +137,7 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
       # TODO: fix the underlying issues then re-enable the stuff below
 
       # # if we're inside the git dir, sweet. just return that.
-      # set -l toplevel (command git rev-parse --show-toplevel ^/dev/null)
+      # set -l toplevel (command git rev-parse --show-toplevel 2>/dev/null)
       # if [ "$toplevel" ]
       #   switch $git_dir/
       #     case $toplevel/\*
@@ -155,7 +155,7 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
       return
   end
 
-  set project_dir (command git rev-parse --show-toplevel ^/dev/null)
+  set project_dir (command git rev-parse --show-toplevel 2>/dev/null)
   switch $PWD/
     case $project_dir/\*
       echo $project_dir
@@ -172,7 +172,7 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
   set -l d $PWD
   while not [ -z "$d" ]
     if [ -e $d/.hg ]
-      command hg root --cwd "$d" ^/dev/null
+      command hg root --cwd "$d" 2>/dev/null
       return
     end
     [ "$d" = '/' ]; and return
@@ -202,7 +202,7 @@ function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the curr
 
   set -l ahead 0
   set -l behind 0
-  for line in (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
+  for line in (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
     switch "$line"
       case '>*'
         if [ $behind -eq 1 ]
@@ -227,7 +227,7 @@ function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the curr
 end
 
 function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind state for the current branch'
-  set -l commits (command git rev-list --left-right '@{upstream}...HEAD' ^/dev/null)
+  set -l commits (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
     or return
 
   set -l behind (count (for arg in $commits; echo $arg; end | command grep '^<'))
@@ -444,7 +444,7 @@ end
 
 function __bobthefish_prompt_vagrant_vbox -S -a id -d 'Display VirtualBox Vagrant status'
   set -l vagrant_status
-  set -l vm_status (VBoxManage showvminfo --machinereadable $id ^/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+  set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
   switch "$vm_status"
     case 'running'
       set vagrant_status "$vagrant_status$vagrant_running_glyph"
@@ -480,7 +480,7 @@ end
 
 function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant status'
   set -l vagrant_status
-  set -l vm_status (prlctl list $id -o status ^/dev/null | command tail -1)
+  set -l vm_status (prlctl list $id -o status 2>/dev/null | command tail -1)
   switch "$vm_status"
     case 'running'
       set vagrant_status "$vagrant_status$vagrant_running_glyph"
@@ -589,7 +589,7 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     or set -l rvm_path ~/.rvm /usr/local/rvm
 
   # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default ^/dev/null | sed -e"s/'//g" | sed -e's/.*\///')
+  set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default 2>/dev/null | sed -e"s/'//g" | sed -e's/.*\///')
   set -l __rvm_current_ruby (rvm-prompt i v g)
   [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
 
@@ -647,7 +647,7 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
   else if type -q chruby
     set ruby_version $RUBY_VERSION
   else if type -q asdf
-    asdf current ruby ^/dev/null | read -l asdf_ruby_version asdf_provenance
+    asdf current ruby 2>/dev/null | read -l asdf_ruby_version asdf_provenance
       or return
 
     # If asdf changes their ruby version provenance format, update this to match
@@ -661,7 +661,7 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
-  switch (python --version ^&1 | tr '\n' ' ')
+  switch (python --version 2>&1 | tr '\n' ' ')
     case 'Python 2*PyPy*'
       echo $pypy_glyph
     case 'Python 3*PyPy*'
@@ -738,24 +738,24 @@ end
 function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
   set -l dirty ''
   if [ "$theme_display_git_dirty" != 'no' ]
-    set -l show_dirty (command git config --bool bash.showDirtyState ^/dev/null)
+    set -l show_dirty (command git config --bool bash.showDirtyState 2>/dev/null)
     if [ "$show_dirty" != 'false' ]
-      set dirty (command git diff --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$git_dirty_glyph")
+      set dirty (command git diff --no-ext-diff --quiet --exit-code 2>/dev/null; or echo -n "$git_dirty_glyph")
       if [ "$dirty" -a "$theme_display_git_dirty_verbose" = 'yes' ]
         set dirty "$dirty"(__bobthefish_git_dirty_verbose)
       end
     end
   end
 
-  set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code ^/dev/null; or echo -n "$git_staged_glyph")
+  set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code 2>/dev/null; or echo -n "$git_staged_glyph")
   set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$git_stashed_glyph")
   set -l ahead   (__bobthefish_git_ahead)
 
   set -l new ''
   if [ "$theme_display_git_untracked" != 'no' ]
-    set -l show_untracked (command git config --bool bash.showUntrackedFiles ^/dev/null)
+    set -l show_untracked (command git config --bool bash.showUntrackedFiles 2>/dev/null)
     if [ "$show_untracked" != 'false' ]
-      set new (command git ls-files --other --exclude-standard --directory --no-empty-directory ^/dev/null)
+      set new (command git ls-files --other --exclude-standard --directory --no-empty-directory 2>/dev/null)
       if [ "$new" ]
         set new "$git_untracked_glyph"
       end
@@ -793,8 +793,8 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     return
   end
 
-  set -l project_pwd (command git rev-parse --show-prefix ^/dev/null | string trim --right --chars=/)
-  set -l work_dir (command git rev-parse --show-toplevel ^/dev/null)
+  set -l project_pwd (command git rev-parse --show-prefix 2>/dev/null | string trim --right --chars=/)
+  set -l work_dir (command git rev-parse --show-toplevel 2>/dev/null)
 
   # only show work dir if it's a parent…
   if [ "$work_dir" ]
