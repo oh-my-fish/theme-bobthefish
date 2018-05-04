@@ -26,7 +26,7 @@
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
-#     set -g theme_display_k8s_context no
+#     set -g theme_display_k8s_context yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
@@ -508,7 +508,7 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
 end
 
 function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
-  [ "$theme_display_k8s_context" = 'no' ]; and return
+  [ "$theme_display_k8s_context" = 'yes' ]; or return
 
   set -l config_paths "$HOME/.kube/config"
   [ -n "$KUBECONFIG" ]
