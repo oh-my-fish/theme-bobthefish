@@ -535,6 +535,17 @@ end
 # User / hostname info segments
 # ==============================
 
+# Polyfill for fish < 2.5.0
+if not type -q prompt_hostname
+  if not set -q __bobthefish_prompt_hostname
+    set -g __bobthefish_prompt_hostname (hostname | string replace -r '\..*' '')
+  end
+
+  function prompt_hostname
+    echo $__bobthefish_prompt_hostname
+  end
+end
+
 function __bobthefish_prompt_user -S -d 'Display current user and hostname'
   [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
@@ -547,17 +558,15 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
   end
 
   if set -q display_hostname
-    set -l IFS .
-    hostname | read -l hostname __
     if set -q display_user
       # reset colors without starting a new segment...
       # (so we can have a bold username and non-bold hostname)
       set_color normal
       set_color -b $color_hostname[1] $color_hostname[2..-1]
-      echo -ns '@' $hostname
+      echo -ns '@' (prompt_hostname)
     else
       __bobthefish_start_segment $color_hostname
-      echo -ns $hostname
+      echo -ns (prompt_hostname)
     end
   end
 
