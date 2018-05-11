@@ -427,6 +427,43 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_virtualgo             $blue[2] $fg[2] --bold
       set -x color_desk                  $blue[2] $fg[2] --bold
 
+    case 'dracula'
+      set -l grey   282A36
+      set -l red    FF5555
+      set -l green  50FA7B
+      set -l yellow F1FA8C
+      set -l orange FFB86C
+      set -l blue   6272A4
+      set -l white  F8F8F2
+      set -l purple 6272A4
+
+      set -x color_initial_segment_exit     $white $red --bold
+      set -x color_initial_segment_su       $white $green --bold
+      set -x color_initial_segment_jobs     $white $blue --bold
+
+      set -x color_path                     $purple $white
+      set -x color_path_basename            $purple $white --bold
+      set -x color_path_nowrite             $purple $red
+      set -x color_path_nowrite_basename    $purple $red --bold
+
+      set -x color_repo                     $green $grey
+      set -x color_repo_work_tree           $grey $grey --bold
+      set -x color_repo_dirty               $red $grey
+      set -x color_repo_staged              $yellow $grey
+
+      set -x color_vi_mode_default          $grey $yellow --bold
+      set -x color_vi_mode_insert           $green $grey --bold
+      set -x color_vi_mode_visual           $yellow $grey --bold
+
+      set -x color_vagrant                  $blue $green --bold
+      set -x color_k8s                      $green $white --bold
+      set -x color_username                 $grey $blue --bold
+      set -x color_hostname                 $grey $blue
+      set -x color_rvm                      $red $grey --bold
+      set -x color_virtualfish              $blue $grey --bold
+      set -x color_virtualgo                $blue $grey --bold
+      set -x color_desk                     $blue $grey --bold
+
     case '*' # default dark theme
       #               light  medium dark
       #               ------ ------ ------

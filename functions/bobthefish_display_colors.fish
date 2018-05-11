@@ -4,6 +4,7 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
     solarized solarized-light \
     base16 base16-light \
     gruvbox zenburn \
+    dracula \
     terminal terminal-dark-white \
     terminal-light terminal-light-black \
     terminal2 terminal2-dark-white \
