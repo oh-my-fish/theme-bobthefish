@@ -38,11 +38,11 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   set_color normal
 
   __bobthefish_start_segment $color_initial_segment_exit
-  echo -n exit '! '
+  echo -n exit $nonzero_exit_glyph
   set_color -b $color_initial_segment_su
-  echo -n su '$ '
+  echo -n su $superuser_glyph
   set_color -b $color_initial_segment_jobs
-  echo -n jobs '% '
+  echo -n jobs $bg_job_glyph
   __bobthefish_finish_segments
   set_color normal
   echo -n "(<- initial_segment)"
