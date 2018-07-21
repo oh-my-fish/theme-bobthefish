@@ -40,6 +40,7 @@
 #     set -g default_user your_normal_user
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
+#     set -g theme_prompt_pwd_dir_length -1
 #     set -g theme_project_dir_length 1
 #     set -g theme_newline_cursor yes
 
@@ -81,8 +82,13 @@ function __bobthefish_hg_branch -S -d 'Get the current hg branch'
 end
 
 function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
-  set -q fish_prompt_pwd_dir_length
-    or set -l fish_prompt_pwd_dir_length 1
+  if not set -q theme_prompt_pwd_dir_length
+      if set -q fish_prompt_pwd_dir_length
+          set theme_prompt_pwd_dir_length "$fish_prompt_pwd_dir_length"
+      else
+          set theme_prompt_pwd_dir_length 1
+      end
+  end
 
   # Replace $HOME with ~
   set -l real_home ~
@@ -94,12 +100,14 @@ function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directo
     return
   end
 
-  if [ $fish_prompt_pwd_dir_length -eq 0 ]
+  if [ $theme_prompt_pwd_dir_length -eq 0 ]
     echo -n "$parent_dir/"
     return
+  else if [ $theme_prompt_pwd_dir_length -eq -1 ]
+    echo -n (__bobthefish_basename "$parent_dir/")
+    return
   end
-
-  string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
+  string replace -ar '(\.?[^/]{'"$theme_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
 end
 
 function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
