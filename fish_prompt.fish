@@ -330,7 +330,7 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
     else
       set prompt "$__bobthefish_right_arrow_glyph "
     end
-    echo -ns "$prompt"
+    echo -ens "$prompt"
   else if [ "$theme_newline_cursor" = 'clean' ]
     echo -ens "\n"
   end
