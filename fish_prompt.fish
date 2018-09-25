@@ -376,11 +376,14 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
     if [ "$theme_newline_cursor" = 'yes' ]
         echo -ens "\n"
         set_color $fish_color_autosuggestion
-        if [ "$theme_powerline_fonts" = "no" ]
-            echo -ns '> '
+        if [ "$theme_newline_prompt" != '' ]
+            set prompt "$theme_newline_prompt"
+        else if [ "$theme_powerline_fonts" = "no" ]
+            set prompt '> '
         else
-            echo -ns "$right_arrow_glyph "
+            set prompt "$right_arrow_glyph "
         end
+        echo -ns "$prompt"
     else if [ "$theme_newline_cursor" = 'clean' ]
         echo -ens "\n"
     end
