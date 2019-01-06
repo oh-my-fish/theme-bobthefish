@@ -579,6 +579,61 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_virtualgo                $base09 $colorfg --bold
       set -x color_desk                     $base09 $colorfg --bold
 
+    case 'jellybeans' # https://github.com/nanotech/jellybeans.vim
+      set -l bg             151515
+      set -l darker_grey    1c1c1c
+      set -l dark_grey      262626
+      set -l grey           888888
+      set -l blue_grey      a0a8b0
+      set -l light_grey     d8dee9
+      set -l white          ffffff
+      set -l dark_red       902020
+      set -l red            cf6a4c
+      set -l red_orange     ffb964
+      set -l bright_orange  fad07a
+      set -l pale_gold      dad085
+      set -l pink           f0a0c0
+      set -l lilac          c6b6ee
+      set -l dark_blue      2b5b77
+      set -l deep_blue      0d61ac
+      set -l blue           8197bf
+      set -l bright_blue    7697d6
+      set -l cyan           8fbfdc
+      set -l blue_green     668799
+      set -l green          799d6a
+      set -l bright_green   70b950
+      set -l brighter_green 65c254
+      set -l light_green    99ad6a
+      set -l dark_green     556633
+
+      set -x color_initial_segment_exit  $dark_red $white  --bold
+      set -x color_initial_segment_su    $red_orange $darker_grey --bold
+      set -x color_initial_segment_jobs  $lilac $darker_grey --bold
+
+      set -x color_path                  $dark_grey $light_grey
+      set -x color_path_basename         $dark_grey $light_grey --bold
+      set -x color_path_nowrite          $dark_grey $red_orange
+      set -x color_path_nowrite_basename $dark_grey $red_orange --bold
+
+      set -x color_repo                  $light_green $darker_grey
+      set -x color_repo_work_tree        $dark_grey $light_grey --bold
+      set -x color_repo_dirty            $red $darker_grey
+      set -x color_repo_staged           $pale_gold $darker_grey
+
+      set -x color_vi_mode_default       $bright_blue $darker_grey --bold
+      set -x color_vi_mode_insert        $lilac $darker_grey --bold
+      set -x color_vi_mode_visual        $cyan $darker_grey --bold
+
+      set -x color_username              $dark_grey $blue_grey --bold
+      set -x color_hostname              $dark_grey $blue_grey
+
+      set -x color_vagrant               $lilac $darker_grey --bold
+      set -x color_k8s                   $pale_gold $darker_grey --bold
+      set -x color_rvm                   $pink $darker_grey --bold
+      set -x color_virtualfish           $cyan $darker_grey --bold
+      set -x color_virtualgo             $light_green $darker_grey --bold
+      set -x color_desk                  $light_grey $darker_grey --bold
+
     case '*' # default dark theme
       #               light  medium dark
       #               ------ ------ ------
