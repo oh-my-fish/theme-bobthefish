@@ -124,7 +124,31 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
     and return
 
     if [ "$theme_git_worktree_support" != 'yes' ]
-        command git rev-parse --show-toplevel 2>/dev/null
+        set -l git_toplevel (command git rev-parse --show-toplevel 2>/dev/null)
+
+        [ -z "$git_toplevel" ]
+        and return
+
+        # If there are no symlinks, just use git toplevel
+        switch $PWD/
+            case $git_toplevel/\*
+                echo $git_toplevel
+                return
+        end
+
+        # Otherwise, we need to find the equivalent directory in the $PWD
+        set -l d $PWD
+        while not [ -z "$d" ]
+            if [ (realpath "$d") = "$git_toplevel" ]
+                echo $d
+                return
+            end
+
+            [ "$d" = '/' ]
+            and return
+
+            set d (__bobthefish_dirname $d)
+        end
         return
     end
 
