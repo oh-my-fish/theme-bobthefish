@@ -5,4 +5,5 @@
 #
 #     set -g theme_display_vi no
 
-function fish_mode_prompt; end
+function fish_mode_prompt
+end
