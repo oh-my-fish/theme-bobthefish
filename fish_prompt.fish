@@ -81,13 +81,13 @@ function __bobthefish_hg_branch -S -d 'Get the current hg branch'
     echo "$branch_glyph $branch @ $book"
 end
 
-function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
+function __bobthefish_pretty_parent -S -a child_dir -d 'Print a parent directory, shortened to fit the prompt'
     set -q fish_prompt_pwd_dir_length
     or set -l fish_prompt_pwd_dir_length 1
 
     # Replace $HOME with ~
     set -l real_home ~
-    set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (__bobthefish_dirname $current_dir))
+    set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (__bobthefish_dirname $child_dir))
 
     # Must check whether `$parent_dir = /` if using native dirname
     if [ -z "$parent_dir" ]
@@ -187,11 +187,11 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     end
 end
 
-function __bobthefish_project_pwd -S -a current_dir -d 'Print the working directory relative to project root'
+function __bobthefish_project_pwd -S -a project_root_dir -d 'Print the working directory relative to project root'
     set -q theme_project_dir_length
     or set -l theme_project_dir_length 0
 
-    set -l project_dir (string replace -r '^'"$current_dir"'($|/)' '' $PWD)
+    set -l project_dir (string replace -r '^'"$project_root_dir"'($|/)' '' $PWD)
 
     if [ $theme_project_dir_length -eq 0 ]
         echo -n $project_dir
@@ -291,11 +291,11 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
     set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened form of a directory'
+function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened form of a directory'
     set -l segment_color $color_path
     set -l segment_basename_color $color_path_basename
 
-    if not [ -w "$current_dir" ]
+    if not [ -w "$segment_dir" ]
         set segment_color $color_path_nowrite
         set segment_basename_color $color_path_nowrite_basename
     end
@@ -305,14 +305,14 @@ function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened for
     set -l directory
     set -l parent
 
-    switch "$current_dir"
+    switch "$segment_dir"
         case /
             set directory '/'
         case "$HOME"
             set directory '~'
         case '*'
-            set parent (__bobthefish_pretty_parent "$current_dir")
-            set directory (__bobthefish_basename "$current_dir")
+            set parent (__bobthefish_pretty_parent "$segment_dir")
+            set directory (__bobthefish_basename "$segment_dir")
     end
 
     echo -n $parent
@@ -757,7 +757,7 @@ end
 # VCS segments
 # ==============================
 
-function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg state'
+function __bobthefish_prompt_hg -S -a hg_root_dir -d 'Display the actual hg state'
     set -l dirty (command hg stat; or echo -n '*')
 
     set -l flags "$dirty"
@@ -769,7 +769,7 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
         set flag_colors $color_repo_dirty
     end
 
-    __bobthefish_path_segment $current_dir
+    __bobthefish_path_segment $hg_root_dir
 
     __bobthefish_start_segment $flag_colors
     echo -ns $hg_glyph ' '
@@ -778,7 +778,7 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
     echo -ns (__bobthefish_hg_branch) $flags ' '
     set_color normal
 
-    set -l project_pwd (__bobthefish_project_pwd $current_dir)
+    set -l project_pwd (__bobthefish_project_pwd $hg_root_dir)
     if [ "$project_pwd" ]
         if [ -w "$PWD" ]
             __bobthefish_start_segment $color_path
@@ -790,7 +790,7 @@ function __bobthefish_prompt_hg -S -a current_dir -d 'Display the actual hg stat
     end
 end
 
-function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
+function __bobthefish_prompt_git -S -a git_root_dir -d 'Display the actual git state'
     set -l dirty ''
     if [ "$theme_display_git_dirty" != 'no' ]
         set -l show_dirty (command git config --bool bash.showDirtyState 2>/dev/null)
@@ -829,14 +829,14 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
         set flag_colors $color_repo_staged
     end
 
-    __bobthefish_path_segment $current_dir
+    __bobthefish_path_segment $git_root_dir
 
     __bobthefish_start_segment $flag_colors
     echo -ns (__bobthefish_git_branch) $flags ' '
     set_color normal
 
     if [ "$theme_git_worktree_support" != 'yes' ]
-        set -l project_pwd (__bobthefish_project_pwd $current_dir)
+        set -l project_pwd (__bobthefish_project_pwd $git_root_dir)
         if [ "$project_pwd" ]
             if [ -w "$PWD" ]
                 __bobthefish_start_segment $color_path
@@ -856,8 +856,8 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     if [ "$work_dir" ]
         switch $PWD/
             case $work_dir/\*
-                string match "$current_dir*" $work_dir >/dev/null
-                and set work_dir (string sub -s (math 1 + (string length $current_dir)) $work_dir)
+                string match "$git_root_dir*" $work_dir >/dev/null
+                and set work_dir (string sub -s (math 1 + (string length $git_root_dir)) $work_dir)
             case \*
                 set -e work_dir
         end
@@ -892,8 +892,8 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
     else
         set project_pwd $PWD
 
-        string match "$current_dir*" $project_pwd >/dev/null
-        and set project_pwd (string sub -s (math 1 + (string length $current_dir)) $project_pwd)
+        string match "$git_root_dir*" $project_pwd >/dev/null
+        and set project_pwd (string sub -s (math 1 + (string length $git_root_dir)) $project_pwd)
 
         set project_pwd (string trim --left --chars=/ -- $project_pwd)
 
@@ -951,21 +951,21 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_virtualgo
 
     # VCS
-    set -l git_root (__bobthefish_git_project_dir)
-    set -l hg_root (__bobthefish_hg_project_dir)
+    set -l git_root_dir (__bobthefish_git_project_dir)
+    set -l hg_root_dir (__bobthefish_hg_project_dir)
 
-    if [ "$git_root" -a "$hg_root" ]
+    if [ "$git_root_dir" -a "$hg_root_dir" ]
         # only show the closest parent
-        switch $git_root
-            case $hg_root\*
-                __bobthefish_prompt_git $git_root
+        switch $git_root_dir
+            case $hg_root_dir\*
+                __bobthefish_prompt_git $git_root_dir
             case \*
-                __bobthefish_prompt_hg $hg_root
+                __bobthefish_prompt_hg $hg_root_dir
         end
-    else if [ "$git_root" ]
-        __bobthefish_prompt_git $git_root
-    else if [ "$hg_root" ]
-        __bobthefish_prompt_hg $hg_root
+    else if [ "$git_root_dir" ]
+        __bobthefish_prompt_git $git_root_dir
+    else if [ "$hg_root_dir" ]
+        __bobthefish_prompt_hg $hg_root_dir
     else
         __bobthefish_prompt_dir
     end
