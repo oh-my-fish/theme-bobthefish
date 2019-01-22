@@ -285,6 +285,17 @@ function __bobthefish_git_dirty_verbose -S -d 'Print a more verbose dirty state 
     echo "$changes " | string replace -r '(\+0/(-0)?|/-0)' ''
 end
 
+function __bobthefish_git_stashed -S -d 'Print the stashed state for the current branch'
+    set -l stashes (command git rev-list --walk-reflogs --count refs/stash 2>/dev/null)
+    or return
+
+    echo -n "$git_stashed_glyph"
+    if [ "$theme_display_git_stashed_verbose" = 'yes' ]
+        echo -n $stashes
+    end
+
+end
+
 
 # ==============================
 # Segment functions
@@ -828,7 +839,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -d 'Display the actual git s
     end
 
     set -l staged (command git diff --cached --no-ext-diff --quiet --exit-code 2>/dev/null; or echo -n "$git_staged_glyph")
-    set -l stashed (command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$git_stashed_glyph")
+    set -l stashed (__bobthefish_git_stashed)
     set -l ahead (__bobthefish_git_ahead)
 
     set -l new ''
