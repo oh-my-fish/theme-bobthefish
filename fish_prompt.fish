@@ -291,7 +291,7 @@ function __bobthefish_git_stashed -S -d 'Print the stashed state for the current
 
     echo -n "$git_stashed_glyph"
     if [ "$theme_display_git_stashed_verbose" = 'yes' ]
-        echo -n (command git rev-list --walk-reflogs --count refs/stash 2>/dev/null)
+        command git rev-list --walk-reflogs --count refs/stash 2>/dev/null
     end
 
 end
