@@ -44,8 +44,8 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   set -x git_minus_glyph      '-'
   set -x git_plus_minus_glyph '±'
 
-  # Disable Powerline fonts
-  if [ "$theme_powerline_fonts" = "no" ]
+  # Disable Powerline fonts (unless we're using nerd fonts instead)
+  if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
     set branch_glyph            \u2387
     set right_black_arrow_glyph ''
     set right_arrow_glyph       ''
