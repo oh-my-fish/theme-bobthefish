@@ -72,6 +72,7 @@ set -g theme_display_git_dirty no
 set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
 set -g theme_display_git_dirty_verbose yes
+set -g theme_display_git_stashed_verbose yes
 set -g theme_display_git_master_branch yes
 set -g theme_git_worktree_support yes
 set -g theme_display_vagrant yes
@@ -125,7 +126,7 @@ set -g theme_newline_cursor yes
 **Color scheme options**
 
 | ![dark][dark]           | ![light][light]                     |
-|-------------------------|-------------------------------------|
+| ----------------------- | ----------------------------------- |
 | ![solarized][solarized] | ![solarized-light][solarized-light] |
 | ![base16][base16]       | ![base16-light][base16-light]       |
 | ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |

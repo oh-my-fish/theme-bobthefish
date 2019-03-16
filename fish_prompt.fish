@@ -22,6 +22,7 @@
 #     set -g theme_display_git_untracked no
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_display_git_dirty_verbose yes
+#     set -g theme_display_git_stashed_verbose yes
 #     set -g theme_display_git_master_branch yes
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
@@ -292,7 +293,8 @@ function __bobthefish_git_stashed -S -d 'Print the stashed state for the current
 
         echo -n "$git_stashed_glyph$stashed"
     else
-        command git rev-parse --verify --quiet refs/stash >/dev/null; and echo -n "$git_stashed_glyph"
+        command git rev-parse --verify --quiet refs/stash >/dev/null
+        and echo -n "$git_stashed_glyph"
     end
 end
 
