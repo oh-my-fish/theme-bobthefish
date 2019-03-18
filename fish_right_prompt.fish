@@ -27,7 +27,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
     or echo -ns ' ' $__bobthefish_left_arrow_glyph
 end
 
-function __bobthefish_pretty_ms -S -a ms interval -d 'Millisecond formatting for humans'
+function __bobthefish_pretty_ms -S -a ms -a interval -d 'Millisecond formatting for humans'
     set -l interval_ms
     set -l scale 1
 
