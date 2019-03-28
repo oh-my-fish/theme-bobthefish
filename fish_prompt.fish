@@ -969,14 +969,14 @@ end
 # ==============================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
+    # Save the last status for later (do this before anything else)
+    set -l last_status $status
+
     # Use a simple prompt on dumb terminals.
     if [ "$TERM" = "dumb" ]
         echo "> "
         return
     end
-
-    # Save the last status for later (do this before the `set` calls below)
-    set -l last_status $status
 
     __bobthefish_glyphs
     __bobthefish_colors $theme_color_scheme
