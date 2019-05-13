@@ -70,6 +70,10 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
         and echo $branch_glyph
         and return
 
+        [ "$theme_truncate_git_branch" != 'yes' ]
+        and string replace 'refs/heads/' "$branch_glyph " $ref
+        and return
+
         # truncate the middle of the branch name, but only if it's 25+ characters
         set -l truncname (string replace -r '^(.{28}).{3,}(.{5})$' "\$1…\$2" $ref)
 
