@@ -801,6 +801,20 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
+function __bobthefish_prompt_nix -S -d 'Display current nix environment'
+    [ "$theme_display_nix" = 'no' -o -z "$IN_NIX_SHELL" ]
+    and return
+
+    if [ "$IN_NIX_SHELL" = "impure" ]
+        set say_what "nix"
+    else
+        set say_what "pure"
+    end
+
+    __bobthefish_start_segment $color_nix
+    echo -ns $nix_glyph' ' "$say_what" ' '
+    set_color normal
+end
 
 # ==============================
 # VCS segments
@@ -1000,6 +1014,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_user
 
     # Virtual environments
+    __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
