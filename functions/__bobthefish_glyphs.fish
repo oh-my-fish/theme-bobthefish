@@ -62,6 +62,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set virtualenv_glyph \uE73C ' '
     set ruby_glyph       \uE791 ' '
     set go_glyph         \uE626 ' '
+    set node_glyph       \uF898 ' '
 
     set vagrant_running_glyph  \uF431 # ↑ 'running'
     set vagrant_poweroff_glyph \uF433 # ↓ 'poweroff'
