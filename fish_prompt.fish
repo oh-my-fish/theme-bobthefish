@@ -579,10 +579,7 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
     echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
-function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
-    [ "$theme_display_k8s_context" = 'yes' ]
-    or return
-
+function __bobthefish_k8s_context -S -d 'Get the current k8s context'
     set -l config_paths "$HOME/.kube/config"
     [ -n "$KUBECONFIG" ]
     and set config_paths (string split ':' "$KUBECONFIG") $config_paths
@@ -595,14 +592,36 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
             if [ "$key" = 'current-context:' ]
                 set -l context (string trim -c '"\' ' -- $val)
                 [ -z "$context" ]
-                and return
+                and return 1
 
-                __bobthefish_start_segment $color_k8s
-                echo -ns $context ' '
+                echo $context
                 return
             end
         end <$file
     end
+
+    return 1
+end
+
+function __bobthefish_k8s_namespace -S -d 'Get the current k8s namespace'
+    kubectl config view --minify --output "jsonpath={..namespace}"
+end
+
+function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
+    [ "$theme_display_k8s_context" = 'yes' ]
+    or return
+
+    set -l context (__bobthefish_k8s_context)
+    or return
+
+    set -l namespace (__bobthefish_k8s_namespace)
+
+    set -l segment $k8s_glyph " " $context
+    [ -n "$namespace" ]
+    and set segment $segment ":" $namespace
+
+    __bobthefish_start_segment $color_k8s
+    echo -ns $segment " "
 end
 
 
