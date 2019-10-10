@@ -39,6 +39,7 @@
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
 #     set -g theme_show_exit_status yes
+#     set -g theme_show_job_number yes
 #     set -g default_user your_normal_user
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
@@ -420,7 +421,8 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     and set superuser 1
 
     # Jobs display
-    jobs -p >/dev/null
+    set num_bg_jobs (jobs -p | wc -l)
+    [ $num_bg_jobs -gt 0 ]
     and set bg_jobs 1
 
     if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
@@ -449,7 +451,11 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
         if [ "$bg_jobs" ]
             set_color normal
             set_color -b $color_initial_segment_jobs
-            echo -n $bg_job_glyph
+            if [ "$theme_show_job_number" = 'yes' ]
+                echo -ns $bg_job_glyph $bg_jobs ' '
+            else
+                echo -n $bg_job_glyph
+            end
         end
     end
 end
