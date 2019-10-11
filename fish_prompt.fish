@@ -421,9 +421,14 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     and set superuser 1
 
     # Jobs display
-    set num_bg_jobs (jobs -p | wc -l)
-    [ $num_bg_jobs -gt 0 ]
-    and set bg_jobs 1
+    if [ "$theme_display_jobs_verbose" = 'yes' ]
+        set bg_jobs (jobs -p | wc -l)
+        [ "$bg_jobs" -eq 0 ]
+        and set bg_jobs # clear it out so it doesn't show when `0`
+    else
+        jobs -p >/dev/null
+        and set bg_jobs 1
+    end
 
     if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
         __bobthefish_start_segment $color_initial_segment_exit
