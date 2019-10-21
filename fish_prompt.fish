@@ -33,6 +33,7 @@
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
+#     set -g theme_display_sudo_user yes
 #     set -g theme_display_vi no
 #     set -g theme_display_nvm yes
 #     set -g theme_avoid_ambiguous_glyphs yes
@@ -654,8 +655,11 @@ if not type -q prompt_hostname
 end
 
 function __bobthefish_prompt_user -S -d 'Display current user and hostname'
-    [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) -o -n "$SUDO_USER" ]
+    [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
+
+    [ "$theme_display_sudo_user" = 'yes' -a -n "$SUDO_USER" ]
+    and set -l display_sudo_user
 
     [ "$theme_display_hostname" = 'yes' -o \( "$theme_display_hostname" != 'no' -a -n "$SSH_CLIENT" \) ]
     and set -l display_hostname
@@ -663,6 +667,15 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     if set -q display_user
         __bobthefish_start_segment $color_username
         echo -ns (whoami)
+    end
+
+    if set -q display_sudo_user
+        if set -q display_user
+            echo -ns ' '
+        else
+            __bobthefish_start_segment $color_username
+        end
+        echo -ns "($SUDO_USER)"
     end
 
     if set -q display_hostname
