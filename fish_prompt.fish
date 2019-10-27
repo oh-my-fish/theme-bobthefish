@@ -679,7 +679,7 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     end
 
     if set -q display_hostname
-        if set -q display_user
+        if set -q display_user; or set -q display_sudo_user
             # reset colors without starting a new segment...
             # (so we can have a bold username and non-bold hostname)
             set_color normal
