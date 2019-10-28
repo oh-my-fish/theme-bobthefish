@@ -113,8 +113,7 @@ function __bobthefish_pretty_parent -S -a child_dir -d 'Print a parent directory
 end
 
 function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
-    for p in $theme_vcs_ignore_paths
-        set ignore_path (realpath $p 2>/dev/null)
+    for ignore_path in $theme_vcs_ignore_paths
         switch $PWD/
             case $ignore_path/\*
                 echo 1
