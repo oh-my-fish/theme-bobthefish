@@ -60,12 +60,6 @@ function __bobthefish_dirname -d 'basically dirname, but faster'
     string replace -r '/[^/]+/?$' '' -- $argv
 end
 
-function __bobthefish_pwd -d 'Get a normalized $PWD'
-    # The pwd builtin accepts `-P` on at least Fish 3.x, but fall back to $PWD if that doesn't work
-    builtin pwd -P 2>/dev/null
-    or echo $PWD
-end
-
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l ref (command git symbolic-ref HEAD 2>/dev/null)
     and begin
@@ -118,10 +112,10 @@ function __bobthefish_pretty_parent -S -a child_dir -d 'Print a parent directory
     string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' "$parent_dir/"
 end
 
-function __bobthefish_ignore_vcs_dir -a real_pwd -d 'Check whether the current directory should be ignored as a VCS segment'
+function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
     for p in $theme_vcs_ignore_paths
         set ignore_path (realpath $p 2>/dev/null)
-        switch $real_pwd/
+        switch $PWD/
             case $ignore_path/\*
                 echo 1
                 return
@@ -129,108 +123,48 @@ function __bobthefish_ignore_vcs_dir -a real_pwd -d 'Check whether the current d
     end
 end
 
-function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git project base directory'
-    [ "$theme_display_git" = 'no' ]
-    and return
-
-    set -q theme_vcs_ignore_paths
-    and [ (__bobthefish_ignore_vcs_dir $real_pwd) ]
-    and return
-
-    if [ "$theme_git_worktree_support" != 'yes' ]
-        set -l git_toplevel (command git rev-parse --show-toplevel 2>/dev/null)
-
-        [ -z "$git_toplevel" ]
-        and return
-
-        # If there are no symlinks, just use git toplevel
-        switch $real_pwd/
-            case $git_toplevel/\*
-                echo $git_toplevel
-                return
-        end
-
-        # Otherwise, we need to find the equivalent directory in the $PWD
-        set -l d $real_pwd
-        while not [ -z "$d" ]
-            if [ (realpath "$d") = "$git_toplevel" ]
-                echo $d
-                return
-            end
-
-            [ "$d" = '/' ]
-            and return
-
-            set d (__bobthefish_dirname $d)
-        end
-        return
-    end
-
-    set -l git_dir (command git rev-parse --git-dir 2>/dev/null)
+function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
+    [ "$theme_display_git" = 'yes' ]
     or return
 
-    pushd $git_dir
-    set git_dir $real_pwd
-    popd
+    set -q theme_vcs_ignore_paths
+    and [ (__bobthefish_ignore_vcs_dir) ]
+    and return
 
-    switch $real_pwd/
-        case $git_dir/\*
-            # Nothing works quite right if we're inside the git dir
-            # TODO: fix the underlying issues then re-enable the stuff below
+    set -l is_inside_work_tree (command git rev-parse --is-inside-work-tree 2>/dev/null)
+    or return # we are not in a git repo
 
-            # # if we're inside the git dir, sweet. just return that.
-            # set -l toplevel (command git rev-parse --show-toplevel 2>/dev/null)
-            # if [ "$toplevel" ]
-            #   switch $git_dir/
-            #     case $toplevel/\*
-            #       echo $git_dir
-            #   end
-            # end
-            return
-    end
+    [ "$is_inside_work_tree" = 'false' ]
+    and return # we are in a git repo but not in the tree; we are probably in .git
 
-    set -l project_dir (__bobthefish_dirname $git_dir)
-
-    switch $real_pwd/
-        case $project_dir/\*
-            echo $project_dir
-            return
-    end
-
-    set project_dir (command git rev-parse --show-toplevel 2>/dev/null)
-    switch $real_pwd/
-        case $project_dir/\*
-            echo $project_dir
-    end
+    set -l prefix (string trim -r -c / (command git rev-parse --show-prefix))
+    set -l prjdir (string replace -r "/$prefix\$" '' $PWD)
+    [ -z "$prjdir" ]; and set prjdir '/' # handle edge case where prjdir is /
+    echo $prjdir
 end
 
-function __bobthefish_hg_project_dir -S -a real_pwd -d 'Print the current hg project base directory'
+function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
     [ "$theme_display_hg" = 'yes' ]
     or return
 
     set -q theme_vcs_ignore_paths
-    and [ (__bobthefish_ignore_vcs_dir $real_pwd) ]
+    and [ (__bobthefish_ignore_vcs_dir) ]
     and return
 
-    set -l d $real_pwd
-    while not [ -z "$d" ]
-        if [ -e $d/.hg ]
-            command hg root --cwd "$d" 2>/dev/null
-            return
-        end
+    set -l prjdir (command hg root --cwd $PWD 2>/dev/null)
+    or return # we are not in an hg repo
 
-        [ "$d" = '/' ]
-        and return
-
-        set d (__bobthefish_dirname $d)
-    end
+    set -l prefix (string replace $prjdir/ '' (pwd -P))
+    set prjdir (string replace -r "/$prefix\$" '' $PWD)
+    [ -z "$prjdir" ]; and set prjdir '/' # handle edge case where prjdir is /
+    echo $prjdir
 end
 
-function __bobthefish_project_pwd -S -a project_root_dir -a real_pwd -d 'Print the working directory relative to project root'
+function __bobthefish_project_pwd -S -a project_root_dir -d 'Print the working directory relative to project root'
     set -q theme_project_dir_length
     or set -l theme_project_dir_length 0
 
-    set -l project_dir (string replace -r '^'"$project_root_dir"'($|/)' '' $real_pwd)
+    set -l project_dir (string replace -r '^'"$project_root_dir"'($|/)' '' $PWD)
 
     if [ $theme_project_dir_length -eq 0 ]
         echo -n $project_dir
@@ -867,7 +801,7 @@ end
 # VCS segments
 # ==============================
 
-function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the actual hg state'
+function __bobthefish_prompt_hg -S -a hg_root_dir -d 'Display the actual hg state'
     set -l dirty (command hg stat; or echo -n '*')
 
     set -l flags "$dirty"
@@ -888,9 +822,9 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
     echo -ns (__bobthefish_hg_branch) $flags ' '
     set_color normal
 
-    set -l project_pwd (__bobthefish_project_pwd $hg_root_dir $real_pwd)
+    set -l project_pwd (__bobthefish_project_pwd $hg_root_dir $PWD)
     if [ "$project_pwd" ]
-        if [ -w "$real_pwd" ]
+        if [ -w "$PWD" ]
             __bobthefish_start_segment $color_path
         else
             __bobthefish_start_segment $color_path_nowrite
@@ -900,7 +834,7 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
     end
 end
 
-function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the actual git state'
+function __bobthefish_prompt_git -S -a git_root_dir -d 'Display the actual git state'
     set -l dirty ''
     if [ "$theme_display_git_dirty" != 'no' ]
         set -l show_dirty (command git config --bool bash.showDirtyState 2>/dev/null)
@@ -946,9 +880,9 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     set_color normal
 
     if [ "$theme_git_worktree_support" != 'yes' ]
-        set -l project_pwd (__bobthefish_project_pwd $git_root_dir $real_pwd)
+        set -l project_pwd (__bobthefish_project_pwd $git_root_dir $PWD)
         if [ "$project_pwd" ]
-            if [ -w "$real_pwd" ]
+            if [ -w "$PWD" ]
                 __bobthefish_start_segment $color_path
             else
                 __bobthefish_start_segment $color_path_nowrite
@@ -964,7 +898,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 
     # only show work dir if it's a parent…
     if [ "$work_dir" ]
-        switch $real_pwd/
+        switch $PWD/
             case $work_dir/\*
                 string match "$git_root_dir*" $work_dir >/dev/null
                 and set work_dir (string sub -s (math 1 + (string length $git_root_dir)) $work_dir)
@@ -975,7 +909,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 
     if [ "$project_pwd" -o "$work_dir" ]
         set -l colors $color_path
-        if not [ -w "$real_pwd" ]
+        if not [ -w "$PWD" ]
             set colors $color_path_nowrite
         end
 
@@ -1000,7 +934,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 
         echo -ns $project_pwd ' '
     else
-        set project_pwd $real_pwd
+        set project_pwd $PWD
 
         string match "$git_root_dir*" $project_pwd >/dev/null
         and set project_pwd (string sub -s (math 1 + (string length $git_root_dir)) $project_pwd)
@@ -1009,7 +943,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 
         if [ "$project_pwd" ]
             set -l colors $color_path
-            if not [ -w "$real_pwd" ]
+            if not [ -w "$PWD" ]
                 set colors $color_path_nowrite
             end
 
@@ -1020,8 +954,8 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     end
 end
 
-function __bobthefish_prompt_dir -S -a real_pwd -d 'Display a shortened form of the current directory'
-    __bobthefish_path_segment "$real_pwd"
+function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current directory'
+    __bobthefish_path_segment "$PWD"
 end
 
 
@@ -1067,26 +1001,24 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_nvm
 
-    set -l real_pwd (__bobthefish_pwd)
-
     # VCS
-    set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
-    set -l hg_root_dir (__bobthefish_hg_project_dir $real_pwd)
+    set -l git_root_dir (__bobthefish_git_project_dir)
+    set -l hg_root_dir (__bobthefish_hg_project_dir)
 
     if [ "$git_root_dir" -a "$hg_root_dir" ]
         # only show the closest parent
         switch $git_root_dir
             case $hg_root_dir\*
-                __bobthefish_prompt_git $git_root_dir $real_pwd
+                __bobthefish_prompt_git $git_root_dir
             case \*
-                __bobthefish_prompt_hg $hg_root_dir $real_pwd
+                __bobthefish_prompt_hg $hg_root_dir
         end
     else if [ "$git_root_dir" ]
-        __bobthefish_prompt_git $git_root_dir $real_pwd
+        __bobthefish_prompt_git $git_root_dir
     else if [ "$hg_root_dir" ]
-        __bobthefish_prompt_hg $hg_root_dir $real_pwd
+        __bobthefish_prompt_hg $hg_root_dir
     else
-        __bobthefish_prompt_dir $real_pwd
+        __bobthefish_prompt_dir
     end
 
     __bobthefish_finish_segments
