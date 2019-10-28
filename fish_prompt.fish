@@ -359,7 +359,7 @@ function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened for
     switch "$segment_dir"
         case /
             set directory '/'
-        case "$HOME"
+        case (builtin realpath "$HOME")
             set directory '~'
         case '*'
             set parent (__bobthefish_pretty_parent "$segment_dir")
