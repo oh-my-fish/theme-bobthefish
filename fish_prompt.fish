@@ -136,10 +136,11 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
     [ "$is_inside_work_tree" = 'false' ]
     and return # we are in a git repo but not in the tree; we are probably in .git
 
-    set -l prefix (string trim -r -c / (command git rev-parse --show-prefix))
-    set -l prjdir (string replace -r "/$prefix\$" '' $PWD)
-    [ -z "$prjdir" ]; and set prjdir '/' # handle edge case where prjdir is /
-    echo $prjdir
+    set -l projdir (command git rev-parse --show-toplevel)
+    set -l workdir (string replace $projdir/ '' (pwd -P))
+    set projdir (string replace -r "/$workdir\$" '' $PWD)
+    [ -z "$projdir" ]; and set projdir '/' # handle edge case where projdir is /
+    echo $projdir
 end
 
 function __bobthefish_hg_project_dir -S -d 'Print the current hg project base directory'
@@ -150,13 +151,14 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     and [ (__bobthefish_ignore_vcs_dir) ]
     and return
 
-    set -l prjdir (command hg root --cwd $PWD 2>/dev/null)
+    [ (command hg identify 2>/dev/null) ]
     or return # we are not in an hg repo
 
-    set -l prefix (string replace $prjdir/ '' (pwd -P))
-    set prjdir (string replace -r "/$prefix\$" '' $PWD)
-    [ -z "$prjdir" ]; and set prjdir '/' # handle edge case where prjdir is /
-    echo $prjdir
+    set -l projdir (command hg root --cwd $PWD 2>/dev/null)
+    set -l workdir (string replace $projdir/ '' (pwd -P))
+    set projdir (string replace -r "/$workdir\$" '' $PWD)
+    [ -z "$projdir" ]; and set projdir '/' # handle edge case where projdir is /
+    echo $projdir
 end
 
 function __bobthefish_project_pwd -S -a project_root_dir -d 'Print the working directory relative to project root'
@@ -821,7 +823,7 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -d 'Display the actual hg stat
     echo -ns (__bobthefish_hg_branch) $flags ' '
     set_color normal
 
-    set -l project_pwd (__bobthefish_project_pwd $hg_root_dir $PWD)
+    set -l project_pwd (__bobthefish_project_pwd $hg_root_dir)
     if [ "$project_pwd" ]
         if [ -w "$PWD" ]
             __bobthefish_start_segment $color_path
@@ -878,78 +880,15 @@ function __bobthefish_prompt_git -S -a git_root_dir -d 'Display the actual git s
     echo -ns (__bobthefish_git_branch) $flags ' '
     set_color normal
 
-    if [ "$theme_git_worktree_support" != 'yes' ]
-        set -l project_pwd (__bobthefish_project_pwd $git_root_dir $PWD)
-        if [ "$project_pwd" ]
-            if [ -w "$PWD" ]
-                __bobthefish_start_segment $color_path
-            else
-                __bobthefish_start_segment $color_path_nowrite
-            end
-
-            echo -ns $project_pwd ' '
-        end
-        return
-    end
-
-    set -l project_pwd (command git rev-parse --show-prefix 2>/dev/null | string trim --right --chars=/)
-    set -l work_dir (command git rev-parse --show-toplevel 2>/dev/null)
-
-    # only show work dir if it's a parent…
-    if [ "$work_dir" ]
-        switch $PWD/
-            case $work_dir/\*
-                string match "$git_root_dir*" $work_dir >/dev/null
-                and set work_dir (string sub -s (math 1 + (string length $git_root_dir)) $work_dir)
-            case \*
-                set -e work_dir
-        end
-    end
-
-    if [ "$project_pwd" -o "$work_dir" ]
-        set -l colors $color_path
-        if not [ -w "$PWD" ]
-            set colors $color_path_nowrite
-        end
-
-        __bobthefish_start_segment $colors
-
-        # handle work_dir != project dir
-        if [ "$work_dir" ]
-            set -l work_parent (__bobthefish_dirname $work_dir)
-            if [ "$work_parent" ]
-                echo -n "$work_parent/"
-            end
-
-            set_color normal
-            set_color -b $color_repo_work_tree
-            echo -n (__bobthefish_basename $work_dir)
-
-            set_color normal
-            set_color -b $colors
-            [ "$project_pwd" ]
-            and echo -n '/'
+    set -l project_pwd (__bobthefish_project_pwd $git_root_dir)
+    if [ "$project_pwd" ]
+        if [ -w "$PWD" ]
+            __bobthefish_start_segment $color_path
+        else
+            __bobthefish_start_segment $color_path_nowrite
         end
 
         echo -ns $project_pwd ' '
-    else
-        set project_pwd $PWD
-
-        string match "$git_root_dir*" $project_pwd >/dev/null
-        and set project_pwd (string sub -s (math 1 + (string length $git_root_dir)) $project_pwd)
-
-        set project_pwd (string trim --left --chars=/ -- $project_pwd)
-
-        if [ "$project_pwd" ]
-            set -l colors $color_path
-            if not [ -w "$PWD" ]
-                set colors $color_path_nowrite
-            end
-
-            __bobthefish_start_segment $colors
-
-            echo -ns $project_pwd ' '
-        end
     end
 end
 
