@@ -422,13 +422,24 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     and set superuser 1
 
     # Jobs display
-    if [ "$theme_display_jobs_verbose" = 'yes' ]
-        set bg_jobs (jobs -p | wc -l)
+    if set -q AUTOJUMP_SOURCED
+        # Autojump special case: check if there are jobs besides the `autojump`
+        # job, since that one is (briefly) backgrounded every time we `cd`
+        set bg_jobs (jobs -c | string match -v --regex '(Command|autojump)' | wc -l)
         [ "$bg_jobs" -eq 0 ]
         and set bg_jobs # clear it out so it doesn't show when `0`
     else
-        jobs -p >/dev/null
-        and set bg_jobs 1
+        if [ "$theme_display_jobs_verbose" = 'yes' ]
+            set bg_jobs (jobs -p | wc -l)
+            [ "$bg_jobs" -eq 0 ]
+            and set bg_jobs # clear it out so it doesn't show when `0`
+        else
+            # `jobs -p` is faster if we redirect to /dev/null, because it exits
+            # after the first match. We'll use that unless the user wants to
+            # display the actual job count
+            jobs -p >/dev/null
+            and set bg_jobs 1
+        end
     end
 
     if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
@@ -679,7 +690,8 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     end
 
     if set -q display_hostname
-        if set -q display_user; or set -q display_sudo_user
+        if set -q display_user
+            or set -q display_sudo_user
             # reset colors without starting a new segment...
             # (so we can have a bold username and non-bold hostname)
             set_color normal
