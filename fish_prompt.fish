@@ -52,14 +52,6 @@
 # Helper methods
 # ==============================
 
-function __bobthefish_basename -d 'basically basename, but faster'
-    string replace -r '^.*/' '' -- $argv
-end
-
-function __bobthefish_dirname -d 'basically dirname, but faster'
-    string replace -r '/[^/]+/?$' '' -- $argv
-end
-
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l ref (command git symbolic-ref HEAD 2>/dev/null)
     and begin
@@ -96,7 +88,7 @@ function __bobthefish_pretty_parent -S -a child_dir -d 'Print a parent directory
 
     # Replace $HOME with ~
     set -l real_home ~
-    set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (__bobthefish_dirname $child_dir))
+    set -l parent_dir (string replace -r '^'"$real_home"'($|/)' '~$1' (dirname "$child_dir"))
 
     # Must check whether `$parent_dir = /` if using native dirname
     if [ -z "$parent_dir" ]
@@ -113,9 +105,11 @@ function __bobthefish_pretty_parent -S -a child_dir -d 'Print a parent directory
 end
 
 function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory should be ignored as a VCS segment'
+    set -l real_pwd = (realpath $PWD)
     for ignore_path in $theme_vcs_ignore_paths
-        switch $PWD/
-            case $ignore_path/\*
+        set -l real_ignore_path = (realpath $ignore_path)
+        switch $real_pwd/
+            case $real_ignore_path/\*
                 echo 1
                 return
         end
@@ -123,8 +117,8 @@ function __bobthefish_ignore_vcs_dir -d 'Check whether the current directory sho
 end
 
 function __bobthefish_git_project_dir -S -d 'Print the current git project base directory'
-    [ "$theme_display_git" = 'yes' ]
-    or return
+    [ "$theme_display_git" = 'no' ]
+    and return
 
     set -q theme_vcs_ignore_paths
     and [ (__bobthefish_ignore_vcs_dir) ]
@@ -151,10 +145,14 @@ function __bobthefish_hg_project_dir -S -d 'Print the current hg project base di
     and [ (__bobthefish_ignore_vcs_dir) ]
     and return
 
-    [ (command hg identify 2>/dev/null) ]
-    or return # we are not in an hg repo
+    set -l d $PWD
+    while not [ -z "$d" ]
+        [ -e "$d/.hg" ]; and break
+        [ "$d" = '/' ]; and return
+        set d (dirname $d)
+    end
 
-    set -l projdir (command hg root --cwd $PWD 2>/dev/null)
+    set -l projdir (command hg root --cwd $PWD)
     set -l workdir (string replace $projdir/ '' (pwd -P))
     set projdir (string replace -r "/$workdir\$" '' $PWD)
     [ -z "$projdir" ]; and set projdir '/' # handle edge case where projdir is /
@@ -298,7 +296,7 @@ function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened for
             set directory '~'
         case '*'
             set parent (__bobthefish_pretty_parent "$segment_dir")
-            set directory (__bobthefish_basename "$segment_dir")
+            set directory (basename "$segment_dir")
     end
 
     echo -n $parent
