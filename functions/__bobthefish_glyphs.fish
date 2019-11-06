@@ -21,6 +21,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   set -x ruby_glyph              ''
   set -x go_glyph                ''
+  set -x nix_glyph               ''
 
   # Desk glyphs
   set -x desk_glyph              \u25F2
@@ -62,6 +63,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set detached_glyph   \uF417
     set tag_glyph        \uF412
 
+    set nix_glyph        \uF313 ' ' # nf-linux-nixos
     set virtualenv_glyph \uE73C ' '
     set ruby_glyph       \uE791 ' '
     set go_glyph         \uE626 ' '
