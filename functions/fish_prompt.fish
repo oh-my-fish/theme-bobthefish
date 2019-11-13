@@ -1072,7 +1072,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     if [ "$theme_display_git_untracked" != 'no' ]
         set -l show_untracked (command git config --bool bash.showUntrackedFiles 2>/dev/null)
         if [ "$show_untracked" != 'false' ]
-            set new (command git ls-files --other --exclude-standard --directory --no-empty-directory 2>/dev/null)
+            set new (command git ls-files --other --exclude-standard --directory --no-empty-directory (git rev-parse --show-toplevel) 2>/dev/null)
             if [ "$new" ]
                 set new "$git_untracked_glyph"
             end
