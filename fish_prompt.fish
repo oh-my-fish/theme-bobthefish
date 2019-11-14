@@ -37,7 +37,7 @@
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
 #     set -g theme_display_vi no
-#     set -g theme_display_nvm yes
+#     set -g theme_display_nodejs yes
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
@@ -850,14 +850,35 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
-function __bobthefish_prompt_nvm -S -d 'Display current node version through NVM'
-    [ "$theme_display_nvm" = 'yes' -a -n "$NVM_DIR" ]
+function __bobthefish_prompt_nodejs -S -d 'Display current Node.js version'
+    [ "$theme_display_nodejs" = 'yes' -o "$theme_display_nvm" = 'yes' ]
     or return
 
-    set -l node_version (nvm current 2> /dev/null)
+    set -l node_version
+    if type -q nvm
+        [ -n "$NVM_DIR" ]
+        or return
 
-    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
-    and return
+        set node_version (nvm current 2> /dev/null)
+
+        [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+        and return
+    else if type -fq nodenv
+        set node_version (nodenv version-name)
+
+        # Don't show global node version...
+        set -q NODENV_ROOT
+        or set -l NODENV_ROOT $HOME/.nodenv
+
+        [ -e "$NODENV_ROOT/version" ]
+        and read -l global_node_version < "$NODENV_ROOT/version"
+
+        [ "$global_node_version" ]
+        or set -l global_node_version system
+
+        [ "$node_version" = "$global_node_version" ]
+        and return
+    end
 
     __bobthefish_start_segment $color_nvm
     echo -ns $node_glyph $node_version ' '
@@ -1076,7 +1097,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
-    __bobthefish_prompt_nvm
+    __bobthefish_prompt_nodejs
 
     set -l real_pwd (__bobthefish_pwd)
 
