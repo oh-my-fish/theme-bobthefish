@@ -56,6 +56,23 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set left_arrow_glyph        ''
   end
 
+  set os_type_darwin       'Mac'
+  set os_type_synology     'Syno'
+  set os_type_mint         'Mint'
+  set os_type_suse         'Suse'
+  set os_type_centos       'Cent'
+  set os_type_fedora       'Fed'
+  set os_type_redhat       'RHat'
+  set os_type_gentoo       'Gnto'
+  set os_type_arch         'Arch'
+  set os_type_alpine       'Alp'
+  set os_type_ubuntu       'Ubu'
+  set os_type_elementary   'Elem'
+  set os_type_debian       'Deb'
+  set os_type_generic      'Lin'
+  set os_type_amazon       'Amz'
+  set os_type_coreos       'Core'
+
   # Use prettier Nerd Fonts glyphs
   if [ "$theme_nerd_fonts" = "yes" ]
     set branch_glyph     \uF418
@@ -84,6 +101,24 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set git_plus_glyph       \uF0DE # fa-sort-asc
     set git_minus_glyph      \uF0DD # fa-sort-desc
     set git_plus_minus_glyph \uF0DC # fa-sort
+
+    set os_type_darwin       ''
+    set os_type_synology     ''
+    set os_type_mint         ''
+    set os_type_suse         ''
+    set os_type_centos       ''
+    set os_type_fedora       ''
+    set os_type_redhat       ''
+    set os_type_gentoo       ''
+    set os_type_arch         ''
+    set os_type_alpine       ''
+    set os_type_ubuntu       ''
+    set os_type_elementary   ''
+    set os_type_debian       ''
+    set os_type_generic      ''
+    set os_type_amazon       ''
+    set os_type_coreos       ''
+
   end
 
   # Avoid ambiguous glyphs

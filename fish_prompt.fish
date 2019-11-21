@@ -402,6 +402,61 @@ end
 # Status and input mode segments
 # ==============================
 
+function __bobthefish_prompt_currentos -S -d 'Display current OS version'
+    [ "$theme_display_currentos" = 'yes' ]
+    and set -l display_currentos
+    
+    if set -q display_currentos
+
+        if ! set -q __bobthefish_os_type
+            if uname | grep -qi Darwin
+            set -gx __bobthefish_os_type "$os_type_darwin"
+            else if test -f /etc/synoinfo.conf
+            set -gx __bobthefish_os_type "$os_type_synology"
+            else if test -f /etc/linuxmint/info
+            set -gx __bobthefish_os_type "$os_type_mint"
+            else if test -f  /etc/SuSE-release
+            set -gx __bobthefish_os_type "$os_type_suse"
+            else if test -f /etc/centos-release
+            set -gx __bobthefish_os_type "$os_type_centos"
+            else if test -f /etc/fedora-release
+            set -gx __bobthefish_os_type "$os_type_fedora"
+            else if test -f /etc/redhat-release
+            set -gx __bobthefish_os_type "$os_type_redhat"
+            else if test -f /etc/gentoo-release
+            set -gx __bobthefish_os_type "$os_type_gentoo"
+            else if test -f /etc/arch-release
+            set -gx __bobthefish_os_type "$os_type_arch"
+            else if test -f /etc/alpine-release
+            set -gx __bobthefish_os_type "$os_type_alpine"
+            else if test -f /etc/lsb-release
+                if cat /etc/lsb-release | grep -qi Ubuntu
+                    set -gx __bobthefish_os_type "$os_type_ubuntu"
+                else if cat /etc/lsb-release | grep -qi elementary
+                    set -gx __bobthefish_os_type "$os_type_elementary"
+                else if test -f /etc/debian_version
+                    set -gx __bobthefish_os_type "$os_type_debian"
+                else
+                    set -gx __bobthefish_os_type="$os_type_generic"
+                end
+            else if test -f /etc/debian_version
+            set -gx __bobthefish_os_type "$os_type_debian"
+            else if test -f /etc/os-release
+            if cat /etc/os-release | grep -q "Amazon";
+                set -gx __bobthefish_os_type="$os_type_amazon"
+            else
+                set -gx __bobthefish_os_type="$os_type_coreos"
+            end
+            else
+            set -gx __bobthefish_os_type "$os_type_generic"
+            end
+        end
+
+        __bobthefish_start_segment $color_currentos
+        echo -ns "$__bobthefish_os_type "
+    end
+end
+
 function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a non-zero exit status, root user, and background jobs'
     set -l nonzero
     set -l superuser
@@ -666,6 +721,12 @@ if not type -q prompt_hostname
 end
 
 function __bobthefish_prompt_user -S -d 'Display current user and hostname'
+    [ "$theme_display_ssh_keylock" = 'yes' ]; and begin ; [ -n "$SSH_CLIENT" ]; or [ -n "$SSH_TTY" ]; or [ -n "$SSH_CONNECTION" ]; or tty | fgrep pts > /dev/null ; end
+    and set -l display_ssh_keylock
+
+    [ "$theme_display_split_user_hostname" = 'yes' ]
+    and set -l split_user_hostname
+
     [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
 
@@ -676,11 +737,21 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     and set -l display_hostname
 
     if set -q display_user
-        __bobthefish_start_segment $color_username
+        if test (id -u) -eq 0; and set -q color_root_username
+            __bobthefish_start_segment $color_root_username
+        else
+            __bobthefish_start_segment $color_username
+        end
+        if set -q display_ssh_keylock; and ! set -q split_user_hostname
+            echo -ns " "
+        end
         echo -ns (whoami)
     end
 
     if set -q display_sudo_user
+        if set -q display_ssh_keylock; and ! set -q split_user_hostname; and ! set -q display_user
+            echo -ns " "
+        end
         if set -q display_user
             echo -ns ' '
         else
@@ -688,10 +759,11 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
         end
         echo -ns "($SUDO_USER)"
     end
+    echo -ns ' '
 
     if set -q display_hostname
-        if set -q display_user
-            or set -q display_sudo_user
+        #if begin ; set -q display_user or set -q display_sudo_user ; end ; and ! set -q split_user_hostname
+        if ! set -q split_user_hostname ; and begin ; set -q display_user ; or set -q display_sudo_user ; end
             # reset colors without starting a new segment...
             # (so we can have a bold username and non-bold hostname)
             set_color normal
@@ -699,6 +771,9 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
             echo -ns '@' (prompt_hostname)
         else
             __bobthefish_start_segment $color_hostname
+            if set -q display_ssh_keylock
+                echo -ns " "
+            end
             echo -ns (prompt_hostname)
         end
     end
@@ -1061,6 +1136,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set -l __bobthefish_current_bg
 
     # Status flags and input mode
+    __bobthefish_prompt_currentos
     __bobthefish_prompt_status $last_status
     __bobthefish_prompt_vi
 
