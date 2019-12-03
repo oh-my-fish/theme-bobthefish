@@ -156,6 +156,7 @@ one of the following options to change the prompt colors.
 - `zenburn`. An adaptation of Zenburn.
 - `gruvbox`. An adaptation of gruvbox.
 - `dracula`. An adaptation of dracula.
+- `nord`. An adaptation of nord.
 
 Some of these may not look right if your terminal does not support 24 bit color,
 in which case you can try one of the `terminal` schemes (below). However, if
