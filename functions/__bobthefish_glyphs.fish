@@ -21,6 +21,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   set -x ruby_glyph              ''
   set -x go_glyph                ''
+  set -x ranger_glyph            'R'
 
   # Desk glyphs
   set -x desk_glyph              \u25F2
