@@ -1064,13 +1064,13 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_status $last_status
     __bobthefish_prompt_vi
 
+    # User / hostname info
+    __bobthefish_prompt_user
+
     # Containers and VMs
     __bobthefish_prompt_vagrant
     __bobthefish_prompt_docker
     __bobthefish_prompt_k8s_context
-
-    # User / hostname info
-    __bobthefish_prompt_user
 
     # Virtual environments
     __bobthefish_prompt_desk
