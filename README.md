@@ -140,6 +140,7 @@ set -g theme_newline_prompt '$ '
 | ![solarized][solarized] | ![solarized-light][solarized-light] |
 | ![base16][base16]       | ![base16-light][base16-light]       |
 | ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
+| ![nord][nord]           |                                     |
 
 You can use the function `bobthefish_display_colors` to preview the prompts in
 any color scheme.
@@ -156,6 +157,7 @@ one of the following options to change the prompt colors.
 - `zenburn`. An adaptation of Zenburn.
 - `gruvbox`. An adaptation of gruvbox.
 - `dracula`. An adaptation of dracula.
+- `nord`. An adaptation of nord.
 
 Some of these may not look right if your terminal does not support 24 bit color,
 in which case you can try one of the `terminal` schemes (below). However, if
@@ -234,3 +236,4 @@ end
 [base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
 [zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
 [terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
+[nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
