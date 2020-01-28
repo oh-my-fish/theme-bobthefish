@@ -25,6 +25,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           brgreen $colorfg --bold
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
+      set -x color_aws_id                  yellow $colorfg
+
       set -x color_vagrant                  brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 white black --bold
@@ -87,6 +89,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           brgreen $colorfg --bold
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
+      set -x color_aws_id                  yellow $colorfg
+
       set -x color_vagrant                  brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 brgrey white --bold
@@ -117,6 +121,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_default          brblue $colorfg --bold
       set -x color_vi_mode_insert           brgreen $colorfg --bold
       set -x color_vi_mode_visual           bryellow $colorfg --bold
+
+      set -x color_aws_id                  yellow $colorfg
 
       set -x color_vagrant                  brcyan $colorfg
       set -x color_k8s                      magenta white --bold
@@ -154,6 +160,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_default          $grey $yellow --bold
       set -x color_vi_mode_insert           $green $white --bold
       set -x color_vi_mode_visual           $yellow $grey --bold
+
+      set -x color_aws_id                   $yellow $grey
 
       set -x color_vagrant                  $blue $green --bold
       set -x color_k8s                      $green $white --bold
@@ -203,6 +211,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $base0B $colorfg --bold
       set -x color_vi_mode_visual           $base09 $colorfg --bold
 
+      set -x color_aws_id                   $base09 $colorfg
+
       set -x color_vagrant                  $base0C $colorfg --bold
       set -x color_k8s                      $base06 $colorfg --bold
       set -x color_username                 $base02 $base0D --bold
@@ -250,6 +260,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_default          $base03 $colorfg --bold
       set -x color_vi_mode_insert           $base0B $colorfg --bold
       set -x color_vi_mode_visual           $base09 $colorfg --bold
+
+      set -x color_aws_id                   $base09 $colorfg
 
       set -x color_vagrant                  $base0C $colorfg --bold
       set -x color_k8s                      $base0B $colorfg --bold
@@ -299,6 +311,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $green $colorfg --bold
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
+      set -x color_aws_id                   $yellow $colorfg
+
       set -x color_vagrant                  $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_username                 $base2 $blue --bold
@@ -347,6 +361,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $green $colorfg --bold
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
+      set -x color_aws_id                   $yellow $colorfg
+
       set -x color_vagrant                  $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_username                 $base02 $blue --bold
@@ -388,6 +404,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $green[2] $grey[3] --bold
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
+      set -x color_aws_id                   $orange[1] $orange[3]
+
       set -x color_vagrant                  $blue[1] $white --bold
       set -x color_k8s                      $green[1] $colorfg --bold
       set -x color_username                 $grey[1] $blue[3] --bold
@@ -427,6 +445,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_default       $fg[4] $bg[2] --bold
       set -x color_vi_mode_insert        $blue[1] $bg[2] --bold
       set -x color_vi_mode_visual        $yellow[1] $bg[2] --bold
+
+      set -x color_aws_id                $yellow[1] $bg[1]
 
       set -x color_vagrant               $blue[2] $fg[2] --bold
       set -x color_k8s                   $green[2] $fg[2] --bold
@@ -469,6 +489,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_default       $bg $yellow --bold
       set -x color_vi_mode_insert        $green $bg --bold
       set -x color_vi_mode_visual        $orange $bg --bold
+
+      set -x color_aws_id                $yellow $bg
 
       set -x color_vagrant               $pink $bg --bold
       set -x color_k8s                   $green $fg --bold
@@ -518,6 +540,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $base06 $colorfg --bold
       set -x color_vi_mode_visual           $base07 $colorfg --bold
 
+      set -x color_aws_id                   $base0D $colorfg
+
       set -x color_vagrant                  $base02 $colorfg --bold
       set -x color_k8s                      $base02 $colorfg --bold
       set -x color_username                 $base02 $base0D --bold
@@ -560,6 +584,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_insert           $green[2] $grey[3] --bold
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
+      set -x color_aws_id                   $orange[1] $orange[3]
+
       set -x color_vagrant                  $blue[1] $white --bold
       set -x color_k8s                      $green[2] $white --bold
       set -x color_username                 $grey[1] $blue[3] --bold
@@ -587,6 +613,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -q __color_vi_mode_default;       or set -l __color_vi_mode_default       999999 333333 --bold
   set -q __color_vi_mode_insert;        or set -l __color_vi_mode_insert        189303 333333 --bold
   set -q __color_vi_mode_visual;        or set -l __color_vi_mode_visual        f6b117 3a2a03 --bold
+  set -q __color_aws_id;                or set -l __color_aws_id                f6b117 3a2a03 --bold
   set -q __color_vagrant;               or set -l __color_vagrant               48b4fb ffffff --bold
   set -q __color_username;              or set -l __color_username              cccccc 255e87 --bold
   set -q __color_hostname;              or set -l __color_hostname              cccccc 255e87
@@ -623,6 +650,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -x color_vi_mode_default       $__color_vi_mode_default
   set -x color_vi_mode_insert        $__color_vi_mode_insert
   set -x color_vi_mode_visual        $__color_vi_mode_visual
+  set -x color_aws_id               $__color_aws_id
   set -x color_vagrant               $__color_vagrant
   set -x color_username              $__color_username
   set -x color_hostname              $__color_hostname

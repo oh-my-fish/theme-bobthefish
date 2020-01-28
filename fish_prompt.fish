@@ -25,6 +25,7 @@
 #     set -g theme_display_git_stashed_verbose yes
 #     set -g theme_display_git_master_branch yes
 #     set -g theme_git_worktree_support yes
+#     set -g theme_display_aws_account_id no
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
 #     set -g theme_display_k8s_context yes
@@ -503,6 +504,18 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
     end
 end
 
+# ==============================
+# Cloud segments
+# ==============================
+
+function __bobthefish_prompt_aws_account_id -S -d 'Display AWS AccountId'
+    function get-account-auto -S --on-variable AWS_ACCESS_KEY_ID
+        set -x AWS_ACCOUNT_ID (aws sts get-caller-identity --output text --query "Account")
+    end
+    [ "$theme_display_aws_account_id" = 'yes' -a -n "$AWS_ACCOUNT_ID" ]; or return
+    __bobthefish_start_segment $color_aws_id
+    echo -ns $AWS_ACCOUNT_ID ' '
+end
 
 # ==============================
 # Container and VM segments
@@ -1066,6 +1079,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # User / hostname info
     __bobthefish_prompt_user
+
+    # Cloud
+    __bobthefish_prompt_aws_account_id
 
     # Containers and VMs
     __bobthefish_prompt_vagrant
