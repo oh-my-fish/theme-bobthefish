@@ -512,7 +512,7 @@ function __bobthefish_prompt_aws_account_id -S -d 'Display AWS AccountId'
     function get-account-auto -S --on-variable AWS_ACCESS_KEY_ID
         set -x AWS_ACCOUNT_ID (aws sts get-caller-identity --output text --query "Account")
     end
-    [ "$theme_display_aws_account_id" = 'yes' -a -n "$AWS_ACCOUNT_ID" ]; or return
+    [ "$theme_display_aws_account_id" = 'no' -o -n "$AWS_ACCOUNT_ID" ]; or return
     __bobthefish_start_segment $color_aws_id
     echo -ns $AWS_ACCOUNT_ID ' '
 end
