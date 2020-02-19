@@ -24,7 +24,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
     set_color $fish_color_autosuggestion
 
     [ "$theme_display_date" = "no" ]
-    or echo -ns ' ' $__bobthefish_left_arrow_glyph
+    or echo -ns ' '
 end
 
 function __bobthefish_pretty_ms -S -a ms -a interval -d 'Millisecond formatting for humans'
@@ -59,17 +59,20 @@ function __bobthefish_timestamp -S -d 'Show the current timestamp'
     and return
 
     set -q theme_date_format
-    or set -l theme_date_format "+%c"
+    or set -l theme_date_format "+%H:%M:%S"
 
-    echo -n ' '
+    set_color $color_path
+    echo -ns $left_black_arrow_glyph
+
+    set_color -b $color_path
+    echo -ns ' '
     date $theme_date_format
+    echo -ns ' '
 end
 
 function fish_right_prompt -d 'bobthefish is all about the right prompt'
-    set -l __bobthefish_left_arrow_glyph \uE0B3
-    if [ "$theme_powerline_fonts" = "no" ]
-        set __bobthefish_left_arrow_glyph '<'
-    end
+    __bobthefish_colors $theme_color_scheme
+    __bobthefish_glyphs
 
     set_color $fish_color_autosuggestion
 
