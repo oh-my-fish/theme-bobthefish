@@ -28,6 +28,7 @@
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
 #     set -g theme_display_k8s_context yes
+#     set -g theme_display_k8s_namespace no
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
@@ -639,7 +640,8 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     set -l context (__bobthefish_k8s_context)
     or return
 
-    set -l namespace (__bobthefish_k8s_namespace)
+    [ "$theme_display_k8s_namespace" = 'yes' ]
+    and set -l namespace (__bobthefish_k8s_namespace)
 
     set -l segment $k8s_glyph " " $context
     [ -n "$namespace" ]
