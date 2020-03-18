@@ -67,6 +67,13 @@ function __bobthefish_pwd -d 'Get a normalized $PWD'
     or echo $PWD
 end
 
+# Note that for fish < 3.0 this falls back to unescaped, rather than trying to do something clever /shrug
+# After we drop support for older fishies, we can inline this without the fallback.
+function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string escape --style=regex` implementation'
+    string escape --style=regex "$str" 2>/dev/null
+    or echo "$str"
+end
+
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l ref (command git symbolic-ref HEAD 2>/dev/null)
     and begin
@@ -231,8 +238,7 @@ function __bobthefish_project_pwd -S -a project_root_dir -a real_pwd -d 'Print t
     set -q theme_project_dir_length
     or set -l theme_project_dir_length 0
 
-    set -l project_root_dir_escaped (string escape --style=regex $project_root_dir)
-    set -l project_dir (string replace -r '^'"$project_root_dir_escaped"'($|/)' '' $real_pwd)
+    set -l project_dir (string replace -r '^'(__bobthefish_escape_regex "$project_root_dir")'($|/)' '' $real_pwd)
 
     if [ $theme_project_dir_length -eq 0 ]
         echo -n $project_dir
