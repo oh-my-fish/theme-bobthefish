@@ -833,7 +833,7 @@ function __bobthefish_virtualenv_python_version -S -d 'Get current Python versio
     end
 end
 
-function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment."
+function __bobthefish_prompt_virtualfish -S -a real_pwd -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment."
     [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
     and return
 
@@ -845,6 +845,11 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
     end
 
     if [ "$VIRTUAL_ENV" ]
+        # Pipenv makes long and not-super-useful virtualenv names.
+        # If the current virtualenv matches a folder in the path, only show the glyph above.
+        string match -q -r '/'(__bobthefish_escape_regex (string replace -r -- '--[^-]+$' '' "$VIRTUAL_ENV"))'(/|$)' -- $real_pwd
+        and return
+
         echo -ns (basename "$VIRTUAL_ENV") ' '
     else if [ "$CONDA_DEFAULT_ENV" ]
         echo -ns (basename "$CONDA_DEFAULT_ENV") ' '
@@ -1081,14 +1086,14 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_docker
     __bobthefish_prompt_k8s_context
 
+    set -l real_pwd (__bobthefish_pwd)
+
     # Virtual environments
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
-    __bobthefish_prompt_virtualfish
+    __bobthefish_prompt_virtualfish $real_pwd
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_nvm
-
-    set -l real_pwd (__bobthefish_pwd)
 
     # VCS
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
