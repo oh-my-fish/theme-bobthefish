@@ -407,7 +407,7 @@ end
 
 
 # ==============================
-# Status and input mode segments
+# Status segment
 # ==============================
 
 function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a non-zero exit status, root user, and background jobs'
@@ -482,32 +482,6 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
                 echo -n $bg_job_glyph
             end
         end
-    end
-end
-
-function __bobthefish_prompt_vi -S -d 'Display vi mode'
-    [ "$theme_display_vi" != 'no' ]
-    or return
-
-    [ "$fish_key_bindings" = 'fish_vi_key_bindings' \
-        -o "$fish_key_bindings" = 'hybrid_bindings' \
-        -o "$fish_key_bindings" = 'fish_hybrid_key_bindings' \
-        -o "$theme_display_vi" = 'yes' ]
-    or return
-
-    switch $fish_bind_mode
-        case default
-            __bobthefish_start_segment $color_vi_mode_default
-            echo -n 'N '
-        case insert
-            __bobthefish_start_segment $color_vi_mode_insert
-            echo -n 'I '
-        case replace_one replace-one
-            __bobthefish_start_segment $color_vi_mode_insert
-            echo -n 'R '
-        case visual
-            __bobthefish_start_segment $color_vi_mode_visual
-            echo -n 'V '
     end
 end
 
@@ -1071,7 +1045,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Status flags and input mode
     __bobthefish_prompt_status $last_status
-    __bobthefish_prompt_vi
 
     # User / hostname info
     __bobthefish_prompt_user
