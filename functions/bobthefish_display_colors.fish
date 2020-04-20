@@ -23,8 +23,16 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
       __bobthefish_colors $color_scheme
 
     case ''
-      [ -n "$theme_color_scheme" ]
-      and echo "$theme_color_scheme:"
+      if type -q bobthefish_colors
+        if [ -n "$theme_color_scheme" ]
+          echo "$theme_color_scheme (with bobthefish_colors overrides):"
+        else
+          echo 'custom (via bobthefish_colors):'
+        end
+      else if [ -n "$theme_color_scheme" ]
+        echo "$theme_color_scheme:"
+      end
+
       __bobthefish_colors $theme_color_scheme
       type -q bobthefish_colors
         and bobthefish_colors
