@@ -30,6 +30,7 @@
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_hg yes
+#     set -g theme_display_guix_environment no
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
@@ -697,6 +698,15 @@ end
 # Virtual environment segments
 # ==============================
 
+function __bobthefish_prompt_guix_environment -S -d 'Display Guix environment'
+    [ "$theme_display_guix_environment" = 'no' -o -z "$GUIX_ENVIRONMENT" ]
+    and return
+
+    __bobthefish_start_segment $color_guix_environment
+    echo -ns 'GUIX ENV '
+    set_color normal
+end
+
 function __bobthefish_rvm_parse_ruby -S -a ruby_string -a scope -d 'Parse RVM Ruby string'
     # Function arguments:
     # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
@@ -1055,6 +1065,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_k8s_context
 
     # Virtual environments
+    __bobthefish_prompt_guix_environment
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
