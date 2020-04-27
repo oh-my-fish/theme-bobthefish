@@ -62,7 +62,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set detached_glyph   \uF417
     set tag_glyph        \uF412
 
-    set virtualenv_glyph \uE73C ' '
+    set virtualenv_glyph \ue606 ' '
     set ruby_glyph       \uE791 ' '
     set go_glyph         \uE626 ' '
     set node_glyph       \uE718 ' '
