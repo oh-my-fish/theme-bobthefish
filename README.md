@@ -134,6 +134,8 @@ set -g theme_newline_prompt '$ '
 - `theme_project_dir_length`. The same as `$fish_prompt_pwd_dir_length`, but for the path relative to the current project root. Defaults to `0`; set to any other number to show an abbreviated path.
 - `theme_newline_cursor`. Use `yes` to have cursor start on a new line. By default the prompt is only one line. When working with long directories it may be preferrend to have cursor on the next line. Setting this to `clean` instead of `yes` suppresses the caret on the new line.
 - `theme_newline_prompt`. Use a custom prompt with newline cursor. By default this is the chevron right glyph or `>` when powerline fonts are disabled.
+- `theme_display_ranger`. Use `no` to completely hide all information about ranger. By default ranger shows 'R' symbol to indicate shell was created from ranger.
+- `theme_display_ranger_level`. Use `yes` to also display information about ranger level. By default ranger level not is displayed.
 
 **Color scheme options**
 

@@ -836,6 +836,21 @@ function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environ
     set_color normal
 end
 
+function __bobthefish_prompt_ranger -S -d 'Display current ranger indicator'
+    [ "$theme_display_ranger" = 'no' -o -z "$RANGER_LEVEL" ]
+    and return
+
+    __bobthefish_start_segment $color_ranger
+    echo -ns $ranger_glyph
+
+    if [ "$theme_display_ranger_level" = 'yes' ]
+        echo -ns "$RANGER_LEVEL"
+    end
+
+    echo -ns ' '
+    set_color normal
+end
+
 function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     [ "$theme_display_desk" = 'no' -o -z "$DESK_ENV" ]
     and return
@@ -1061,6 +1076,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
+    __bobthefish_prompt_ranger
     __bobthefish_prompt_nvm
 
     set -l real_pwd (__bobthefish_pwd)
