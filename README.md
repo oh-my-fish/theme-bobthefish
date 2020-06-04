@@ -82,6 +82,7 @@ set -g theme_display_docker_machine no
 set -g theme_display_k8s_context yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
+set -g theme_display_nix no
 set -g theme_display_ruby no
 set -g theme_display_nvm yes
 set -g theme_display_user ssh
@@ -94,6 +95,7 @@ set -g theme_title_display_path no
 set -g theme_title_display_user yes
 set -g theme_title_use_abbreviated_path no
 set -g theme_date_format "+%a %H:%M"
+set -g theme_date_timezone America/Los_Angeles
 set -g theme_avoid_ambiguous_glyphs yes
 set -g theme_powerline_fonts no
 set -g theme_nerd_fonts yes
@@ -121,6 +123,7 @@ set -g theme_newline_prompt '$ '
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).
+- `theme_display_k8s_namespace`. This feature is disabled by default. Use `yes` to show the current kubernetes namespace.
 - `theme_display_user`. If set to `yes`, display username always, if set to `ssh`, only when an SSH-Session is detected, if set to no, never.
 - `theme_display_hostname`. Same behaviour as `theme_display_user`.
 - `theme_display_sudo_user`. If set to `yes`, displays the sudo-username in a root shell. For example, when calling `sudo -s` and having this option set to `yes`, the username of the user, who called `sudo -s`, will be displayed.
@@ -140,6 +143,7 @@ set -g theme_newline_prompt '$ '
 | ![solarized][solarized] | ![solarized-light][solarized-light] |
 | ![base16][base16]       | ![base16-light][base16-light]       |
 | ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
+| ![nord][nord]           |                                     |
 
 You can use the function `bobthefish_display_colors` to preview the prompts in
 any color scheme.
@@ -156,6 +160,7 @@ one of the following options to change the prompt colors.
 - `zenburn`. An adaptation of Zenburn.
 - `gruvbox`. An adaptation of gruvbox.
 - `dracula`. An adaptation of dracula.
+- `nord`. An adaptation of nord.
 
 Some of these may not look right if your terminal does not support 24 bit color,
 in which case you can try one of the `terminal` schemes (below). However, if
@@ -234,3 +239,4 @@ end
 [base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
 [zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
 [terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
+[nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
