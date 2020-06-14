@@ -164,7 +164,7 @@ one of the following options to change the prompt colors.
 - `base16` (or `base16-dark`), `base16-light`. Dark and light variants of the
   default Base16 theme.
 - `zenburn`. An adaptation of Zenburn.
-- `gruvbox`. An adaptation of gruvbox.
+- `gruvbox`, `gruvbox-light`. An adaptation of gruvbox dark and light variants.
 - `dracula`. An adaptation of dracula.
 - `nord`. An adaptation of nord.
 
