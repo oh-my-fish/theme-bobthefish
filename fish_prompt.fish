@@ -24,6 +24,8 @@
 #     set -g theme_display_git_dirty_verbose yes
 #     set -g theme_display_git_stashed_verbose yes
 #     set -g theme_display_git_master_branch yes
+#     set -g theme_display_git_default_branch yes
+#     set -g theme_git_default_branch ''
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
