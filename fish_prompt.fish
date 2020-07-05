@@ -868,8 +868,9 @@ function __bobthefish_prompt_nix -S -d 'Display current nix environment'
     [ "$theme_display_nix" = 'no' -o -z "$IN_NIX_SHELL" ]
     and return
 
+    set -q NIX_SHELL_PROMPT; or set NIX_SHELL_PROMPT $IN_NIX_SHELL
     __bobthefish_start_segment $color_nix
-    echo -ns $nix_glyph $IN_NIX_SHELL ' '
+    echo -ns $nix_glyph $NIX_SHELL_PROMPT ' '
 
     set_color normal
 end
