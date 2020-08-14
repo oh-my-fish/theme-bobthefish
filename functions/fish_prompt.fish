@@ -645,10 +645,9 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     [ -n "$namespace" ]
     and set segment $segment ':' $namespace
 
-    __bobthefish_start_segment $color_k8s
+    __bobthefish_start_segment (__bobthefish_prompt_k8s_color $context $namespace)
     echo -ns $segment ' '
 end
-
 
 # ==============================
 # Cloud Tools
