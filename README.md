@@ -37,11 +37,11 @@ This theme is based loosely on [agnoster][agnoster].
 
 ### The Prompt
 
- * Flags:
+ * Status flags:
      * Previous command failed (**`!`**)
-     * Background jobs (**`%`**)
+     * Private mode (**🔒** or **`⦸`**)
      * You currently have superpowers (**`$`**)
-     * Cursor on newline
+     * Background jobs (**`%`**)
  * Current vi mode
  * `User@Host` (unless you're the default user)
  * Current RVM, rbenv or chruby (Ruby) version
