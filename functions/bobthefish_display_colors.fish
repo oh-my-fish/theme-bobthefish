@@ -49,6 +49,8 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
 
   __bobthefish_start_segment $color_initial_segment_exit
   echo -n exit $nonzero_exit_glyph
+  set_color -b $color_initial_segment_private
+  echo -n private $private_glyph
   set_color -b $color_initial_segment_su
   echo -n su $superuser_glyph
   set_color -b $color_initial_segment_jobs

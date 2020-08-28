@@ -411,7 +411,7 @@ end
 # Status segment
 # ==============================
 
-function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a non-zero exit status, root user, and background jobs'
+function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a non-zero exit status, private mode, root user, and background jobs'
     set -l nonzero
     set -l superuser
     set -l bg_jobs
@@ -451,7 +451,7 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
         end
     end
 
-    if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
+    if [ "$nonzero" -o "$fish_private_mode" -o "$superuser" -o "$bg_jobs" ]
         __bobthefish_start_segment $color_initial_segment_exit
         if [ "$nonzero" ]
             set_color normal
@@ -461,6 +461,12 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
             else
                 echo -n $nonzero_exit_glyph
             end
+        end
+
+        if [ "$fish_private_mode" ]
+            set_color normal
+            set_color -b $color_initial_segment_private
+            echo -n $private_glyph
         end
 
         if [ "$superuser" ]

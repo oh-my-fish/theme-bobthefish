@@ -10,6 +10,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   set -x detached_glyph          \u27A6
   set -x tag_glyph               \u2302
   set -x nonzero_exit_glyph      '! '
+  set -x private_glyph           \uE0A2 ' '
   set -x superuser_glyph         '$ '
   set -x bg_job_glyph            '% '
   set -x hg_glyph                \u263F
@@ -50,6 +51,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   # Disable Powerline fonts (unless we're using nerd fonts instead)
   if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
+    set private_glyph           \u29B8 ' '
     set branch_glyph            \u2387
     set right_black_arrow_glyph ''
     set right_arrow_glyph       ''
@@ -59,6 +61,8 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   # Use prettier Nerd Fonts glyphs
   if [ "$theme_nerd_fonts" = "yes" ]
+    set private_glyph    \uF023 ' ' # nf-fa-lock
+
     set branch_glyph     \uF418
     set detached_glyph   \uF417
     set tag_glyph        \uF412
