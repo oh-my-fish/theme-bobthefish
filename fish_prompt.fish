@@ -666,7 +666,7 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
 
     set -l segment $profile " (" $diff_mins "m)"
 
-    __bobthefish_start_segment blue white --bold
+    __bobthefish_start_segment $color_aws_vault
     echo -ns $segment " "
 end
 
