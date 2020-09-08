@@ -664,7 +664,7 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     [ "$diff_mins" -lt 0 ]
     and set -l diff_mins 0
 
-    set -l segment $profile " (" $diff_mins "m)"
+    set -l segment $aws_vault_glyph " " $profile " (" $diff_mins "m)"
 
     __bobthefish_start_segment $color_desk
     echo -ns $segment " "
