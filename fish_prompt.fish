@@ -29,6 +29,7 @@
 #     set -g theme_display_docker_machine no
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
+#     set -g theme_display_aws_vault_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
@@ -645,6 +646,32 @@ end
 
 
 # ==============================
+# Cloud Tools
+# ==============================
+
+function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
+    [ "$theme_display_aws_vault_profile" = 'yes' ]
+    or return
+
+    [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
+    or return
+
+    set -l profile $AWS_VAULT
+
+    set -l now (date --utc +%s)
+    set -l expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
+    set -l diff_mins (math "floor(( $expiry - $now ) / 60)")
+    [ "$diff_mins" -lt 0 ]
+    and set -l diff_mins 0
+
+    set -l segment $profile " (" $diff_mins "m)"
+
+    __bobthefish_start_segment blue white --bold
+    echo -ns $segment " "
+end
+
+
+# ==============================
 # User / hostname info segments
 # ==============================
 
@@ -1075,6 +1102,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_vagrant
     __bobthefish_prompt_docker
     __bobthefish_prompt_k8s_context
+
+    # Cloud Tools
+    __bobthefish_prompt_aws_vault_profile
 
     # Virtual environments
     __bobthefish_prompt_nix
