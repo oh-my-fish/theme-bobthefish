@@ -30,9 +30,6 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   # Kubernetes glyphs
   set -x k8s_glyph               \u2388 # '⎈'
 
-  # AWS glyphs
-  set -x aws_vault_glyph         \u2601 # '☁'
-
   # Vagrant glyphs
   set -x vagrant_running_glyph   \u2191 # ↑ 'running'
   set -x vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
