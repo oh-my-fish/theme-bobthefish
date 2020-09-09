@@ -653,7 +653,7 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     [ "$theme_display_aws_vault_profile" = 'yes' ]
     or return
 
-    [ -n "$AWS_VAULT" ]
+    [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
     or return
 
     set -l profile $AWS_VAULT
