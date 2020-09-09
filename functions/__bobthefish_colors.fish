@@ -682,6 +682,8 @@ function __bobthefish_user_color_scheme_deprecated
   set -x color_vi_mode_insert           $__color_vi_mode_insert
   set -x color_vi_mode_visual           $__color_vi_mode_visual
   set -x color_vagrant                  $__color_vagrant
+  set -x color_aws_vault                $__color_aws_vault
+  set -x color_aws_vault_expired        $__color_aws_vault_expired
   set -x color_username                 $__color_username
   set -x color_hostname                 $__color_hostname
   set -x color_rvm                      $__color_rvm
