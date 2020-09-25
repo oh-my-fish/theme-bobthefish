@@ -27,6 +27,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 white black --bold
       set -x color_hostname                 white black
@@ -60,6 +61,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 black white --bold
       set -x color_hostname                 black white
@@ -93,6 +95,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 brgrey white --bold
       set -x color_hostname                 brgrey white
@@ -126,6 +129,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_username                 grey black --bold
       set -x color_hostname                 grey black
@@ -165,6 +169,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $grey --bold
 
       set -x color_vagrant                  $blue $green --bold
+      set -x color_tf                       $blue $green --bold
       set -x color_k8s                      $green $white --bold
       set -x color_username                 $grey $blue --bold
       set -x color_hostname                 $grey $blue
@@ -215,6 +220,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base09 $colorfg --bold
 
       set -x color_vagrant                  $base0C $colorfg --bold
+      set -x color_tf                       $base0C $colorfg --bold
       set -x color_k8s                      $base06 $colorfg --bold
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
@@ -265,6 +271,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base09 $colorfg --bold
 
       set -x color_vagrant                  $base0C $colorfg --bold
+      set -x color_tf                       $base0C $colorfg --bold
       set -x color_k8s                      $base0B $colorfg --bold
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
@@ -315,6 +322,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
       set -x color_vagrant                  $violet $colorfg --bold
+      set -x color_tf                       $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_username                 $base2 $blue --bold
       set -x color_hostname                 $base2 $blue
@@ -365,6 +373,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
       set -x color_vagrant                  $violet $colorfg --bold
+      set -x color_tf                       $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_username                 $base02 $blue --bold
       set -x color_hostname                 $base02 $blue
@@ -408,6 +417,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set -x color_vagrant                  $blue[1] $white --bold
+      set -x color_tf                       $blue[1] $white --bold
       set -x color_k8s                      $green[1] $colorfg --bold
       set -x color_username                 $grey[1] $blue[3] --bold
       set -x color_hostname                 $grey[1] $blue[3]
@@ -450,6 +460,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow[1] $bg[2] --bold
 
       set -x color_vagrant                  $blue[2] $fg[2] --bold
+      set -x color_tf                       $blue[2] $fg[2] --bold
       set -x color_k8s                      $green[2] $fg[2] --bold
       set -x color_username                 $fg[3] $blue[2] --bold
       set -x color_hostname                 $fg[3] $blue[2]
@@ -494,6 +505,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange $bg --bold
 
       set -x color_vagrant                  $pink $bg --bold
+      set -x color_tf                       $pink $bg --bold
       set -x color_k8s                      $green $fg --bold
       set -x color_username                 $selection $cyan --bold
       set -x color_hostname                 $selection $cyan
@@ -544,6 +556,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base07 $colorfg --bold
 
       set -x color_vagrant                  $base02 $colorfg --bold
+      set -x color_tf                       $base02 $colorfg --bold
       set -x color_k8s                      $base02 $colorfg --bold
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
@@ -587,6 +600,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set -x color_vagrant                  $blue[1] $white --bold
+      set -x color_tf                       $blue[1] $white --bold
       set -x color_k8s                      $green[2] $white --bold
       set -x color_username                 $grey[1] $blue[3] --bold
       set -x color_hostname                 $grey[1] $blue[3]
@@ -616,6 +630,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -q __color_vi_mode_insert;           or set -l __color_vi_mode_insert           189303 333333 --bold
   set -q __color_vi_mode_visual;           or set -l __color_vi_mode_visual           f6b117 3a2a03 --bold
   set -q __color_vagrant;                  or set -l __color_vagrant                  48b4fb ffffff --bold
+  set -q __color_tf;                       or set -l __color_tf                       48b4fb ffffff --bold
   set -q __color_username;                 or set -l __color_username                 cccccc 255e87 --bold
   set -q __color_hostname;                 or set -l __color_hostname                 cccccc 255e87
   set -q __color_rvm;                      or set -l __color_rvm                      af0000 cccccc --bold

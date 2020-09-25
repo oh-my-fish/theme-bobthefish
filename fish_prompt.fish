@@ -25,6 +25,7 @@
 #     set -g theme_display_git_stashed_verbose yes
 #     set -g theme_display_git_master_branch yes
 #     set -g theme_git_worktree_support yes
+#     set -g theme_display_tf_workspace yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
 #     set -g theme_display_k8s_context yes
@@ -593,6 +594,18 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
     echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
+function __bobthefish_prompt_tf_workspace -S -d 'Display current terraform workspace environment'
+    [ "$theme_display_tf_workspace" = 'yes' ]
+    or return
+
+    set -l tf_workspace (terraform workspace show)
+
+    __bobthefish_start_segment $color_tf
+    echo -ns $tf_glyph ' ' $tf_workspace ' '
+
+    set_color normal
+end
+
 function __bobthefish_k8s_context -S -d 'Get the current k8s context'
     set -l config_paths "$HOME/.kube/config"
     [ -n "$KUBECONFIG" ]
@@ -1073,6 +1086,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Containers and VMs
     __bobthefish_prompt_vagrant
+    __bobthefish_prompt_tf_workspace
     __bobthefish_prompt_docker
     __bobthefish_prompt_k8s_context
 
