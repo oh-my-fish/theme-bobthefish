@@ -46,6 +46,8 @@
 #     set -g default_user your_normal_user
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
+#     set -g theme_prompt_max_size_percentage 90
+#     set -g theme_prompt_keep_space 10
 #     set -g theme_project_dir_length 1
 #     set -g theme_newline_cursor yes
 
@@ -1041,12 +1043,7 @@ function __bobthefish_prompt_dir -S -a real_pwd -d 'Display a shortened form of 
     __bobthefish_path_segment "$real_pwd"
 end
 
-
-# ==============================
-# Apply theme
-# ==============================
-
-function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
+function __bobthefish_fish_prompt -d 'The whole prompt'
     # Save the last status for later (do this before anything else)
     set -l last_status $status
 
@@ -1107,4 +1104,47 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     end
 
     __bobthefish_finish_segments
+end
+
+function __bobthefish_limited_fish_prompt -d "show shorter prompt if it is too large"
+    # Prompt should be smaller than X% of the terminal's width
+    set -q theme_prompt_max_size_percentage    
+    or set -l theme_prompt_max_size_percentage 90
+
+    # Prompt should leave N chars free space
+    set -q theme_prompt_keep_space
+    or set -l theme_prompt_keep_space 10
+
+    set -l prompt (__bobthefish_fish_prompt)
+
+    # Do nothing if we cannot determine the size of the terminal
+    if test -z "$COLUMNS"
+	echo $prompt
+    end
+
+    set -l prompt_chars (echo "$prompt" | sed -r 's/\x1b[^m]+m//g')
+    set -l prompt_size (string length "$prompt_chars")
+    set -l prompt_max_size_percentage (math "$COLUMNS * ( $theme_prompt_max_size_percentage / 100 )")
+    set -l prompt_max_size_keep (math "$COLUMNS - $theme_prompt_keep_space")
+    set -l prompt_max_size (
+        test "$prompt_max_size_percentage" -lt "$prompt_max_size_keep" \
+	&& echo $prompt_max_size_percentage \
+	|| echo $prompt_max_size_keep
+    )
+    if test "$prompt_size" -gt "$prompt_max_size"
+    	echo "> "
+	return
+    end
+
+    # Do nothing if the prompt could fit well
+    echo $prompt
+end
+
+
+# ==============================
+# Apply theme
+# ==============================
+
+function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
+   __bobthefish_limited_fish_prompt
 end

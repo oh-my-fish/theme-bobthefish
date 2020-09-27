@@ -104,6 +104,8 @@ set -g theme_display_jobs_verbose yes
 set -g default_user your_normal_user
 set -g theme_color_scheme dark
 set -g fish_prompt_pwd_dir_length 0
+set -g theme_prompt_max_size_percentage 90
+set -g theme_prompt_keep_space 10
 set -g theme_project_dir_length 1
 set -g theme_newline_cursor yes
 set -g theme_newline_prompt '$ '
@@ -132,6 +134,8 @@ set -g theme_newline_prompt '$ '
 - `theme_git_worktree_support`. If you do any git worktree shenanigans, setting this to `yes` will fix incorrect project-relative path display. If you don't do any git worktree shenanigans, leave it disabled. It's faster this way :)
 - `theme_use_abbreviated_branch_name`. Set to `yes` to truncate git branch names in the prompt.
 - `fish_prompt_pwd_dir_length`. bobthefish respects the Fish `$fish_prompt_pwd_dir_length` setting to abbreviate the prompt path. Set to `0` to show the full path, `1` (default) to show only the first character of each parent directory name, or any other number to show up to that many characters.
+- `theme_prompt_max_size_percentage`. When the prompt is wider then the given number, show a smaller prompt instead. The default is `90` (90% of the terminal's width). Fish cannot show wider prompt than 100% (this case fish would show: `> `). See the option below.
+- `theme_prompt_keep_space`. When the prompt is too wide to provide the given number of free space (chars), show a smaller prompt instead. The default is `10` chars. See the option above.
 - `theme_project_dir_length`. The same as `$fish_prompt_pwd_dir_length`, but for the path relative to the current project root. Defaults to `0`; set to any other number to show an abbreviated path.
 - `theme_newline_cursor`. Use `yes` to have cursor start on a new line. By default the prompt is only one line. When working with long directories it may be preferrend to have cursor on the next line. Setting this to `clean` instead of `yes` suppresses the caret on the new line.
 - `theme_newline_prompt`. Use a custom prompt with newline cursor. By default this is the chevron right glyph or `>` when powerline fonts are disabled.
