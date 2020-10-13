@@ -78,7 +78,7 @@ end
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l ref (command git symbolic-ref HEAD 2>/dev/null)
     and begin
-        [ "$theme_display_git_master_branch" != 'yes' -a "$ref" = 'refs/heads/master' ]
+        [ "$theme_display_git_master_branch" != 'yes' -a \( "$ref" = 'refs/heads/master' -o "$ref" = 'refs/heads/main' \) ]
         and echo $branch_glyph
         and return
 

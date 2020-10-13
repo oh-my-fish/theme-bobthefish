@@ -108,6 +108,11 @@ set -g theme_project_dir_length 1
 set -g theme_newline_cursor yes
 set -g theme_newline_prompt '$ '
 ```
+**GIT options**
+
+Note that `master` and `main` now behave in the same way i.e. they
+are hidden/collapsed by default. Set the `theme_display_git_master_branch`
+override to `yes` (see above) to see these branches.
 
 **Title options**
 
