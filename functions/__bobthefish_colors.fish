@@ -524,10 +524,10 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -l colorfg $base00
 
-      set -x color_initial_segment_exit     $base05 $base0B --bold  
+      set -x color_initial_segment_exit     $base05 $base0B --bold
       set -x color_initial_segment_private  $base05 $base02
-      set -x color_initial_segment_su       $base05 $base0E --bold 
-      set -x color_initial_segment_jobs     $base05 $base0C --bold 
+      set -x color_initial_segment_su       $base05 $base0E --bold
+      set -x color_initial_segment_jobs     $base05 $base0C --bold
 
       set -x color_path                     $base02 $base05
       set -x color_path_basename            $base02 $base06 --bold
