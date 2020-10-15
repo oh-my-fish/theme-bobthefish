@@ -76,9 +76,13 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
+    [ -n "$theme_git_default_branches" ]
+    or set -l theme_git_default_branches refs/heads/master refs/heads/main
+
     set -l ref (command git symbolic-ref HEAD 2>/dev/null)
     and begin
-        [ "$theme_display_git_master_branch" != 'yes' -a \( "$ref" = 'refs/heads/master' -o "$ref" = 'refs/heads/main' \) ]
+        [ "$theme_display_git_master_branch" != 'yes' ]
+        and contains $ref $theme_git_default_branches
         and echo $branch_glyph
         and return
 
