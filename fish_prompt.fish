@@ -76,22 +76,22 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
-    [ -n "$theme_git_default_branches" ]
-    or set -l theme_git_default_branches refs/heads/master refs/heads/main
-
-    set -l ref (command git symbolic-ref HEAD 2>/dev/null)
+    set -l branch (command git symbolic-ref HEAD | cut -d "/" -f3 2>/dev/null)
     and begin
+        [ -n "$theme_git_default_branches" ]
+        or set -l theme_git_default_branches master main
+
         [ "$theme_display_git_master_branch" != 'yes' ]
-        and contains $ref $theme_git_default_branches
+        and contains $branch $theme_git_default_branches
         and echo $branch_glyph
         and return
 
         # truncate the middle of the branch name, but only if it's 25+ characters
-        set -l truncname $ref
+        set -l truncname $branch
         [ "$theme_use_abbreviated_branch_name" = 'yes' ]
-        and set truncname (string replace -r '^(.{28}).{3,}(.{5})$' "\$1…\$2" $ref)
+        and set truncname (string replace -r '^(.{17}).{3,}(.{5})$' "\$1…\$2" $branch)
 
-        string replace -r '^refs/heads/' "$branch_glyph " $truncname
+        echo $branch_glyph $truncname
         and return
     end
 
