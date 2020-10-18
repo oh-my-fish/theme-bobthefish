@@ -81,7 +81,7 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
         [ -n "$theme_git_default_branches" ]
         or set -l theme_git_default_branches master main
 
-        [ "$theme_display_git_master_branch" != 'yes' ]
+        [ "$theme_display_git_master_branch" != 'yes' -a "$theme_display_git_default_branch" != 'yes' ]
         and contains $branch $theme_git_default_branches
         and echo $branch_glyph
         and return
