@@ -76,7 +76,7 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
-    set -l branch (command git symbolic-ref HEAD | cut -d "/" -f3 2>/dev/null)
+    set -l branch (command git symbolic-ref HEAD | string replace -r '^refs/heads/' '' 2>/dev/null)
     and begin
         [ -n "$theme_git_default_branches" ]
         or set -l theme_git_default_branches master main
