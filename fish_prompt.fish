@@ -23,7 +23,8 @@
 #     set -g theme_display_git_ahead_verbose yes
 #     set -g theme_display_git_dirty_verbose yes
 #     set -g theme_display_git_stashed_verbose yes
-#     set -g theme_display_git_master_branch yes
+#     set -g theme_display_git_default_branch yes
+#     set -g theme_git_default_branches main trunk
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
@@ -77,18 +78,22 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
-    set -l ref (command git symbolic-ref HEAD 2>/dev/null)
+    set -l branch (command git symbolic-ref HEAD | string replace -r '^refs/heads/' '' 2>/dev/null)
     and begin
-        [ "$theme_display_git_master_branch" != 'yes' -a "$ref" = 'refs/heads/master' ]
+        [ -n "$theme_git_default_branches" ]
+        or set -l theme_git_default_branches master main
+
+        [ "$theme_display_git_master_branch" != 'yes' -a "$theme_display_git_default_branch" != 'yes' ]
+        and contains $branch $theme_git_default_branches
         and echo $branch_glyph
         and return
 
         # truncate the middle of the branch name, but only if it's 25+ characters
-        set -l truncname $ref
+        set -l truncname $branch
         [ "$theme_use_abbreviated_branch_name" = 'yes' ]
-        and set truncname (string replace -r '^(.{28}).{3,}(.{5})$' "\$1…\$2" $ref)
+        and set truncname (string replace -r '^(.{17}).{3,}(.{5})$' "\$1…\$2" $branch)
 
-        string replace -r '^refs/heads/' "$branch_glyph " $truncname
+        echo $branch_glyph $truncname
         and return
     end
 
