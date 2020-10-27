@@ -149,7 +149,7 @@ set -g theme_newline_prompt '$ '
 | ![solarized][btf-solarized] | ![solarized-light][btf-solarized-light] |
 | ![base16][btf-base16]       | ![base16-light][btf-base16-light]       |
 | ![zenburn][btf-zenburn]     | ![terminal-dark][btf-terminal-dark]     |
-| ![nord][btf-nord]           |                                         |
+| ![nord][btf-nord]           | ![gruvbox-light][gruvbox-light]         |
 
 You can use the function `bobthefish_display_colors` to preview the prompts in
 any color scheme.
@@ -246,3 +246,4 @@ end
 [btf-zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
 [btf-terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
 [btf-nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
+[gruvbox-light]:   https://user-images.githubusercontent.com/458535/97345492-6a207e80-188a-11eb-92df-30f33419238b.png "gruvbox-light"
