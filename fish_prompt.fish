@@ -40,6 +40,7 @@
 #     set -g theme_display_sudo_user yes
 #     set -g theme_display_vi no
 #     set -g theme_display_nvm yes
+#     set -g theme_display_fvm yes
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
@@ -900,6 +901,20 @@ function __bobthefish_prompt_nvm -S -d 'Display current node version through NVM
     or return
 
     set -l node_version (nvm current 2> /dev/null)
+
+    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+    and return
+
+    __bobthefish_start_segment $color_nvm
+    echo -ns $node_glyph $node_version ' '
+    set_color normal
+end
+
+function __bobthefish_prompt_nvm -S -d 'Display current node version through FNM'
+    [ "$theme_display_nvm" = 'yes' -a -n "$FNM_DIR" ]
+    or return
+
+    set -l node_version (fnm current 2> /dev/null)
 
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
