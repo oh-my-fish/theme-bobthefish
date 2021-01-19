@@ -125,6 +125,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   __bobthefish_finish_segments
   echo
 
+  __bobthefish_start_segment $color_screen
+  echo -ns 'screen '
+  __bobthefish_finish_segments
+
   __bobthefish_start_segment $color_rvm
   echo -ns $ruby_glyph rvm ' '
   __bobthefish_finish_segments
