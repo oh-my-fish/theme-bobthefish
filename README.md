@@ -85,8 +85,7 @@ set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_nix no
 set -g theme_display_ruby no
-set -g theme_display_nvm yes
-set -g theme_display_fnm yes
+set -g theme_display_node yes
 set -g theme_display_user ssh
 set -g theme_display_hostname ssh
 set -g theme_display_vi no
@@ -125,8 +124,7 @@ set -g theme_newline_prompt '$ '
 **Prompt options**
 
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
-- `theme_display_nvm`. If set to `yes`, will display current NVM node version.
-- `theme_display_fnm`. If set to `yes`, will display current FNM node version.
+- `theme_display_node`. If set to `yes`, will display current NVM or FNM node version.
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).

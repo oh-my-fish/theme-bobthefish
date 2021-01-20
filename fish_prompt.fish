@@ -896,30 +896,30 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
-function __bobthefish_prompt_nvm -S -d 'Display current node version through NVM'
-    [ "$theme_display_nvm" = 'yes' -a -n "$NVM_DIR" ]
+function __bobthefish_prompt_node -S -d 'Display current node version'
+    [ "$theme_display_node" = "yes" -o "$theme_display_nvm" = 'yes' ]
     or return
 
-    set -l node_version (nvm current 2> /dev/null)
+    set -l node_manager
+    set -l node_manager_dir
+
+    if type -fq nvm
+      set node_manager "nvm"
+      set node_manager_dir $NVM_DIR
+    else if type -fq fnm
+      set node_manager "fnm"
+      set node_manager_dir $FNM_DIR
+    end
+
+    [ -n "$node_manager_dir" ]
+    or return
+
+    set -l node_version ("$node_manager" current)
 
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
 
-    __bobthefish_start_segment $color_nvm
-    echo -ns $node_glyph $node_version ' '
-    set_color normal
-end
-
-function __bobthefish_prompt_nvm -S -d 'Display current node version through FNM'
-    [ "$theme_display_nvm" = 'yes' -a -n "$FNM_DIR" ]
-    or return
-
-    set -l node_version (fnm current 2> /dev/null)
-
-    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
-    and return
-
-    __bobthefish_start_segment $color_nvm
+    __bobthefish_start_segment $color_node
     echo -ns $node_glyph $node_version ' '
     set_color normal
 end
@@ -1139,7 +1139,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
-    __bobthefish_prompt_nvm
+    __bobthefish_prompt_node
 
     set -l real_pwd (__bobthefish_pwd)
 
