@@ -39,8 +39,7 @@
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
 #     set -g theme_display_vi no
-#     set -g theme_display_nvm yes
-#     set -g theme_display_fvm yes
+#     set -g theme_display_node yes
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
@@ -914,7 +913,7 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     [ -n "$node_manager_dir" ]
     or return
 
-    set -l node_version ("$node_manager" current)
+    set -l node_version ("$node_manager" current 2> /dev/null)
 
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
