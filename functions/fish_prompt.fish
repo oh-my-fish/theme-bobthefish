@@ -918,6 +918,9 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
 
+    [ -n "$color_nvm" ]
+     and set -x color_node $color_nvm
+
     __bobthefish_start_segment $color_node
     echo -ns $node_glyph $node_version ' '
     set_color normal
