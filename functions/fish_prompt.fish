@@ -1115,9 +1115,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     type -q bobthefish_colors
     and bobthefish_colors
 
-    [ -n "$color_nvm" ]
-    and set -x color_node $color_nvm
-
     # Start each line with a blank slate
     set -l __bobthefish_current_bg
 

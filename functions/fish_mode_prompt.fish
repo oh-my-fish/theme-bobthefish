@@ -21,9 +21,6 @@ function fish_mode_prompt -d 'bobthefish-optimized fish mode indicator'
     type -q bobthefish_colors
     and bobthefish_colors
 
-    [ -n "$color_nvm" ]
-    and set -x color_node $color_nvm
-
     set_color normal # clear out anything bold or underline...
 
     switch $fish_bind_mode
