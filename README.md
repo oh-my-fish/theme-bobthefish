@@ -1,10 +1,10 @@
 # bobthefish
 
-`bobthefish` is a Powerline-style, Git-aware [fish][fish] theme optimized for awesome.
+`bobthefish` is a Powerline-style, Git-aware [fish][btf-fish] theme optimized for awesome.
 
 [![Oh My Fish](https://img.shields.io/badge/Framework-Oh_My_Fish-blue.svg?style=flat)](https://github.com/oh-my-fish/oh-my-fish) [![MIT License](https://img.shields.io/github/license/oh-my-fish/theme-bobthefish.svg?style=flat)](/LICENSE.md)
 
-![bobthefish][screencast]
+![bobthefish][btf-screencast]
 
 
 ### Installation
@@ -13,15 +13,15 @@ Be sure to have Oh My Fish installed. Then just:
 
     omf install bobthefish
 
-You will need a [Powerline-patched font][patching] for this to work, unless you enable the compatibility fallback option:
+You will need a [Powerline-patched font][btf-patching] for this to work, unless you enable the compatibility fallback option:
 
     set -g theme_powerline_fonts no
 
-[I recommend picking one of these][fonts]. For more advanced awesome, install a [nerd fonts patched font][nerd-fonts], and enable nerd fonts support:
+[I recommend picking one of these][btf-fonts]. For more advanced awesome, install a [nerd fonts patched font][btf-nerd-fonts], and enable nerd fonts support:
 
     set -g theme_nerd_fonts yes
 
-This theme is based loosely on [agnoster][agnoster].
+This theme is based loosely on [agnoster][btf-agnoster].
 
 
 ### Features
@@ -144,12 +144,12 @@ set -g theme_newline_prompt '$ '
 
 **Color scheme options**
 
-| ![dark][dark]           | ![light][light]                     |
-| ----------------------- | ----------------------------------- |
-| ![solarized][solarized] | ![solarized-light][solarized-light] |
-| ![base16][base16]       | ![base16-light][base16-light]       |
-| ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
-| ![nord][nord]           |                                     |
+| ![dark][btf-dark]           | ![light][btf-light]                     |
+| --------------------------- | --------------------------------------- |
+| ![solarized][btf-solarized] | ![solarized-light][btf-solarized-light] |
+| ![base16][btf-base16]       | ![base16-light][btf-base16-light]       |
+| ![zenburn][btf-zenburn]     | ![terminal-dark][btf-terminal-dark]     |
+| ![nord][btf-nord]           |                                         |
 
 You can use the function `bobthefish_display_colors` to preview the prompts in
 any color scheme.
@@ -230,19 +230,19 @@ end
 ```
 
 
-[fish]:       https://github.com/fish-shell/fish-shell
-[screencast]: https://cloud.githubusercontent.com/assets/53660/18028510/f16f6b2c-6c35-11e6-8eb9-9f23ea3cce2e.gif
-[patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
-[fonts]:      https://github.com/Lokaltog/powerline-fonts
-[nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
-[agnoster]:   https://gist.github.com/agnoster/3712874
+[btf-fish]:       https://github.com/fish-shell/fish-shell
+[btf-screencast]: https://cloud.githubusercontent.com/assets/53660/18028510/f16f6b2c-6c35-11e6-8eb9-9f23ea3cce2e.gif
+[btf-patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
+[btf-fonts]:      https://github.com/Lokaltog/powerline-fonts
+[btf-nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
+[btf-agnoster]:   https://gist.github.com/agnoster/3712874
 
-[dark]:            https://cloud.githubusercontent.com/assets/53660/16141569/ee2bbe4a-3411-11e6-85dc-3d9b0226e833.png "dark"
-[light]:           https://cloud.githubusercontent.com/assets/53660/16141570/f106afc6-3411-11e6-877d-fc2a8f6d3175.png "light"
-[solarized]:       https://cloud.githubusercontent.com/assets/53660/16141572/f7724032-3411-11e6-8771-b43769e7afec.png "solarized"
-[solarized-light]: https://cloud.githubusercontent.com/assets/53660/16141575/fbed8036-3411-11e6-92e9-90da6d45f94b.png "solarized-light"
-[base16]:          https://cloud.githubusercontent.com/assets/53660/16141577/0134763a-3412-11e6-9cca-6040d39c8fd4.png "base16"
-[base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
-[zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
-[terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
-[nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
+[btf-dark]:            https://cloud.githubusercontent.com/assets/53660/16141569/ee2bbe4a-3411-11e6-85dc-3d9b0226e833.png "dark"
+[btf-light]:           https://cloud.githubusercontent.com/assets/53660/16141570/f106afc6-3411-11e6-877d-fc2a8f6d3175.png "light"
+[btf-solarized]:       https://cloud.githubusercontent.com/assets/53660/16141572/f7724032-3411-11e6-8771-b43769e7afec.png "solarized"
+[btf-solarized-light]: https://cloud.githubusercontent.com/assets/53660/16141575/fbed8036-3411-11e6-92e9-90da6d45f94b.png "solarized-light"
+[btf-base16]:          https://cloud.githubusercontent.com/assets/53660/16141577/0134763a-3412-11e6-9cca-6040d39c8fd4.png "base16"
+[btf-base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
+[btf-zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
+[btf-terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
+[btf-nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
