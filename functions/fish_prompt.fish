@@ -399,7 +399,7 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
 
         if set -q theme_newline_prompt
             echo -ens "$theme_newline_prompt"
-        else if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
+        else if [ "$theme_powerline_fonts" = 'no' -a "$theme_nerd_fonts" != 'yes' ]
             echo -ns '> '
         else
             echo -ns "$right_arrow_glyph "
@@ -641,12 +641,12 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     and [ -z $namespace -o "$namespace" = 'default' ]
     and return
 
-    set -l segment $k8s_glyph " " $context
+    set -l segment $k8s_glyph ' ' $context
     [ -n "$namespace" ]
-    and set segment $segment ":" $namespace
+    and set segment $segment ':' $namespace
 
     __bobthefish_start_segment $color_k8s
-    echo -ns $segment " "
+    echo -ns $segment ' '
 end
 
 
@@ -669,17 +669,17 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
 
     set -l diff_time $diff_mins"m"
     [ $diff_mins -le 0 ]
-    and set -l diff_time "0m"
+    and set -l diff_time '0m'
     [ $diff_mins -ge 60 ]
     and set -l diff_time (math "floor($diff_mins / 60)")"h"(math "$diff_mins % 60")"m"
 
-    set -l segment $profile " (" $diff_time ")"
+    set -l segment $profile ' (' $diff_time ')'
     set -l status_color $color_aws_vault
     [ $diff_mins -le 0 ]
     and set -l status_color $color_aws_vault_expired
 
     __bobthefish_start_segment $status_color
-    echo -ns $segment " "
+    echo -ns $segment ' '
 end
 
 
@@ -891,22 +891,22 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     and return
 
     __bobthefish_start_segment $color_desk
-    echo -ns $desk_glyph ' ' (basename  -a -s ".fish" "$DESK_ENV") ' '
+    echo -ns $desk_glyph ' ' (basename -a -s '.fish' "$DESK_ENV") ' '
     set_color normal
 end
 
 function __bobthefish_prompt_node -S -d 'Display current node version'
-    [ "$theme_display_node" = "yes" -o "$theme_display_nvm" = 'yes' ]
+    [ "$theme_display_node" = 'yes' -o "$theme_display_nvm" = 'yes' ]
     or return
 
     set -l node_manager
     set -l node_manager_dir
 
     if type -fq nvm
-      set node_manager "nvm"
+      set node_manager 'nvm'
       set node_manager_dir $NVM_DIR
     else if type -fq fnm
-      set node_manager "fnm"
+      set node_manager 'fnm'
       set node_manager_dir $FNM_DIR
     end
 
@@ -919,7 +919,7 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     and return
 
     [ -n "$color_nvm" ]
-     and set -x color_node $color_nvm
+    and set -x color_node $color_nvm
 
     __bobthefish_start_segment $color_node
     echo -ns $node_glyph $node_version ' '
@@ -945,7 +945,7 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
 
     set -l flags "$dirty"
     [ "$flags" ]
-    and set flags ""
+    and set flags ''
 
     set -l flag_colors $color_repo
     if [ "$dirty" ]
@@ -1107,8 +1107,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set -l last_status $status
 
     # Use a simple prompt on dumb terminals.
-    if [ "$TERM" = "dumb" ]
-        echo "> "
+    if [ "$TERM" = 'dumb' ]
+        echo '> '
         return
     end
 
