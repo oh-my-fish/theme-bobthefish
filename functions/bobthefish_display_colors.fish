@@ -3,7 +3,7 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   set -l color_schemes default light \
     solarized solarized-light \
     base16 base16-light \
-    gruvbox zenburn \
+    gruvbox gruvbox-light zenburn \
     dracula nord \
     terminal terminal-dark-white \
     terminal-light terminal-light-black \
