@@ -141,5 +141,13 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   echo -ns $desk_glyph desk ' '
   __bobthefish_finish_segments
 
+  __bobthefish_start_segment $color_aws_vault
+  echo -ns aws-vault ' (' active ') '
+  __bobthefish_finish_segments
+
+  __bobthefish_start_segment $color_aws_vault_expired
+  echo -ns aws-vault ' (' expired ') '
+  __bobthefish_finish_segments
+
   echo -e "\n"
 end

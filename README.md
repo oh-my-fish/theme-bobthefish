@@ -1,10 +1,10 @@
 # bobthefish
 
-`bobthefish` is a Powerline-style, Git-aware [fish][fish] theme optimized for awesome.
+`bobthefish` is a Powerline-style, Git-aware [fish][btf-fish] theme optimized for awesome.
 
 [![Oh My Fish](https://img.shields.io/badge/Framework-Oh_My_Fish-blue.svg?style=flat)](https://github.com/oh-my-fish/oh-my-fish) [![MIT License](https://img.shields.io/github/license/oh-my-fish/theme-bobthefish.svg?style=flat)](/LICENSE.md)
 
-![bobthefish][screencast]
+![bobthefish][btf-screencast]
 
 
 ### Installation
@@ -13,15 +13,15 @@ Be sure to have Oh My Fish installed. Then just:
 
     omf install bobthefish
 
-You will need a [Powerline-patched font][patching] for this to work, unless you enable the compatibility fallback option:
+You will need a [Powerline-patched font][btf-patching] for this to work, unless you enable the compatibility fallback option:
 
     set -g theme_powerline_fonts no
 
-[I recommend picking one of these][fonts]. For more advanced awesome, install a [nerd fonts patched font][nerd-fonts], and enable nerd fonts support:
+[I recommend picking one of these][btf-fonts]. For more advanced awesome, install a [nerd fonts patched font][btf-nerd-fonts], and enable nerd fonts support:
 
     set -g theme_nerd_fonts yes
 
-This theme is based loosely on [agnoster][agnoster].
+This theme is based loosely on [agnoster][btf-agnoster].
 
 
 ### Features
@@ -47,7 +47,7 @@ This theme is based loosely on [agnoster][agnoster].
  * Current RVM, rbenv or chruby (Ruby) version
  * Current virtualenv (Python) version
      * _If you use virtualenv, you will probably need to disable the default virtualenv prompt, since it doesn't play nice with fish: `set -x VIRTUAL_ENV_DISABLE_PROMPT 1`_
- * Current NVM version (Nodejs) (inactive by default; see configurations in the next paragraph)
+ * Current NVM/FNM version (Nodejs) (inactive by default; see configurations in the next paragraph)
  * Abbreviated parent directory
  * Current directory, or Git or Mercurial project name
  * Current project's repo branch (<img width="16" alt="branch-glyph" src="https://cloud.githubusercontent.com/assets/53660/8768360/53ee9b58-2e32-11e5-9977-cee0063936fa.png"> master) or detached head (`➦` d0dfd9b)
@@ -74,7 +74,8 @@ set -g theme_display_git_untracked no
 set -g theme_display_git_ahead_verbose yes
 set -g theme_display_git_dirty_verbose yes
 set -g theme_display_git_stashed_verbose yes
-set -g theme_display_git_master_branch yes
+set -g theme_display_git_default_branch yes
+set -g theme_git_default_branches master main
 set -g theme_git_worktree_support yes
 set -g theme_use_abbreviated_branch_name yes
 set -g theme_display_vagrant yes
@@ -84,7 +85,7 @@ set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_nix no
 set -g theme_display_ruby no
-set -g theme_display_nvm yes
+set -g theme_display_node yes
 set -g theme_display_user ssh
 set -g theme_display_hostname ssh
 set -g theme_display_vi no
@@ -108,6 +109,10 @@ set -g theme_project_dir_length 1
 set -g theme_newline_cursor yes
 set -g theme_newline_prompt '$ '
 ```
+**Git options**
+
+- `theme_display_git_default_branch`. By default theme will hide/collapse the branch name in your prompt when you are using a Git _default branch_ i.e. historically `master` and often `main` now. Set to `yes` to stop these branches from being hidden/collapsed.
+- `theme_git_default_branches`. The big cloud repos (GitHub, Bitbucket, GitLab et al.) are moving away from using `master` as the default branch name, and allow you to choose your own. As of version **2.28**, Git also supports custom default branch names via the `init.defaultBranch` config option. If our defaults of `master main` don't suit you, you can add/remove names in thist list i.e. `main trunk`. This ensures correct hiding/collapsing behaviour with custom default branch names (unless option above is activated).
 
 **Title options**
 
@@ -119,11 +124,12 @@ set -g theme_newline_prompt '$ '
 **Prompt options**
 
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
-- `theme_display_nvm`. If set to `yes`, will display current NVM node version.
+- `theme_display_node`. If set to `yes`, will display current NVM or FNM node version.
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).
 - `theme_display_k8s_namespace`. This feature is disabled by default. Use `yes` to show the current kubernetes namespace.
+- `theme_display_aws_vault_profile`. This feature is disabled by default. Use `yes` to show the currently executing [AWS Vault](https://github.com/99designs/aws-vault) profile.
 - `theme_display_user`. If set to `yes`, display username always, if set to `ssh`, only when an SSH-Session is detected, if set to no, never.
 - `theme_display_hostname`. Same behaviour as `theme_display_user`.
 - `theme_display_sudo_user`. If set to `yes`, displays the sudo-username in a root shell. For example, when calling `sudo -s` and having this option set to `yes`, the username of the user, who called `sudo -s`, will be displayed.
@@ -138,12 +144,12 @@ set -g theme_newline_prompt '$ '
 
 **Color scheme options**
 
-| ![dark][dark]           | ![light][light]                     |
-| ----------------------- | ----------------------------------- |
-| ![solarized][solarized] | ![solarized-light][solarized-light] |
-| ![base16][base16]       | ![base16-light][base16-light]       |
-| ![zenburn][zenburn]     | ![terminal-dark][terminal-dark]     |
-| ![nord][nord]           |                                     |
+| ![dark][btf-dark]           | ![light][btf-light]                     |
+| --------------------------- | --------------------------------------- |
+| ![solarized][btf-solarized] | ![solarized-light][btf-solarized-light] |
+| ![base16][btf-base16]       | ![base16-light][btf-base16-light]       |
+| ![zenburn][btf-zenburn]     | ![terminal-dark][btf-terminal-dark]     |
+| ![nord][btf-nord]           |                                         |
 
 You can use the function `bobthefish_display_colors` to preview the prompts in
 any color scheme.
@@ -224,19 +230,19 @@ end
 ```
 
 
-[fish]:       https://github.com/fish-shell/fish-shell
-[screencast]: https://cloud.githubusercontent.com/assets/53660/18028510/f16f6b2c-6c35-11e6-8eb9-9f23ea3cce2e.gif
-[patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
-[fonts]:      https://github.com/Lokaltog/powerline-fonts
-[nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
-[agnoster]:   https://gist.github.com/agnoster/3712874
+[btf-fish]:       https://github.com/fish-shell/fish-shell
+[btf-screencast]: https://cloud.githubusercontent.com/assets/53660/18028510/f16f6b2c-6c35-11e6-8eb9-9f23ea3cce2e.gif
+[btf-patching]:   https://powerline.readthedocs.org/en/master/installation.html#patched-fonts
+[btf-fonts]:      https://github.com/Lokaltog/powerline-fonts
+[btf-nerd-fonts]: https://github.com/ryanoasis/nerd-fonts
+[btf-agnoster]:   https://gist.github.com/agnoster/3712874
 
-[dark]:            https://cloud.githubusercontent.com/assets/53660/16141569/ee2bbe4a-3411-11e6-85dc-3d9b0226e833.png "dark"
-[light]:           https://cloud.githubusercontent.com/assets/53660/16141570/f106afc6-3411-11e6-877d-fc2a8f6d3175.png "light"
-[solarized]:       https://cloud.githubusercontent.com/assets/53660/16141572/f7724032-3411-11e6-8771-b43769e7afec.png "solarized"
-[solarized-light]: https://cloud.githubusercontent.com/assets/53660/16141575/fbed8036-3411-11e6-92e9-90da6d45f94b.png "solarized-light"
-[base16]:          https://cloud.githubusercontent.com/assets/53660/16141577/0134763a-3412-11e6-9cca-6040d39c8fd4.png "base16"
-[base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
-[zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
-[terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
-[nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
+[btf-dark]:            https://cloud.githubusercontent.com/assets/53660/16141569/ee2bbe4a-3411-11e6-85dc-3d9b0226e833.png "dark"
+[btf-light]:           https://cloud.githubusercontent.com/assets/53660/16141570/f106afc6-3411-11e6-877d-fc2a8f6d3175.png "light"
+[btf-solarized]:       https://cloud.githubusercontent.com/assets/53660/16141572/f7724032-3411-11e6-8771-b43769e7afec.png "solarized"
+[btf-solarized-light]: https://cloud.githubusercontent.com/assets/53660/16141575/fbed8036-3411-11e6-92e9-90da6d45f94b.png "solarized-light"
+[btf-base16]:          https://cloud.githubusercontent.com/assets/53660/16141577/0134763a-3412-11e6-9cca-6040d39c8fd4.png "base16"
+[btf-base16-light]:    https://cloud.githubusercontent.com/assets/53660/16141579/02f7245e-3412-11e6-97c6-5f3cecffb73c.png "base16-light"
+[btf-zenburn]:         https://cloud.githubusercontent.com/assets/53660/16141580/06229dd4-3412-11e6-84aa-a48de127b6da.png "zenburn"
+[btf-terminal-dark]:   https://cloud.githubusercontent.com/assets/53660/16141583/0b3e8eea-3412-11e6-8068-617c5371f6ea.png "terminal-dark"
+[btf-nord]:            https://user-images.githubusercontent.com/39213657/72811435-f64ca800-3c5f-11ea-8711-dcce8cfc50fb.png "nord"
