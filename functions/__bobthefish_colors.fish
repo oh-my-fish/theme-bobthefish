@@ -27,6 +27,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_aws_vault                blue $colorfg --bold
       set -x color_aws_vault_expired        blue red --bold
@@ -62,6 +63,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_aws_vault                blue $colorfg --bold
       set -x color_aws_vault_expired        blue red --bold
@@ -97,6 +99,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_aws_vault                blue $colorfg --bold
       set -x color_aws_vault_expired        blue red --bold
@@ -132,6 +135,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           bryellow $colorfg --bold
 
       set -x color_vagrant                  brcyan $colorfg
+      set -x color_tf                       brcyan $colorfg
       set -x color_k8s                      magenta white --bold
       set -x color_aws_vault                blue $colorfg --bold
       set -x color_aws_vault_expired        blue red --bold
@@ -173,6 +177,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $grey --bold
 
       set -x color_vagrant                  $blue $green --bold
+      set -x color_tf                       $blue $green --bold
       set -x color_k8s                      $green $white --bold
       set -x color_aws_vault                $blue $grey --bold
       set -x color_aws_vault_expired        $blue $red --bold
@@ -225,6 +230,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base09 $colorfg --bold
 
       set -x color_vagrant                  $base0C $colorfg --bold
+      set -x color_tf                       $base0C $colorfg --bold
       set -x color_k8s                      $base06 $colorfg --bold
       set -x color_aws_vault                $base0D $colorfg --bold
       set -x color_aws_vault_expired        $base0D $base08 --bold
@@ -277,6 +283,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base09 $colorfg --bold
 
       set -x color_vagrant                  $base0C $colorfg --bold
+      set -x color_tf                       $base0C $colorfg --bold
       set -x color_k8s                      $base0B $colorfg --bold
       set -x color_aws_vault                $base0D $base0A --bold
       set -x color_aws_vault_expired        $base0D $base08 --bold
@@ -329,6 +336,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
       set -x color_vagrant                  $violet $colorfg --bold
+      set -x color_tf                       $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_aws_vault                $violet $base3 --bold
       set -x color_aws_vault_expired        $violet $orange --bold
@@ -381,6 +389,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow $colorfg --bold
 
       set -x color_vagrant                  $violet $colorfg --bold
+      set -x color_tf                       $violet $colorfg --bold
       set -x color_k8s                      $green $colorfg --bold
       set -x color_aws_vault                $violet $base3 --bold
       set -x color_aws_vault_expired        $violet $orange --bold
@@ -426,6 +435,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set -x color_vagrant                  $blue[1] $white --bold
+      set -x color_tf                       $blue[1] $white --bold
       set -x color_k8s                      $green[1] $colorfg --bold
       set -x color_aws_vault                $blue[3] $orange[1] --bold
       set -x color_aws_vault_expired        $blue[3] $red[3] --bold
@@ -470,6 +480,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $yellow[1] $bg[2] --bold
 
       set -x color_vagrant                  $blue[2] $fg[2] --bold
+      set -x color_tf                       $blue[2] $fg[2] --bold
       set -x color_k8s                      $green[2] $fg[2] --bold
       set -x color_aws_vault                $blue[2] $yellow[1] --bold
       set -x color_aws_vault_expired        $blue[2] $red[1] --bold
@@ -516,6 +527,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange $bg --bold
 
       set -x color_vagrant                  $pink $bg --bold
+      set -x color_tf                       $pink $bg --bold
       set -x color_k8s                      $green $fg --bold
       set -x color_aws_vault                $comment $yellow --bold
       set -x color_aws_vault_expired        $comment $red --bold
@@ -568,6 +580,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $base07 $colorfg --bold
 
       set -x color_vagrant                  $base02 $colorfg --bold
+      set -x color_tf                       $base02 $colorfg --bold
       set -x color_k8s                      $base02 $colorfg --bold
       set -x color_aws_vault                $base0A $base0D --bold
       set -x color_aws_vault_expired        $base0A $base0B --bold
@@ -613,6 +626,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange[1] $orange[3] --bold
 
       set -x color_vagrant                  $blue[1] $white --bold
+      set -x color_tf                       $blue[1] $white --bold
       set -x color_k8s                      $green[2] $white --bold
       set -x color_aws_vault                $blue[3] $orange[1] --bold
       set -x color_aws_vault_expired        $blue[3] $red[3] --bold
@@ -644,6 +658,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -q __color_vi_mode_insert;           or set -l __color_vi_mode_insert           189303 333333 --bold
   set -q __color_vi_mode_visual;           or set -l __color_vi_mode_visual           f6b117 3a2a03 --bold
   set -q __color_vagrant;                  or set -l __color_vagrant                  48b4fb ffffff --bold
+  set -q __color_tf;                       or set -l __color_tf                       48b4fb ffffff --bold
   set -q __color_username;                 or set -l __color_username                 cccccc 255e87 --bold
   set -q __color_hostname;                 or set -l __color_hostname                 cccccc 255e87
   set -q __color_rvm;                      or set -l __color_rvm                      af0000 cccccc --bold
