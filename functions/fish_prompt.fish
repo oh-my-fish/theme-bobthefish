@@ -662,10 +662,15 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
     or return
 
+    if test (uname) = Darwin
+           set  now (gdate --utc +%s)
+           set  expiry (gdate -d "$AWS_SESSION_EXPIRATION" +%s)
+    else
+           set  now (date --utc +%s)
+           set  expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
+    end
+    
     set -l profile $AWS_VAULT
-
-    set -l now (date --utc +%s)
-    set -l expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
     set -l diff_mins (math "floor(( $expiry - $now ) / 60)")
 
     set -l diff_time $diff_mins"m"
