@@ -28,6 +28,7 @@
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
+#     set -g theme_display_oci_container no
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
@@ -599,6 +600,14 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
     echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
+function __bobthefish_prompt_oci_container -S -d 'Display oci container tool (podman)'
+    [ "$theme_display_oci_container" = 'no' -o -z "$container" ]
+    and return
+
+    __bobthefish_start_segment $color_vagrant
+    echo -ns $container ' '
+end
+
 function __bobthefish_k8s_context -S -d 'Get the current k8s context'
     set -l config_paths "$HOME/.kube/config"
     [ -n "$KUBECONFIG" ]
@@ -1130,6 +1139,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     # Containers and VMs
     __bobthefish_prompt_vagrant
     __bobthefish_prompt_docker
+    __bobthefish_prompt_oci_container
     __bobthefish_prompt_k8s_context
 
     # Cloud Tools
