@@ -690,7 +690,7 @@ end
 # Polyfill for fish < 2.5.0
 if not type -q prompt_hostname
     if not set -q __bobthefish_prompt_hostname
-        set -g __bobthefish_prompt_hostname (hostname | string replace -r '\..*' '')
+        set -g __bobthefish_prompt_hostname (uname -n | string replace -r '\..*' '')
     end
 
     function prompt_hostname
