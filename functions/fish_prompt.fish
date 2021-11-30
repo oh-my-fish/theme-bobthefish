@@ -895,9 +895,42 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
+function __bobthefish_prompt_find_file -S -d 'Find a file by going up the parent directories'
+    set -l dir "$argv[1]"
+    set -l file "$argv[2]"
+
+    if [ -z "$dir" ]
+        return 1
+    end
+
+    while [ "$dir" != '/' ]
+        if [ -f "$dir/$file" ]
+            return
+        end
+
+        set dir (dirname "$dir")
+    end
+    return 1
+end
+
 function __bobthefish_prompt_node -S -d 'Display current node version'
-    [ "$theme_display_node" = 'yes' -o "$theme_display_nvm" = 'yes' ]
-    or return
+    set -l should_show
+
+    if [ "$theme_display_node" = 'yes' -o "$theme_display_nvm" = 'yes' ]
+        set should_show 1
+    else if [ "$theme_display_node" = 'rc' ]
+        begin
+            __bobthefish_prompt_find_file "$PWD" .nvmrc
+            or __bobthefish_prompt_find_file "$PWD" .node-version
+        end
+        and set should_show 1
+    else if [ "$theme_display_node" = 'package' ]
+        __bobthefish_prompt_find_file "$PWD" package.json
+        and set should_show 1
+    end
+
+    [ -z "$should_show" ]
+    and return
 
     set -l node_manager
     set -l node_manager_dir
