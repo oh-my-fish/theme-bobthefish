@@ -35,6 +35,7 @@
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
+#     set -g theme_display_rustc no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
@@ -846,6 +847,47 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     echo -ns $ruby_glyph $ruby_version ' '
 end
 
+function __bobthefish_get_cargo_version -S -d 'Display the cargo version in a directory'
+    pushd $argv[1]
+    command rustc --version | cut -d ' ' -f 2
+    popd
+end
+
+function __bobthefish_prompt_rustc -S -d 'Display current cargo version if different than system'
+    [ "$theme_display_rustc" = '' ]
+    and return
+
+    type -fq rustc
+    or return
+
+    # If this value is non-zero we should show it as a segment.
+    set -l local_rustc_version
+
+    switch "$theme_display_rustc"
+        case always
+            set local_rustc_version (__bobthefish_get_cargo_version (__bobthefish_pwd))
+        case yes
+            cargo locate-project --message-format plain --quiet >/dev/null 2>/dev/null
+            and set local_rustc_version (__bobthefish_get_cargo_version (__bobthefish_pwd))
+        case diff
+            if not set -q __bobthefish_global_cargo_version
+                set -g __bobthefish_global_cargo_version (__bobthefish_get_cargo_version /)
+            end
+
+            set local_rustc_version (__bobthefish_get_cargo_version (__bobthefish_pwd))
+            if [ "$local_rustc_version" = "$__bobthefish_global_cargo_version" ]
+                set local_rustc_version ''
+            end
+    end
+
+    [ -z "$local_rustc_version" ]
+    and return
+
+    __bobthefish_start_segment $color_rustc
+    echo -ns $rustc_glyph $local_rustc_version ' '
+    set_color normal
+end
+
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
     switch (python --version 2>&1 | tr '\n' ' ')
         case 'Python 2*PyPy*'
@@ -1170,6 +1212,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Virtual environments
     __bobthefish_prompt_nix
+    __bobthefish_prompt_rustc
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
