@@ -516,7 +516,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange $bg --bold
 
       set -x color_vagrant                  $pink $bg --bold
-      set -x color_k8s                      $green $fg --bold
+      set -x color_k8s                      $purple $bg --bold
       set -x color_aws_vault                $comment $yellow --bold
       set -x color_aws_vault_expired        $comment $red --bold
       set -x color_username                 $selection $cyan --bold
