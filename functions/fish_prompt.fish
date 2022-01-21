@@ -895,7 +895,7 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
-function __bobthefish_prompt_find_file -S -d 'Find a file by going up the parent directories'
+function __bobthefish_prompt_find_file_up_re -S -d 'Find file(s) (as a regex), going up the parent directories'
     set -l dir "$argv[1]"
     set -l file "$argv[2]"
 
@@ -903,12 +903,12 @@ function __bobthefish_prompt_find_file -S -d 'Find a file by going up the parent
         return 1
     end
 
-    while [ "$dir" != '/' ]
-        if [ -f "$dir/$file" ]
+    while [ "$dir" ]
+        if string match -q -r "$dir/($file)\$" -- $dir/*
             return
         end
 
-        set dir (dirname "$dir")
+        set dir (__bobthefish_dirname "$dir")
     end
     return 1
 end
@@ -920,12 +920,11 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
         set should_show 1
     else if [ "$theme_display_node" = 'rc' ]
         begin
-            __bobthefish_prompt_find_file "$PWD" .nvmrc
-            or __bobthefish_prompt_find_file "$PWD" .node-version
+            __bobthefish_prompt_find_file_up_re "$PWD" '\.nvmrc|\.node-version'
         end
         and set should_show 1
     else if [ "$theme_display_node" = 'package' ]
-        __bobthefish_prompt_find_file "$PWD" package.json
+        __bobthefish_prompt_find_file_up_re "$PWD" 'package\.json'
         and set should_show 1
     end
 
