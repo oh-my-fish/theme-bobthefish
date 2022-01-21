@@ -916,15 +916,10 @@ end
 function __bobthefish_prompt_node -S -d 'Display current node version'
     set -l should_show
 
-    if [ "$theme_display_node" = 'yes' -o "$theme_display_nvm" = 'yes' ]
+    if [ "$theme_display_node" = 'always' -o "$theme_display_nvm" = 'yes' ]
         set should_show 1
-    else if [ "$theme_display_node" = 'rc' ]
-        begin
-            __bobthefish_prompt_find_file_up_re "$PWD" '\.nvmrc|\.node-version'
-        end
-        and set should_show 1
-    else if [ "$theme_display_node" = 'package' ]
-        __bobthefish_prompt_find_file_up_re "$PWD" 'package\.json'
+    else if [ "$theme_display_node" = 'yes' ]
+        __bobthefish_prompt_find_file_up_re "$PWD" '\.nvmrc|\.node-version|package\.json'
         and set should_show 1
     end
 
