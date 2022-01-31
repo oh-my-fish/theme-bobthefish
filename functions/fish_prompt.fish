@@ -899,7 +899,8 @@ function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the pare
     set -l dir "$argv[1]"
     set -l files $argv[2..]
 
-    if [ -z "$dir" ]
+    if test -z "$dir"
+        or test -z "$files"
         return 1
     end
 
@@ -909,6 +910,9 @@ function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the pare
                 return
             end
         end
+
+        [ "$dir" = '/' ]
+        and return 1
 
         set dir (__bobthefish_dirname "$dir")
     end
