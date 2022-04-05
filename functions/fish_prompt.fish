@@ -830,10 +830,10 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
         set -l asdf_current_ruby (asdf current ruby 2>/dev/null)
         or return
 
-        echo "$asdf_current_ruby" | read -l asdf_ruby_version asdf_provenance
+        echo "$asdf_current_ruby" | read -l _asdf_plugin asdf_ruby_version asdf_provenance
 
         # If asdf changes their ruby version provenance format, update this to match
-        [ (string trim -- "$asdf_provenance") = "(set by $HOME/.tool-versions)" ]
+        [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
         and return
 
         set ruby_version $asdf_ruby_version
