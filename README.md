@@ -80,6 +80,7 @@ set -g theme_git_worktree_support yes
 set -g theme_use_abbreviated_branch_name yes
 set -g theme_display_vagrant yes
 set -g theme_display_docker_machine no
+set -g theme_display_docker_context no
 set -g theme_display_k8s_context yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no

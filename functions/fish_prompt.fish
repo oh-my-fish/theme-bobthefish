@@ -28,6 +28,7 @@
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_vagrant yes
 #     set -g theme_display_docker_machine no
+#     set -g theme_display_docker_context no
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
@@ -599,6 +600,17 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
     echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
+function __bobthefish_prompt_docker_context -S -d 'Display Docker context'
+    [ "$theme_display_docker_context" = 'no' ]
+    and return
+    set -l docker_context (docker context inspect -f '{{.Name}}')
+    [ "$docker_context" = 'default' -o -z "docker_context" ]
+    and return
+
+    __bobthefish_start_segment $color_vagrant
+    echo -ns $docker_context ' '
+end
+
 function __bobthefish_k8s_context -S -d 'Get the current k8s context'
     set -l config_paths "$HOME/.kube/config"
     [ -n "$KUBECONFIG" ]
@@ -1163,6 +1175,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     # Containers and VMs
     __bobthefish_prompt_vagrant
     __bobthefish_prompt_docker
+    __bobthefish_prompt_docker_context
     __bobthefish_prompt_k8s_context
 
     # Cloud Tools
