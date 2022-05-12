@@ -81,6 +81,8 @@ set -g theme_use_abbreviated_branch_name yes
 set -g theme_display_vagrant yes
 set -g theme_display_docker_machine no
 set -g theme_display_k8s_context yes
+set -g theme_display_azure_subscription yes
+set -g theme_display_azure_subscription_truncate yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
 set -g theme_display_nix no
@@ -130,6 +132,8 @@ set -g theme_newline_prompt '$ '
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).
 - `theme_display_k8s_namespace`. This feature is disabled by default. Use `yes` to show the current kubernetes namespace.
 - `theme_display_aws_vault_profile`. This feature is disabled by default. Use `yes` to show the currently executing [AWS Vault](https://github.com/99designs/aws-vault) profile.
+- `theme_display_azure_subscription`. This feature is disabled by default. Use `yes` to show the currently select [Azure](https://docs.microsoft.com/en-us/cli/azure/) subscription.
+- `theme_display_azure_subscription_truncate`. Set to `yes` to truncate the azure subscription name in the promp.
 - `theme_display_user`. If set to `yes`, display username always, if set to `ssh`, only when an SSH-Session is detected, if set to no, never.
 - `theme_display_hostname`. Same behaviour as `theme_display_user`.
 - `theme_display_sudo_user`. If set to `yes`, displays the sudo-username in a root shell. For example, when calling `sudo -s` and having this option set to `yes`, the username of the user, who called `sudo -s`, will be displayed.
