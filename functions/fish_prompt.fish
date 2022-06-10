@@ -35,6 +35,7 @@
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
+#     set -g theme_display_go no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
@@ -803,6 +804,22 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     end
 end
 
+function __bobthefish_prompt_golang -S -d 'Display current Go information'
+    [ "$theme_display_go" = 'no' ]
+    and return
+    
+    set -l go_version
+    if type -fq go
+        set go_version (go version | cut --delimiter=' ' -f 3 | cut --characters='3-6' )
+    end
+
+    [ -z "$go_version" ]
+    and return
+
+    __bobthefish_start_segment $color_virtualgo
+    echo -ns $go_glyph $go_version ' '
+end
+
 function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     [ "$theme_display_ruby" = 'no' ]
     and return
@@ -1172,6 +1189,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
+    __bobthefish_prompt_golang
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_node
