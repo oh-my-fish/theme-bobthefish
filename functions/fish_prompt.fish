@@ -887,19 +887,21 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
         if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
             set high_enough_version "1"
         end
-    end 
+    end
     
-    __bobthefish_start_segment $color_virtualgo
-    echo -ns $go_glyph
-
     # do we show the version in red if it's not the right version?
     if [ "$theme_display_go_show_wrong_version" = "yes" ]
         # yes we do, so check if the version is high enough
         if [ "$high_enough_version" = "0" ]
             # the version of go isn't high enough
             __bobthefish_start_segment $color_rvm
+        else
+            __bobthefish_start_segment $color_virtualgo
         end
+    else
+        __bobthefish_start_segment $color_virtualgo
     end
+    echo -ns $go_glyph
 
     if [ "$theme_display_go_actual" = "yes" ]
         if [ "$actual_go_version" = "0" ]
