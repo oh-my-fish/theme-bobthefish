@@ -865,7 +865,7 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
 
         if test -f "$gomod_file"
             set found_gomod 1
-            cat "$gomod_file" | grep "^go\ " | read _gomod gomod_version 
+            grep "^go\ " "$gomod_file" | read __ gomod_version
             break
         end
 
