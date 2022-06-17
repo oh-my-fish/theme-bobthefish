@@ -868,39 +868,39 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
             echo "$asdf_go_sdk_version" | read  _asdf_plugin asdf_go_version asdf_provenance
         end
 
-        [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
-        and return
-
         set go_version $asdf_go_version
     end
 
+
+    set -l cwd (pwd)
+    set -l dir (pwd)
+    set -l found_gomod 0
     set -l no_go_installed 0
     set -l gomod_version "0"
-    
-    # no version from asdf, check go.mod file
-    if [ -z "$go_version" ]
-        set -l cwd (pwd)
-        set -l dir (pwd)
-        set -l gomod_file
-        set -l _gomod
-        set -l found_gomod 0
+    set -l gomod_file
 
-        # find the closest go.mod
-        while not test "$dir" = "/"
-            set gomod_file "$dir/go.mod"
+    # find the closest go.mod
+    while not test "$dir" = "/"
+        set gomod_file "$dir/go.mod"
 
-            if test -f "$gomod_file"
-                cat "$gomod_file" | grep "^go\ " | read _gomod gomod_version 
-                break
-            end
-
-            cd $dir/..
-            set dir (pwd)
+        if test -f "$gomod_file"
+            set found_gomod 1
+            cat "$gomod_file" | grep "^go\ " | read _gomod gomod_version 
+            break
         end
-        cd $cwd
 
+        cd $dir/..
+        set dir (pwd)
+    end
+    cd $cwd
+
+    if [ -z "$go_version" ]
         set go_version $gomod_version
     end
+
+    if test "$found_gomod" -eq "0"
+        return
+    end 
 
     set -l actual_go_version "0"
     if ! type -fq go
