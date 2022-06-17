@@ -853,26 +853,21 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     [ "$theme_display_go" = 'no' ]
     and return
     
-    set -l cwd (pwd)
-    set -l dir (pwd)
+    
+    set -l dir $real_pwd
     set -l found_gomod 0
     set -l gomod_version "0"
     set -l gomod_file
 
     # find the closest go.mod
-    while not test "$dir" = "/"
-        set gomod_file "$dir/go.mod"
-
-        if test -f "$gomod_file"
-            set found_gomod 1
+    while not [ -z "$d" ]
+        if [ -e $d/go.mod ]
             grep "^go\ " "$gomod_file" | read __ gomod_version
-            break
         end
 
-        cd $dir/..
-        set dir (pwd)
+        [ "$d" = "/" ]
+        and return
     end
-    cd $cwd
 
     # no go.mod, not in a go project, don't display the prompt
     if test "$found_gomod" -eq "0"
