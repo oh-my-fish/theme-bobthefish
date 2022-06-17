@@ -909,9 +909,9 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
 
     if [ "$theme_display_go_actual" = "yes" ]
         if [ "$actual_go_version" = "0" ]
-            echo -ns "(NA)"
+            echo -ns "NA"
         else                    
-            echo -ns "($actual_go_version)"
+            echo -ns "$actual_go_version"
         end
     else        
         echo -ns "$gomod_version" ' '
