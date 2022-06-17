@@ -36,6 +36,8 @@
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
 #     set -g theme_display_go no
+#     set -g theme_display_go_show_wrong_version yes
+#     set -g theme_display_go_actual diff
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
@@ -854,14 +856,8 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     set -l go_version
     if type -fq asdf
         set -l asdf_golang_version (asdf current golang 2>/dev/null)
-        or set -l asdf_golang_version "na"
-        
         set -l asdf_go_sdk_version (asdf current go-sdk 2>/dev/null)
-        or set -l asdf_go_sdk_version "na"
 
-        set -l _asdf_plugin
-        set -l asdf_go_version
-        set -l asdf_provenance
         if [ "$asdf_golang_version" != "na" ]
             echo "$asdf_golang_version" | read  _asdf_plugin asdf_go_version asdf_provenance
         else if [ "$asdf_go_sdk_version" != "na" ]
@@ -875,7 +871,6 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     set -l cwd (pwd)
     set -l dir (pwd)
     set -l found_gomod 0
-    set -l no_go_installed 0
     set -l gomod_version "0"
     set -l gomod_file
 
@@ -894,36 +889,53 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     end
     cd $cwd
 
-    if [ -z "$go_version" ]
-        set go_version $gomod_version
-    end
-
+    # no go.mod, not in a go project, don't display the prompt
     if test "$found_gomod" -eq "0"
         return
-    end 
+    end
 
-    set -l actual_go_version "0"
+    # check if there's a Go executable
+    set -l no_go_installed 0
+    set -l actual_go_version 0
     if ! type -fq go
         set no_go_installed 1
     else
         set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
     end
 
-    [ -z "$go_version" ]
-    and return
-
     set -l high_enough_version 0
-    if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
-        set high_enough_version 1
-    end
+    if test "$no_go_installed" -eq "0"
+        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+            set high_enough_version 1
+        end
+    end 
     
     __bobthefish_start_segment $color_virtualgo
     echo -ns $go_glyph
-    if test "$high_enough_version" -eq "0"
-        # the version of go 
-        __bobthefish_start_segment $color_rvm
-    end 
-    echo -ns $go_version ' '
+
+    # do we show the version in red if it's not the right version?
+    if [ "$theme_display_go_show_wrong_version" = "yes" ]
+        # yes we do, so check if the version is high enough
+        if test "$high_enough_version" -eq "0"
+            # the version of go isn't high enough
+            __bobthefish_start_segment $color_rvm
+        end
+    end
+
+    if [ "$theme_display_go_actual" = "yes" ]
+        echo -ns "$actual_go_version"
+    else        
+        echo -ns "$gomod_version" ' '
+        if [ "$theme_display_go_actual" = "diff"  ]
+            if [ "$gomod_version" != "$actual_go_version" ]
+                if [ "$actual_go_version" = "0" ]
+                    echo -ns "(NA)"
+                else                    
+                    echo -ns "($actual_go_version)"
+                end
+            end
+        end
+    end
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
