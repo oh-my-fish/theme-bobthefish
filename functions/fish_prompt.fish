@@ -804,22 +804,6 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     end
 end
 
-function __bobthefish_prompt_golang -S -d 'Display current Go information'
-    [ "$theme_display_go" = 'no' ]
-    and return
-    
-    set -l go_version
-    if type -fq go
-        set go_version (go version | cut --delimiter=' ' -f 3 | cut --characters='3-6' )
-    end
-
-    [ -z "$go_version" ]
-    and return
-
-    __bobthefish_start_segment $color_virtualgo
-    echo -ns $go_glyph $go_version ' '
-end
-
 function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     [ "$theme_display_ruby" = 'no' ]
     and return
@@ -861,6 +845,88 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
 
     __bobthefish_start_segment $color_rvm
     echo -ns $ruby_glyph $ruby_version ' '
+end
+
+function __bobthefish_prompt_golang -S -d 'Display current Go information'
+    [ "$theme_display_go" = 'no' ]
+    and return
+    
+    set -l go_version
+    if type -fq asdf
+        set -l asdf_golang_version (asdf current golang 2>/dev/null)
+        or set -l asdf_golang_version "na"
+        
+        set -l asdf_go_sdk_version (asdf current go-sdk 2>/dev/null)
+        or set -l asdf_go_sdk_version "na"
+
+        set -l _asdf_plugin
+        set -l asdf_go_version
+        set -l asdf_provenance
+        if [ "$asdf_golang_version" != "na" ]
+            echo "$asdf_golang_version" | read  _asdf_plugin asdf_go_version asdf_provenance
+        else if [ "$asdf_go_sdk_version" != "na" ]
+            echo "$asdf_go_sdk_version" | read  _asdf_plugin asdf_go_version asdf_provenance
+        end
+
+        [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
+        and return
+
+        set go_version $asdf_go_version
+    end
+
+    set -l no_go_installed 0
+    # no version from asdf, check go.mod file
+    if [ -z "$go_version" ]
+        set -l cwd (pwd)
+        set -l dir (pwd)
+        set -l gomod_file
+        set -l gomod_version
+        set -l _gomod
+
+        set -l found_gomod 0
+
+        # find the closest go.mod
+        while not test "$dir" = "/"
+            set gomod_file "$dir/go.mod"
+
+            if test -f "$gomod_file"
+                set found_gomod 1
+                cat "$gomod_file" | grep "^go\ " | read _gomod gomod_version 
+                break
+            end
+
+            cd $dir/..
+            set dir (pwd)
+        end
+        cd $cwd
+
+        if test "$found_gomod" -eq "1"
+            # found go.mod file, but no version inside
+            if [ -z (string trim -- "$gomod_version") ]
+                # is there a version of go we can ask for the version?
+                if type -fq go
+                    set gomod_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
+                end
+            end
+        end
+
+        set go_version $gomod_version
+    end
+
+    if ! type -fq go
+        set no_go_installed 1
+    end
+
+    [ -z "$go_version" ]
+    and return
+
+    __bobthefish_start_segment $color_virtualgo
+    echo -ns $go_glyph
+    if test "$no_go_installed" -eq "1"
+        # we got a version of go from a go.mod file, but no version of go is installed!
+        __bobthefish_start_segment $color_rvm
+    end 
+    echo -ns $go_version ' '
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
