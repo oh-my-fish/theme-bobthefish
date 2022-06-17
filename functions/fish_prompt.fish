@@ -875,14 +875,14 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     end
 
     set -l no_go_installed 0
+    set -l gomod_version "0"
+    
     # no version from asdf, check go.mod file
     if [ -z "$go_version" ]
         set -l cwd (pwd)
         set -l dir (pwd)
         set -l gomod_file
-        set -l gomod_version
         set -l _gomod
-
         set -l found_gomod 0
 
         # find the closest go.mod
@@ -890,7 +890,6 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
             set gomod_file "$dir/go.mod"
 
             if test -f "$gomod_file"
-                set found_gomod 1
                 cat "$gomod_file" | grep "^go\ " | read _gomod gomod_version 
                 break
             end
@@ -900,30 +899,28 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
         end
         cd $cwd
 
-        if test "$found_gomod" -eq "1"
-            # found go.mod file, but no version inside
-            if [ -z (string trim -- "$gomod_version") ]
-                # is there a version of go we can ask for the version?
-                if type -fq go
-                    set gomod_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
-                end
-            end
-        end
-
         set go_version $gomod_version
     end
 
+    set -l actual_go_version "0"
     if ! type -fq go
         set no_go_installed 1
+    else
+        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
     end
 
     [ -z "$go_version" ]
     and return
 
+    set -l high_enough_version 0
+    if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+        set high_enough_version 1
+    end
+    
     __bobthefish_start_segment $color_virtualgo
     echo -ns $go_glyph
-    if test "$no_go_installed" -eq "1"
-        # we got a version of go from a go.mod file, but no version of go is installed!
+    if test "$high_enough_version" -eq "0"
+        # the version of go 
         __bobthefish_start_segment $color_rvm
     end 
     echo -ns $go_version ' '
