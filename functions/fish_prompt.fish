@@ -853,21 +853,6 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     [ "$theme_display_go" = 'no' ]
     and return
     
-    set -l go_version
-    if type -fq asdf
-        set -l asdf_golang_version (asdf current golang 2>/dev/null)
-        set -l asdf_go_sdk_version (asdf current go-sdk 2>/dev/null)
-
-        if [ "$asdf_golang_version" != "na" ]
-            echo "$asdf_golang_version" | read  _asdf_plugin asdf_go_version asdf_provenance
-        else if [ "$asdf_go_sdk_version" != "na" ]
-            echo "$asdf_go_sdk_version" | read  _asdf_plugin asdf_go_version asdf_provenance
-        end
-
-        set go_version $asdf_go_version
-    end
-
-
     set -l cwd (pwd)
     set -l dir (pwd)
     set -l found_gomod 0
@@ -895,18 +880,18 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     end
 
     # check if there's a Go executable
-    set -l no_go_installed 0
-    set -l actual_go_version 0
-    if ! type -fq go
-        set no_go_installed 1
+    set -l no_go_installed "0"
+    set -l actual_go_version "0"
+    if type -fq go
+        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)        
     else
-        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
+        set no_go_installed "1"
     end
 
-    set -l high_enough_version 0
-    if test "$no_go_installed" -eq "0"
+    set -l high_enough_version "0"
+    if [ "$no_go_installed" = "0" ]
         if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
-            set high_enough_version 1
+            set high_enough_version "1"
         end
     end 
     
@@ -916,14 +901,18 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     # do we show the version in red if it's not the right version?
     if [ "$theme_display_go_show_wrong_version" = "yes" ]
         # yes we do, so check if the version is high enough
-        if test "$high_enough_version" -eq "0"
+        if [ "$high_enough_version" = "0" ]
             # the version of go isn't high enough
             __bobthefish_start_segment $color_rvm
         end
     end
 
     if [ "$theme_display_go_actual" = "yes" ]
-        echo -ns "$actual_go_version"
+        if [ "$actual_go_version" = "0" ]
+            echo -ns "(NA)"
+        else                    
+            echo -ns "($actual_go_version)"
+        end
     else        
         echo -ns "$gomod_version" ' '
         if [ "$theme_display_go_actual" = "diff"  ]
