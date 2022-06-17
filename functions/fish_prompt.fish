@@ -852,17 +852,14 @@ end
 function __bobthefish_prompt_golang -S -d 'Display current Go information'
     [ "$theme_display_go" = 'no' ]
     and return
-    
-    
-    set -l dir $real_pwd
-    set -l found_gomod 0
-    set -l gomod_version "0"
-    set -l gomod_file
 
     # find the closest go.mod
+    set -l gomod_version "0"
+    set -l d $real_pwd
     while not [ -z "$d" ]
         if [ -e $d/go.mod ]
-            grep "^go\ " "$gomod_file" | read __ gomod_version
+            grep "^go\ " "$d/go.mod" | read __ gomod_version
+            break
         end
 
         [ "$d" = "/" ]
@@ -870,7 +867,7 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     end
 
     # no go.mod, not in a go project, don't display the prompt
-    if test "$found_gomod" -eq "0"
+    if [ "$gomod_version" = "0" ]
         return
     end
 
@@ -1229,6 +1226,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Start each line with a blank slate
     set -l __bobthefish_current_bg
+    
+    set -l real_pwd (__bobthefish_pwd)
 
     # Status flags and input mode
     __bobthefish_prompt_status $last_status
@@ -1253,7 +1252,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_node
 
-    set -l real_pwd (__bobthefish_pwd)
 
     # VCS
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
