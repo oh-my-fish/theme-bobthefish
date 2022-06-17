@@ -864,6 +864,8 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
 
         [ "$d" = "/" ]
         and return
+
+        set d (__bobthefish_dirname $d)
     end
 
     # no go.mod, not in a go project, don't display the prompt
