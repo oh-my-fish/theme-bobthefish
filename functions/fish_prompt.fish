@@ -36,8 +36,6 @@
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
 #     set -g theme_display_go no
-#     set -g theme_display_go_show_wrong_version yes
-#     set -g theme_display_go_actual diff
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
@@ -849,7 +847,8 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     echo -ns $ruby_glyph $ruby_version ' '
 end
 
-function __bobthefish_prompt_golang -S -d 'Display current Go information'
+function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go information'
+    # setting is 'no', don't display the prompt
     [ "$theme_display_go" = 'no' ]
     and return
 
@@ -876,49 +875,31 @@ function __bobthefish_prompt_golang -S -d 'Display current Go information'
     # check if there's a Go executable
     set -l no_go_installed "0"
     set -l actual_go_version "0"
+    set -l high_enough_version "0"
     if type -fq go
-        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)        
+        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
+        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+            set high_enough_version "1"
+        end
     else
         set no_go_installed "1"
     end
 
-    set -l high_enough_version "0"
-    if [ "$no_go_installed" = "0" ]
-        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
-            set high_enough_version "1"
-        end
-    end
-    
-    # do we show the version in red if it's not the right version?
-    if [ "$theme_display_go_show_wrong_version" = "yes" ]
-        # yes we do, so check if the version is high enough
-        if [ "$high_enough_version" = "0" ]
-            # the version of go isn't high enough
-            __bobthefish_start_segment $color_rvm
-        else
-            __bobthefish_start_segment $color_virtualgo
-        end
-    else
+    if [ "$high_enough_version" = "1" ]
         __bobthefish_start_segment $color_virtualgo
+    else
+        __bobthefish_start_segment $color_rvm
     end
-    echo -ns $go_glyph
 
-    if [ "$theme_display_go_actual" = "yes" ]
-        if [ "$actual_go_version" = "0" ]
-            echo -ns "NA"
-        else                    
-            echo -ns "$actual_go_version"
-        end
-    else        
-        echo -ns "$gomod_version" ' '
-        if [ "$theme_display_go_actual" = "diff"  ]
-            if [ "$gomod_version" != "$actual_go_version" ]
-                if [ "$actual_go_version" = "0" ]
-                    echo -ns "(NA)"
-                else                    
-                    echo -ns "($actual_go_version)"
-                end
-            end
+    echo -ns $go_glyph
+    echo -ns "$gomod_version "
+
+    # showing the prompt -- but plain ( for 'yes' ) or verbose?
+    if  [ "$theme_display_go" = "verbose" ]
+        if [ "$actual_go_version" != "0" ]
+            # show the prompt with the required version AND the currently available
+            # version; same color rules as above
+            echo -ns " ($actual_go_version)"
         end
     end
 end
@@ -1251,7 +1232,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
-    __bobthefish_prompt_golang
+    __bobthefish_prompt_golang $real_pwd
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_node
