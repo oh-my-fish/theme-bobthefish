@@ -897,7 +897,7 @@ end
 
 function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the parent directories'
     set -l dir "$argv[1]"
-    set -l files $argv[2..]
+    set -l files $argv[2..-1]
 
     if test -z "$dir"
         or test -z "$files"
