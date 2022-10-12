@@ -857,7 +857,7 @@ function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go inform
     set -l d $real_pwd
     while not [ -z "$d" ]
         if [ -e $d/go.mod ]
-            grep "^go\ " "$d/go.mod" | read __ gomod_version
+            grep "^go " "$d/go.mod" | read __ gomod_version
             break
         end
 
