@@ -641,8 +641,10 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     and [ -z $namespace -o "$namespace" = 'default' ]
     and return
 
-    set -l segment $k8s_glyph ' ' $context
-    [ -n "$namespace" ]
+    set -l segment $k8s_glyph ' '
+    [ "$context" != 'default' ]
+    and set segment $segment $context
+    [ "$namespace" != 'default' ]
     and set segment $segment ':' $namespace
 
     __bobthefish_start_segment $color_k8s
