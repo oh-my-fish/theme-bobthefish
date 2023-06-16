@@ -185,7 +185,7 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
     or return
 
     pushd $git_dir
-    set git_dir $real_pwd
+    set git_dir (__bobthefish_pwd)
     popd
 
     switch $real_pwd/
