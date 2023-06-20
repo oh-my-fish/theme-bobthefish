@@ -871,7 +871,7 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
 
-    if [ "$version_glyph" ]
+    if [ "$version_glyph" -o "$theme_display_virtualenv_python_version" = 'no' ]
         __bobthefish_start_segment $color_virtualfish
         echo -ns $virtualenv_glyph
         if [ "$theme_display_virtualenv_python_version" != 'no' ]
