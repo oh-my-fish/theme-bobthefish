@@ -873,7 +873,11 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
 
     if [ "$version_glyph" ]
         __bobthefish_start_segment $color_virtualfish
-        echo -ns $virtualenv_glyph $version_glyph ' '
+        echo -ns $virtualenv_glyph
+        if [ "$theme_display_virtualenv_python_version" != 'no' ]
+            echo -ns $version_glyph
+        end
+        echo -ns ' '
     end
 
     if [ "$VIRTUAL_ENV" ]
