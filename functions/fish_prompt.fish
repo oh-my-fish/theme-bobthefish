@@ -31,6 +31,7 @@
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
+#     set -g theme_display_aws_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
