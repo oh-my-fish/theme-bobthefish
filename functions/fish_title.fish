@@ -18,7 +18,7 @@ function fish_title
     __bobthefish_title_user
 
     if [ "$theme_title_display_process" = 'yes' ]
-        echo $_
+        status current-command
 
         [ "$theme_title_display_path" != 'no' ]
         and echo ' '
