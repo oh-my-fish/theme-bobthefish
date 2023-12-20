@@ -129,7 +129,8 @@ set -g theme_newline_prompt '$ '
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).
 - `theme_display_k8s_namespace`. This feature is disabled by default. Use `yes` to show the current kubernetes namespace.
-- `theme_display_aws_vault_profile`. This feature is disabled by default. Use `yes` to show the currently executing [AWS Vault](https://github.com/99designs/aws-vault) profile.
+- `theme_display_aws_vault_profile`. This feature is disabled by default. Use `yes` to show the currently executing [AWS Vault](https://github.com/99designs/aws-vault) profile. Takes precedence over `theme_display_aws_profile` if `$AWS_VAULT` is set and both options are activated.
+- `theme_display_aws_profile`. This feature is disabled by default. Use `yes` to show the currently executing [AWS Profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-using-profiles). Is overridden if `theme_display_aws_vault_profile` is set and `$AWS_VAULT` is set.
 - `theme_display_user`. If set to `yes`, display username always, if set to `ssh`, only when an SSH-Session is detected, if set to no, never.
 - `theme_display_hostname`. Same behaviour as `theme_display_user`.
 - `theme_display_sudo_user`. If set to `yes`, displays the sudo-username in a root shell. For example, when calling `sudo -s` and having this option set to `yes`, the username of the user, who called `sudo -s`, will be displayed.

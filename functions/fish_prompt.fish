@@ -31,6 +31,7 @@
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
+#     set -g theme_display_aws_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
@@ -656,14 +657,16 @@ end
 # Cloud Tools
 # ==============================
 
-function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
-    [ "$theme_display_aws_vault_profile" = 'yes' ]
+function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS \(Vault\) profile'
+    [ "$theme_display_aws_vault_profile" = 'yes' -o "$theme_display_aws_profile" = 'yes' ]
     or return
 
-    [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
+    [ -n "$AWS_SESSION_EXPIRATION" -a \( -n "$AWS_VAULT" -o -n "$AWS_PROFILE" \) ]
     or return
-
-    set -l profile $AWS_VAULT
+    
+    [ -n "$AWS_VAULT" ]
+    and set -l profile $AWS_VAULT
+    or set -l profile $AWS_PROFILE
 
     set -l now (date --utc +%s)
     set -l expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
@@ -683,7 +686,6 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     __bobthefish_start_segment $status_color
     echo -ns $segment ' '
 end
-
 
 # ==============================
 # User / hostname info segments
