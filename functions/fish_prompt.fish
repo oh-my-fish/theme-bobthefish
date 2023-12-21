@@ -33,6 +33,7 @@
 #     set -g theme_display_aws_vault_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
+#     set -g theme_display_guix no
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
@@ -961,6 +962,16 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     set_color normal
 end
 
+function __bobthefish_prompt_guix -S -d 'Display current Guix environment'
+    [ "$theme_display_guix" = 'no' -o -z "$GUIX_ENVIRONMENT" ]
+    and return
+
+    __bobthefish_start_segment $color_guix
+    echo -ns $guix_glyph 'guix '
+
+    set_color normal
+end
+
 function __bobthefish_prompt_nix -S -d 'Display current nix environment'
     [ "$theme_display_nix" = 'no' -o -z "$IN_NIX_SHELL" ]
     and return
@@ -1171,6 +1182,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_aws_vault_profile
 
     # Virtual environments
+    __bobthefish_prompt_guix
     __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies

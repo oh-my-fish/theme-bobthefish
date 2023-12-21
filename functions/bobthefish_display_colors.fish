@@ -142,6 +142,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   __bobthefish_finish_segments
   echo
 
+  __bobthefish_start_segment $color_guix
+  echo -ns $guix_glyph 'guix '
+  __bobthefish_finish_segments
+
   __bobthefish_start_segment $color_aws_vault
   echo -ns aws-vault ' (' active ') '
   __bobthefish_finish_segments
