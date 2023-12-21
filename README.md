@@ -80,6 +80,7 @@ set -g theme_git_worktree_support yes
 set -g theme_use_abbreviated_branch_name yes
 set -g theme_display_vagrant yes
 set -g theme_display_docker_machine no
+set -g theme_display_oci_container no
 set -g theme_display_k8s_context yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
@@ -126,6 +127,7 @@ set -g theme_newline_prompt '$ '
 - `theme_display_ruby`. Use `no` to completely hide all information about Ruby version. By default Ruby version displayed if there is the difference from default settings.
 - `theme_display_node`. If set to `always`, will display current NPM, NVM or FNM node version. If set to `yes`, will display the version if an `.nvmrc`, `.node-version` or `package.json` file is found in the parent directories.
 - `theme_display_vagrant`. This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
+- `theme_display_oci_container`. This feature is disabled by default, use `yes` to display container management tool (`podman`) when you are in the oci supported container. 
 - `theme_display_vi`. By default the vi mode indicator will be shown if vi or hybrid key bindings are enabled. Use `no` to hide the indicator, or `yes` to show the indicator.
 - `theme_display_k8s_context`. This feature is disabled by default. Use `yes` to show the current kubernetes context (`> kubectl config current-context`).
 - `theme_display_k8s_namespace`. This feature is disabled by default. Use `yes` to show the current kubernetes namespace.
