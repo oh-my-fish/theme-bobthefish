@@ -31,6 +31,8 @@
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
+#     set -g theme_display_azure_subscription yes
+#     set -g theme_display_azure_subscription_truncate yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
@@ -684,6 +686,28 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     echo -ns $segment ' '
 end
 
+function __bobthefish_prompt_azure_subscription -S -d 'Show current Azure subscription'
+    [ "$theme_display_azure_subscription" = yes ]
+    or return
+
+    set -l azure_profile ~/.azure/azureProfile.json
+
+    if type -q jq && test -e $azure_profile
+        set -l subscription_name (jq -r '.subscriptions[] | select(.isDefault == true).name' $azure_profile)
+
+        if test -z $subscription_name
+            return
+        end
+
+        [ "$theme_display_azure_subscription_truncate" = yes ]
+        and set subscription_name (string replace -r '^(.{17}).{3,}(.{5})$' "\$1…\$2" $subscription_name)
+
+        set -l segment $azure_glyph ' ' $subscription_name
+        __bobthefish_start_segment $color_azure
+        echo -ns $segment ' '
+    end
+end
+
 
 # ==============================
 # User / hostname info segments
@@ -1169,6 +1193,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Cloud Tools
     __bobthefish_prompt_aws_vault_profile
+    __bobthefish_prompt_azure_subscription
 
     # Virtual environments
     __bobthefish_prompt_nix

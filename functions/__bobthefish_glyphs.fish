@@ -30,6 +30,9 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   # Kubernetes glyphs
   set -x k8s_glyph               \u2388 # '⎈'
 
+  # Azure glyphs
+  set -x azure_glyph             \ufd03 # ﴃ 'nf-mdi-azure'
+
   # Vagrant glyphs
   set -x vagrant_running_glyph   \u2191 # ↑ 'running'
   set -x vagrant_poweroff_glyph  \u2193 # ↓ 'poweroff'
