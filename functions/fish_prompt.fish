@@ -31,6 +31,7 @@
 #     set -g theme_display_k8s_context yes
 #     set -g theme_display_k8s_namespace no
 #     set -g theme_display_aws_vault_profile yes
+#     set -g theme_display_awsume_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
@@ -663,10 +664,15 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
     or return
 
+    if test (uname) = Darwin
+           set  now (gdate --utc +%s)
+           set  expiry (gdate -d "$AWS_SESSION_EXPIRATION" +%s)
+    else
+           set  now (date --utc +%s)
+           set  expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
+    end
+    
     set -l profile $AWS_VAULT
-
-    set -l now (date --utc +%s)
-    set -l expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
     set -l diff_mins (math "floor(( $expiry - $now ) / 60)")
 
     set -l diff_time $diff_mins"m"
@@ -684,6 +690,38 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     echo -ns $segment ' '
 end
 
+function __bobthefish_prompt_awsume_profile -S -d 'Show awsume profile'
+    [ "$theme_display_awsume_profile" = 'yes' ]
+    or return
+
+    [ -n "$AWSUME_PROFILE" -a -n "$AWSUME_EXPIRATION" ]
+    or return
+
+    if test (uname) = Darwin
+           set  now (gdate --utc +%s)
+           set  expiry (gdate -d "$AWSUME_EXPIRATION" +%s)
+    else
+           set  now (date --utc +%s)
+           set  expiry (date -d "$AWSUME_EXPIRATION" +%s)
+    end
+    set -l profile $AWSUME_PROFILE
+
+    set -l diff_mins (math "floor(( $expiry - $now ) / 60)")
+
+    set -l diff_time $diff_mins"m"
+    [ $diff_mins -le 0 ]
+    and set -l diff_time '0m'
+    [ $diff_mins -ge 60 ]
+    and set -l diff_time (math "floor($diff_mins / 60)")"h"(math "$diff_mins % 60")"m"
+
+    set -l segment $profile ' (' $diff_time ')'
+    set -l status_color $color_aws_vault
+    [ $diff_mins -le 0 ]
+    and set -l status_color $color_aws_vault_expired
+
+    __bobthefish_start_segment $status_color
+    echo -ns $segment ' '
+end
 
 # ==============================
 # User / hostname info segments
@@ -1169,6 +1207,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Cloud Tools
     __bobthefish_prompt_aws_vault_profile
+    __bobthefish_prompt_awsume_profile
 
     # Virtual environments
     __bobthefish_prompt_nix
