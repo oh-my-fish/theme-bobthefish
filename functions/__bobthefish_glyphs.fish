@@ -21,10 +21,11 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   set -x pypy_glyph              \u1D56
 
   set -x ruby_glyph              ''
+  set -x rustc_glyph             ''
   set -x go_glyph                ''
   set -x nix_glyph               ''
 
-  # Desk glyphs
+  # Desk glyphs
   set -x desk_glyph              \u25F2
 
   # Kubernetes glyphs
@@ -70,6 +71,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set nix_glyph        \uF313 ' ' # nf-linux-nixos
     set virtualenv_glyph \uE73C ' '
     set ruby_glyph       \uE791 ' '
+    set rustc_glyph      \uE7a8 ' ' # Rust Nerd Font logo
     set go_glyph         \uE626 ' '
     set node_glyph       \uE718 ' '
 

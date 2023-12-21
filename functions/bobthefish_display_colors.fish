@@ -129,6 +129,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   echo -ns $ruby_glyph rvm ' '
   __bobthefish_finish_segments
 
+  __bobthefish_start_segment $color_rust
+  echo -ns $rust_glyph rust ' '
+  __bobthefish_finish_segments
+
   __bobthefish_start_segment $color_virtualfish
   echo -ns $virtualenv_glyph virtualfish ' '
   __bobthefish_finish_segments
