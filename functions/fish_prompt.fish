@@ -33,6 +33,7 @@
 #     set -g theme_display_aws_vault_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
+#     set -g theme_display_virtualenv_python_version no
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
@@ -849,6 +850,9 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
+    [ "$theme_display_virtualenv_python_version" = 'no' ]
+    and return
+
     switch (python --version 2>&1 | tr '\n' ' ')
         case 'Python 2*PyPy*'
             echo $pypy_glyph
@@ -867,7 +871,7 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
 
-    if [ "$version_glyph" ]
+    if [ "$version_glyph" -o "$theme_display_virtualenv_python_version" = 'no' ]
         __bobthefish_start_segment $color_virtualfish
         echo -ns $virtualenv_glyph $version_glyph ' '
     end
