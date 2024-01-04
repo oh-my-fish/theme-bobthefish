@@ -639,6 +639,66 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_desk                     $peach $mantle --bold
       set -x color_nix                      $sky $mantle --bold
 
+    case 'catppuccin-frappe'
+      set -l rosewater f2d5cf
+      set -l flamingo  eebebe
+      set -l pink      f4b8e4
+      set -l mauve     ca9ee6
+      set -l red       e78284
+      set -l maroon    ea999c
+      set -l peach     ef9f76
+      set -l yellow    e5c890
+      set -l green     a6d189
+      set -l teal      81c8be
+      set -l sky       99d1db
+      set -l sapphire  85c1dc
+      set -l blue      8caaee
+      set -l lavender  babbf1
+      set -l text      c6d0f5
+      set -l subtext1  b5bfe2
+      set -l subtext0  a5adce
+      set -l overlay2  949cbb
+      set -l overlay1  838ba7
+      set -l overlay0  737994
+      set -l surface2  626880
+      set -l surface1  51576d
+      set -l surface0  414559
+      set -l base      303446
+      set -l mantle    292c3c
+      set -l crust     232634
+
+      set -x color_initial_segment_exit     $surface2 $red  --bold
+      set -x color_initial_segment_private  $surface2 $flamingo
+      set -x color_initial_segment_su       $surface2 $green --bold
+      set -x color_initial_segment_jobs     $surface2 $peach --bold
+
+      set -x color_path                     $surface0 $text
+      set -x color_path_basename            $surface0 $text --bold
+      set -x color_path_nowrite             $surface0 $mauve
+      set -x color_path_nowrite_basename    $surface0 $mauve --bold
+
+      set -x color_repo                     $green $mantle
+      set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_dirty               $red $mantle
+      set -x color_repo_staged              $yellow $mantle
+
+      set -x color_vi_mode_default          $sky $mantle --bold
+      set -x color_vi_mode_insert           $green $mantle --bold
+      set -x color_vi_mode_visual           $mauve $mantle --bold
+
+      set -x color_vagrant                  $surface2 $text --bold
+      set -x color_k8s                      $surface2 $text --bold
+      set -x color_aws_vault                $yellow $mantle --bold
+      set -x color_aws_vault_expired        $red $mantle --bold
+      set -x color_username                 $surface2 $yellow --bold
+      set -x color_hostname                 $surface2 $yellow
+      set -x color_rvm                      $red $mantle --bold
+      set -x color_node                     $green $mantle --bold
+      set -x color_virtualfish              $peach $mantle --bold
+      set -x color_virtualgo                $sky $mantle --bold
+      set -x color_desk                     $peach $mantle --bold
+      set -x color_nix                      $sky $mantle --bold
+
     case '*' # default dark theme
       #               light  medium dark
       #               ------ ------ ------
