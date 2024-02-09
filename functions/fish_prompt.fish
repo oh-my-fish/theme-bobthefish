@@ -50,6 +50,7 @@
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
 #     set -g theme_newline_cursor yes
+#     set -g theme_hide_python_version yes
 
 
 # ==============================
@@ -869,7 +870,11 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
 
     if [ "$version_glyph" ]
         __bobthefish_start_segment $color_virtualfish
-        echo -ns $virtualenv_glyph $version_glyph ' '
+        if [ "$theme_hide_python_version" = yes ]
+            echo -ns $virtualenv_glyph
+        else
+            echo -ns $virtualenv_glyph $version_glyph ' '
+        end
     end
 
     if [ "$VIRTUAL_ENV" ]

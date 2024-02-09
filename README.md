@@ -65,7 +65,7 @@ This theme is based loosely on [agnoster][btf-agnoster].
 
 ### Configuration
 
-You can override some of the following default options in your `config.fish`:
+You can override some of the following default options in your `config.fish` or `.conf/omf/init.fish`:
 
 ```fish
 set -g theme_display_git no
@@ -83,6 +83,7 @@ set -g theme_display_docker_machine no
 set -g theme_display_k8s_context yes
 set -g theme_display_hg yes
 set -g theme_display_virtualenv no
+set -g theme_hide_python_version yes
 set -g theme_display_nix no
 set -g theme_display_ruby no
 set -g theme_display_node yes
