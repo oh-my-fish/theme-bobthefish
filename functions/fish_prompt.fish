@@ -33,6 +33,7 @@
 #     set -g theme_display_aws_vault_profile yes
 #     set -g theme_display_hg yes
 #     set -g theme_display_virtualenv no
+#     set -g theme_display_virtualenv verbose
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
 #     set -g theme_display_go no
@@ -51,7 +52,6 @@
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
 #     set -g theme_newline_cursor yes
-
 
 # ==============================
 # Helper methods
@@ -924,10 +924,22 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
     and return
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
+    set -l prompt_style 'default'
 
     if [ "$version_glyph" ]
         __bobthefish_start_segment $color_virtualfish
-        echo -ns $virtualenv_glyph $version_glyph ' '
+        if string match -q "Python 2*" (python --version 2>&1 | string trim)
+            set prompt_style 'verbose'
+        else if [ "$theme_display_virtualenv" = 'verbose' ]
+            set prompt_style 'verbose'
+        end
+
+        if [ "$prompt_style" = 'verbose' ]
+            echo -ns $virtualenv_glyph $version_glyph ' '
+        else
+            echo -ns $virtualenv_glyph
+        end
+
     end
 
     if [ "$VIRTUAL_ENV" ]
