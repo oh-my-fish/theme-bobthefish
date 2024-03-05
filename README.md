@@ -69,10 +69,17 @@ This theme is based loosely on [agnoster][btf-agnoster].
 
 ## Configuration
 
-You can override some of the following default options in your fish config (e.g. `~/.config/fish/config.fish`, `~/.config/omf/init.fish`, or a script in `~/.config/fish/conf.d/`):
+You can override theme defaults in a Fish config file (for example `~/.config/fish/conf.d/bobthefish.fish`):
 
 ```fish
+set -g theme_nerd_fonts yes
+set -g theme_color_scheme dark
+set -g theme_display_user ssh
+set -g default_user bobthecow
 ```
+
+See (many) more options below.
+
 
 
 ### Prompt options
