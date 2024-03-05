@@ -1,8 +1,4 @@
-# You can override some default title options in your config.fish:
-#     set -g theme_title_display_process no
-#     set -g theme_title_display_path no
-#     set -g theme_title_display_user yes
-#     set -g theme_title_use_abbreviated_path no
+# See "Title options" in README.md for configuration options
 
 function __bobthefish_title_user -S -d 'Display actual user if different from $default_user'
     if [ "$theme_title_display_user" = 'yes' ]
