@@ -65,7 +65,7 @@ This theme is based loosely on [agnoster][btf-agnoster].
 
 ### Configuration
 
-You can override some of the following default options in your `config.fish` or `.conf/omf/init.fish`:
+You can override some of the following default options in your fish config (e.g. `~/.config/fish/config.fish`, `~/.config/omf/init.fish`, or a script in `~/.config/fish/conf.d/`):
 
 ```fish
 set -g theme_display_git no
