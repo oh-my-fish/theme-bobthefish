@@ -51,6 +51,7 @@
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
 #     set -g theme_project_dir_length 1
+#     set -g theme_show_project_parent no
 #     set -g theme_newline_cursor yes
 
 # ==============================
@@ -358,7 +359,7 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
     set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened form of a directory'
+function __bobthefish_path_segment -S -a segment_dir -a path_type -d 'Display a shortened form of a directory'
     set -l segment_color $color_path
     set -l segment_basename_color $color_path_basename
 
@@ -382,7 +383,9 @@ function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened for
             set directory (__bobthefish_basename "$segment_dir")
     end
 
-    echo -n $parent
+    [ "$theme_show_project_parent" != "no" -o "$path_type" != "project" ]
+    and echo -n $parent
+
     set_color -b $segment_basename_color
     echo -ns $directory ' '
 end
@@ -1057,7 +1060,7 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
         set flag_colors $color_repo_dirty
     end
 
-    __bobthefish_path_segment $hg_root_dir
+    __bobthefish_path_segment $hg_root_dir project
 
     __bobthefish_start_segment $flag_colors
     echo -ns $hg_glyph ' '
@@ -1117,7 +1120,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
         set flag_colors $color_repo_staged
     end
 
-    __bobthefish_path_segment $git_root_dir
+    __bobthefish_path_segment $git_root_dir project
 
     __bobthefish_start_segment $flag_colors
     echo -ns (__bobthefish_git_branch) $flags ' '
@@ -1199,7 +1202,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 end
 
 function __bobthefish_prompt_dir -S -a real_pwd -d 'Display a shortened form of the current directory'
-    __bobthefish_path_segment "$real_pwd"
+    __bobthefish_path_segment "$real_pwd" pwd
 end
 
 
@@ -1225,7 +1228,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Start each line with a blank slate
     set -l __bobthefish_current_bg
-    
+
     set -l real_pwd (__bobthefish_pwd)
 
     # Status flags and input mode
