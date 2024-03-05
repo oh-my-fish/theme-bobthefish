@@ -35,6 +35,7 @@
 #     set -g theme_display_virtualenv no
 #     set -g theme_display_nix no
 #     set -g theme_display_ruby no
+#     set -g theme_display_go no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_sudo_user yes
@@ -848,6 +849,63 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     echo -ns $ruby_glyph $ruby_version ' '
 end
 
+function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go information'
+    # setting is 'no', don't display the prompt
+    [ "$theme_display_go" = 'no' ]
+    and return
+
+    # find the closest go.mod
+    set -l gomod_version "0"
+    set -l d $real_pwd
+    while not [ -z "$d" ]
+        if [ -e $d/go.mod ]
+            grep "^go " "$d/go.mod" | read __ gomod_version
+            break
+        end
+
+        [ "$d" = "/" ]
+        and return
+
+        set d (__bobthefish_dirname $d)
+    end
+
+    # no go.mod, not in a go project, don't display the prompt
+    if [ "$gomod_version" = "0" ]
+        return
+    end
+
+    # check if there's a Go executable
+    set -l no_go_installed "0"
+    set -l actual_go_version "0"
+    set -l high_enough_version "0"
+    if type -fq go
+        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
+        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+            set high_enough_version "1"
+        end
+    else
+        set no_go_installed "1"
+    end
+
+    if [ "$high_enough_version" = "1" ]
+        __bobthefish_start_segment $color_virtualgo
+    else
+        __bobthefish_start_segment $color_rvm
+    end
+
+    echo -ns $go_glyph
+    echo -ns "$gomod_version "
+
+    # showing the prompt -- but plain ( for 'yes' ) or verbose?
+    if  [ "$theme_display_go" = "verbose" ]
+        if [ "$actual_go_version" != "0" ]
+            # show the prompt with the required version AND the currently available
+            # version; same color rules as above
+            echo -ns " ($actual_go_version)"
+        end
+    end
+end
+
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
     switch (python --version 2>&1 | tr '\n' ' ')
         case 'Python 2*PyPy*'
@@ -1155,6 +1213,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Start each line with a blank slate
     set -l __bobthefish_current_bg
+    
+    set -l real_pwd (__bobthefish_pwd)
 
     # Status flags and input mode
     __bobthefish_prompt_status $last_status
@@ -1174,11 +1234,11 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
+    __bobthefish_prompt_golang $real_pwd
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
     __bobthefish_prompt_node
 
-    set -l real_pwd (__bobthefish_pwd)
 
     # VCS
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
