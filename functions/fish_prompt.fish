@@ -66,8 +66,11 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
         and return
     end
 
-    set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
-    echo "$detached_glyph $branch"
+    # If we've already shown a tag we don't need to show a detached branch
+    if [ -z "$tag" ]
+        set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
+        echo "$detached_glyph $branch"
+    end
 end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
