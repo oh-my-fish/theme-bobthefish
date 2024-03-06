@@ -123,8 +123,10 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
 
         [ -z "$git_toplevel" ]
         and return
-        
-        command -q wslpath; and set -l git_toplevel (command wslpath $git_toplevel)
+
+        # Support Git under WSL (see #336)
+        command -q wslpath
+        and set git_toplevel (command wslpath $git_toplevel)
 
         # If there are no symlinks, just use git toplevel
         switch $real_pwd/
