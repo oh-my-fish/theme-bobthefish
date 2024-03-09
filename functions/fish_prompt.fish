@@ -1054,16 +1054,11 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
 end
 
 function __bobthefish_prompt_screen -S -d 'Display the screen name'
-    [ "$theme_display_screen" = 'no' ]
-    and return
-
-    [ -z "$STY" ]
+    [ "$theme_display_screen" = 'no' -o -z "$STY" ]
     and return
 
     __bobthefish_start_segment $color_screen
-    [ "$theme_display_screen_verbose" = "yes" ]
-    and echo -ns (string split "." -- $STY)[2]
-    echo -ns ' '
+    echo -ns (string split "." -- $STY)[2] ' '
     set_color normal
 end
 
