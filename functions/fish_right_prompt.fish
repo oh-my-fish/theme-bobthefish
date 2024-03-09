@@ -1,6 +1,4 @@
-# You can override some default right prompt options in your config.fish:
-#     set -g theme_date_format "+%a %H:%M"
-#     set -g theme_date_timezone America/Los_Angeles
+# See "Right prompt options" in README.md for configuration options
 
 function __bobthefish_cmd_duration -S -d 'Show command duration'
     [ "$theme_display_cmd_duration" = "no" ]

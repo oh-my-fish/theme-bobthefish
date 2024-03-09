@@ -3,10 +3,11 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   set -l color_schemes default light \
     solarized solarized-light \
     base16 base16-light \
-    gruvbox zenburn \
+    gruvbox gruvbox-light zenburn \
     dracula nord \
     catppuccin-latte catppuccin-frappe \
     catppuccin-macchiato catppuccin-mocha \
+    jellybeans \
     terminal terminal-dark-white \
     terminal-light terminal-light-black \
     terminal2 terminal2-dark-white \
@@ -129,6 +130,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
 
   __bobthefish_start_segment $color_rvm
   echo -ns $ruby_glyph rvm ' '
+  __bobthefish_finish_segments
+
+  __bobthefish_start_segment $color_nvm
+  echo -ns $ruby_glyph nvm ' '
   __bobthefish_finish_segments
 
   __bobthefish_start_segment $color_virtualfish
