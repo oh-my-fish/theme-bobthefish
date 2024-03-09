@@ -152,6 +152,10 @@ See below for all the color scheming you can handle.
 
 ### Virtual environments and version manager options
 
+#### `set -g theme_display_screen no`
+
+Use `no` to disable screen session information.
+
 #### `set -g theme_display_vagrant yes`
 
 This feature is disabled by default, use `yes` to display Vagrant status in your prompt. Please note that only the VirtualBox and VMWare providers are supported.
