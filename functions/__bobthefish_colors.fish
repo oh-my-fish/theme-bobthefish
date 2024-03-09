@@ -33,7 +33,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 white black --bold
       set -x color_hostname                 white black
       set -x color_rvm                      brmagenta $colorfg --bold
-      set -x color_nvm                      brgreen $colorfg --bold
+      set -x color_node                     brgreen $colorfg --bold
       set -x color_virtualfish              brblue $colorfg --bold
       set -x color_virtualgo                brblue $colorfg --bold
       set -x color_desk                     brblue $colorfg --bold
@@ -68,7 +68,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 black white --bold
       set -x color_hostname                 black white
       set -x color_rvm                      brmagenta $colorfg --bold
-      set -x color_nvm                      brgreen $colorfg --bold
+      set -x color_node                     brgreen $colorfg --bold
       set -x color_virtualfish              brblue $colorfg --bold
       set -x color_virtualgo                brblue $colorfg --bold
       set -x color_desk                     brblue $colorfg --bold
@@ -103,7 +103,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 brgrey white --bold
       set -x color_hostname                 brgrey white
       set -x color_rvm                      brmagenta $colorfg --bold
-      set -x color_nvm                      brgreen $colorfg --bold
+      set -x color_node                     brgreen $colorfg --bold
       set -x color_virtualfish              brblue $colorfg --bold
       set -x color_virtualgo                brblue $colorfg --bold
       set -x color_desk                     brblue $colorfg --bold
@@ -138,7 +138,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 grey black --bold
       set -x color_hostname                 grey black
       set -x color_rvm                      brmagenta $colorfg --bold
-      set -x color_nvm                      brgreen $colorfg --bold
+      set -x color_node                     brgreen $colorfg --bold
       set -x color_virtualfish              brblue $colorfg --bold
       set -x color_virtualgo                brblue $colorfg --bold
       set -x color_desk                     brblue $colorfg --bold
@@ -179,7 +179,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $grey $blue --bold
       set -x color_hostname                 $grey $blue
       set -x color_rvm                      $red $grey --bold
-      set -x color_nvm                      $green $white --bold
+      set -x color_node                     $green $white --bold
       set -x color_virtualfish              $blue $grey --bold
       set -x color_virtualgo                $blue $grey --bold
       set -x color_desk                     $blue $grey --bold
@@ -231,7 +231,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
       set -x color_rvm                      $base08 $colorfg --bold
-      set -x color_nvm                      $base0B $colorfg --bold
+      set -x color_node                     $base0B $colorfg --bold
       set -x color_virtualfish              $base0D $colorfg --bold
       set -x color_virtualgo                $base0D $colorfg --bold
       set -x color_desk                     $base0D $colorfg --bold
@@ -283,7 +283,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
       set -x color_rvm                      $base08 $colorfg --bold
-      set -x color_nvm                      $base0B $colorfg --bold
+      set -x color_node                     $base0B $colorfg --bold
       set -x color_virtualfish              $base0D $colorfg --bold
       set -x color_virtualgo                $base0D $colorfg --bold
       set -x color_desk                     $base0D $colorfg --bold
@@ -335,7 +335,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $base2 $blue --bold
       set -x color_hostname                 $base2 $blue
       set -x color_rvm                      $red $colorfg --bold
-      set -x color_nvm                      $green $colorfg --bold
+      set -x color_node                     $green $colorfg --bold
       set -x color_virtualfish              $cyan $colorfg --bold
       set -x color_virtualgo                $cyan $colorfg --bold
       set -x color_desk                     $cyan $colorfg --bold
@@ -387,7 +387,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $base02 $blue --bold
       set -x color_hostname                 $base02 $blue
       set -x color_rvm                      $red $colorfg --bold
-      set -x color_nvm                      $green $colorfg --bold
+      set -x color_node                     $green $colorfg --bold
       set -x color_virtualfish              $cyan $colorfg --bold
       set -x color_virtualgo                $cyan $colorfg --bold
       set -x color_desk                     $cyan $colorfg --bold
@@ -432,7 +432,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $grey[1] $blue[3] --bold
       set -x color_hostname                 $grey[1] $blue[3]
       set -x color_rvm                      $ruby_red $grey[1] --bold
-      set -x color_nvm                      $green $grey[1] --bold
+      set -x color_node                     $green $grey[1] --bold
       set -x color_virtualfish              $blue[2] $grey[1] --bold
       set -x color_virtualgo                $blue[2] $grey[1] --bold
       set -x color_desk                     $blue[2] $grey[1] --bold
@@ -476,11 +476,53 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $fg[3] $blue[2] --bold
       set -x color_hostname                 $fg[3] $blue[2]
       set -x color_rvm                      $red[2] $fg[2] --bold
-      set -x color_nvm                      $green[1] $fg[2] --bold
+      set -x color_node                     $green[1] $fg[2] --bold
       set -x color_virtualfish              $blue[2] $fg[2] --bold
       set -x color_virtualgo                $blue[2] $fg[2] --bold
       set -x color_desk                     $blue[2] $fg[2] --bold
       set -x color_nix                      $blue[2] $fg[2] --bold
+
+    case 'gruvbox-light'
+      #               light  medium  dark  darkest
+      #               ------ ------ ------ -------
+      set -l red      9d0006 cc241d
+      set -l green    79740e 98971a
+      set -l yellow   b57614 d79921
+      set -l aqua     427b58 689d6a
+      set -l blue     076678 458588
+      set -l grey     a89984 928374
+      set -l orange   af3a03 d65d0e
+      set -l fg       282828 3c3836 504945 7c6f64
+      set -l bg       d5c4a1 fbf1c7
+
+      set -x color_initial_segment_exit  $red[1] $bg[2] --bold
+      set -x color_initial_segment_su    $fg[1] $green[2] --bold
+      set -x color_initial_segment_jobs  $fg[1] $aqua[2] --bold
+
+      set -x color_path                  $bg[1] $fg[2]
+      set -x color_path_basename         $bg[1] $fg[2] --bold
+      set -x color_path_nowrite          $red[1] $bg[2]
+      set -x color_path_nowrite_basename $red[1] $bg[2] --bold
+
+      set -x color_repo                  $green[2] $fg[1]
+      set -x color_repo_work_tree        $bg[1] $fg[2] --bold
+      set -x color_repo_dirty            $orange[2] $bg[2]
+      set -x color_repo_staged           $yellow[1] $bg[1]
+
+      set -x color_vi_mode_default       $fg[4] $bg[2] --bold
+      set -x color_vi_mode_insert        $blue[1] $bg[2] --bold
+      set -x color_vi_mode_visual        $yellow[1] $bg[2] --bold
+
+      set -x color_vagrant               $blue[2] $fg[2] --bold
+      set -x color_k8s                   $green[2] $fg[2] --bold
+      set -x color_username              $fg[3] $blue[2] --bold
+      set -x color_hostname              $fg[3] $blue[2]
+      set -x color_rvm                   $red[2] $bg[2] --bold
+      set -x color_nvm                   $green[1] $fg[2] --bold
+      set -x color_virtualfish           $blue[2] $fg[2] --bold
+      set -x color_virtualgo             $blue[2] $fg[2] --bold
+      set -x color_desk                  $blue[2] $fg[2] --bold
+      set -x color_nix                   $blue[2] $fg[2] --bold
 
     case 'dracula' # https://draculatheme.com
       set -l bg           282a36
@@ -516,13 +558,13 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange $bg --bold
 
       set -x color_vagrant                  $pink $bg --bold
-      set -x color_k8s                      $green $fg --bold
+      set -x color_k8s                      $purple $bg --bold
       set -x color_aws_vault                $comment $yellow --bold
       set -x color_aws_vault_expired        $comment $red --bold
       set -x color_username                 $selection $cyan --bold
       set -x color_hostname                 $selection $cyan
       set -x color_rvm                      $red $bg --bold
-      set -x color_nvm                      $green $bg --bold
+      set -x color_node                     $green $bg --bold
       set -x color_virtualfish              $comment $bg --bold
       set -x color_virtualgo                $cyan $bg --bold
       set -x color_desk                     $comment $bg --bold
@@ -574,7 +616,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $base02 $base0D --bold
       set -x color_hostname                 $base02 $base0D
       set -x color_rvm                      $base09 $colorfg --bold
-      set -x color_nvm                      $base09 $colorfg --bold
+      set -x color_node                     $base09 $colorfg --bold
       set -x color_virtualfish              $base09 $colorfg --bold
       set -x color_virtualgo                $base09 $colorfg --bold
       set -x color_desk                     $base09 $colorfg --bold
@@ -634,6 +676,48 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_virtualgo             $light_green $darker_grey --bold
       set -x color_desk                  $light_grey $darker_grey --bold
 
+    case 'darcula'
+      #             light  medium dark   darkest
+      #             ------ ------ ------ ------
+      set -l grey   808080 616161 595959 424242
+      set -l red    FF4050 F0524F B82421 772E2C
+      set -l green  4FC414 5C962C 458500 39511F
+      set -l yellow E5BF00 A68A0D A87B00 5C4F17
+      set -l blue   1FB0FF 3993D4 1778BD 245980
+      set -l white  F9F9F4 B7C3D0
+
+      set -x color_initial_segment_exit     $white[2] $red[3] --bold
+      set -x color_initial_segment_private  $white[2] $grey[4]
+      set -x color_initial_segment_su       $white[2] $green[3] --bold
+      set -x color_initial_segment_jobs     $white[2] $blue[3] --bold
+
+      set -x color_path                     $grey[4] $white[2]
+      set -x color_path_basename            $grey[4] $white[1] --bold
+      set -x color_path_nowrite             $grey[4] $red[2]
+      set -x color_path_nowrite_basename    $grey[4] $red[1] --bold
+
+      set -x color_repo                     $green[3] $white[4]
+      set -x color_repo_work_tree           $grey[4] $grey[4] --bold
+      set -x color_repo_dirty               $red[3] $grey[4]
+      set -x color_repo_staged              $yellow[3] $grey[4]
+
+      set -x color_vi_mode_default          $grey[4] $yellow[2] --bold
+      set -x color_vi_mode_insert           $green[2] $grey[4] --bold
+      set -x color_vi_mode_visual           $yellow[2] $grey[4] --bold
+
+      set -x color_vagrant                  $blue[2] $green[1] --bold
+      set -x color_k8s                      $green[2] $grey[4] --bold
+      set -x color_aws_vault                $blue[2] $grey[4] --bold
+      set -x color_aws_vault_expired        $blue[2] $red[1] --bold
+      set -x color_username                 $grey[4] $blue[2] --bold
+      set -x color_hostname                 $grey[4] $blue[1]
+      set -x color_rvm                      $red[2] $grey[4] --bold
+      set -x color_node                     $green[3] $white[2] --bold
+      set -x color_virtualfish               $blue[2] $grey[4] --bold
+      set -x color_virtualgo                $blue[2] $grey[4] --bold
+      set -x color_desk                     $blue[2] $grey[4] --bold
+      set -x color_nix                      $blue[2] $grey[4] --bold
+
     case '*' # default dark theme
       #               light  medium dark
       #               ------ ------ ------
@@ -674,7 +758,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_username                 $grey[1] $blue[3] --bold
       set -x color_hostname                 $grey[1] $blue[3]
       set -x color_rvm                      $ruby_red $grey[1] --bold
-      set -x color_nvm                      $green[1] $white --bold
+      set -x color_node                     $green[1] $white --bold
       set -x color_virtualfish              $blue[2] $grey[1] --bold
       set -x color_virtualgo                $go_blue $black --bold
       set -x color_desk                     $blue[2] $grey[1] --bold

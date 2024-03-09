@@ -3,7 +3,7 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   set -l color_schemes default light \
     solarized solarized-light \
     base16 base16-light \
-    gruvbox zenburn \
+    gruvbox gruvbox-light zenburn \
     dracula nord \
     terminal terminal-dark-white \
     terminal-light terminal-light-black \
@@ -140,6 +140,7 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   __bobthefish_start_segment $color_desk
   echo -ns $desk_glyph desk ' '
   __bobthefish_finish_segments
+  echo
 
   __bobthefish_start_segment $color_aws_vault
   echo -ns aws-vault ' (' active ') '
@@ -147,6 +148,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
 
   __bobthefish_start_segment $color_aws_vault_expired
   echo -ns aws-vault ' (' expired ') '
+  __bobthefish_finish_segments
+
+  __bobthefish_start_segment $color_k8s
+  echo -ns $k8s_glyph ' k8s-context'
   __bobthefish_finish_segments
 
   echo -e "\n"

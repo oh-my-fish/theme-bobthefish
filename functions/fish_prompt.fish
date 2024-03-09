@@ -15,42 +15,8 @@
 #
 #     https://github.com/ryanoasis/nerd-fonts
 #
-# You can override some default prompt options in your config.fish:
+# See README.md for setup and configuration options.
 #
-#     set -g theme_display_git no
-#     set -g theme_display_git_dirty no
-#     set -g theme_display_git_untracked no
-#     set -g theme_display_git_ahead_verbose yes
-#     set -g theme_display_git_dirty_verbose yes
-#     set -g theme_display_git_stashed_verbose yes
-#     set -g theme_display_git_default_branch yes
-#     set -g theme_git_default_branches main trunk
-#     set -g theme_git_worktree_support yes
-#     set -g theme_display_vagrant yes
-#     set -g theme_display_docker_machine no
-#     set -g theme_display_k8s_context yes
-#     set -g theme_display_k8s_namespace no
-#     set -g theme_display_aws_vault_profile yes
-#     set -g theme_display_hg yes
-#     set -g theme_display_virtualenv no
-#     set -g theme_display_nix no
-#     set -g theme_display_ruby no
-#     set -g theme_display_user ssh
-#     set -g theme_display_hostname ssh
-#     set -g theme_display_sudo_user yes
-#     set -g theme_display_vi no
-#     set -g theme_display_nvm yes
-#     set -g theme_avoid_ambiguous_glyphs yes
-#     set -g theme_powerline_fonts no
-#     set -g theme_nerd_fonts yes
-#     set -g theme_show_exit_status yes
-#     set -g theme_display_jobs_verbose yes
-#     set -g default_user your_normal_user
-#     set -g theme_color_scheme dark
-#     set -g fish_prompt_pwd_dir_length 0
-#     set -g theme_project_dir_length 1
-#     set -g theme_newline_cursor yes
-
 
 # ==============================
 # Helper methods
@@ -78,10 +44,13 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
 end
 
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
+    set -l tag (command git describe --tags --exact-match 2>/dev/null)
+    and echo "$tag_glyph $tag "
+
     set -l branch (command git symbolic-ref HEAD 2>/dev/null | string replace -r '^refs/heads/' '')
     and begin
         [ -n "$theme_git_default_branches" ]
-        or set -l theme_git_default_branches master main
+        or set -l theme_git_default_branches master main (git config init.defaultBranch)
 
         [ "$theme_display_git_master_branch" != 'yes' -a "$theme_display_git_default_branch" != 'yes' ]
         and contains $branch $theme_git_default_branches
@@ -97,12 +66,11 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
         and return
     end
 
-    set -l tag (command git describe --tags --exact-match 2>/dev/null)
-    and echo "$tag_glyph $tag"
-    and return
-
-    set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
-    echo "$detached_glyph $branch"
+    # If we've already shown a tag we don't need to show a detached branch
+    if [ -z "$tag" ]
+        set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
+        echo "$detached_glyph $branch"
+    end
 end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
@@ -158,6 +126,10 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
         [ -z "$git_toplevel" ]
         and return
 
+        # Support Git under WSL (see #336)
+        command -q wslpath
+        and set git_toplevel (command wslpath $git_toplevel)
+
         # If there are no symlinks, just use git toplevel
         switch $real_pwd/
             case $git_toplevel/\*
@@ -185,7 +157,7 @@ function __bobthefish_git_project_dir -S -a real_pwd -d 'Print the current git p
     or return
 
     pushd $git_dir
-    set git_dir $real_pwd
+    set git_dir (__bobthefish_pwd)
     popd
 
     switch $real_pwd/
@@ -357,7 +329,7 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
     set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened form of a directory'
+function __bobthefish_path_segment -S -a segment_dir -a path_type -d 'Display a shortened form of a directory'
     set -l segment_color $color_path
     set -l segment_basename_color $color_path_basename
 
@@ -381,7 +353,9 @@ function __bobthefish_path_segment -S -a segment_dir -d 'Display a shortened for
             set directory (__bobthefish_basename "$segment_dir")
     end
 
-    echo -n $parent
+    [ "$theme_show_project_parent" != "no" -o "$path_type" != "project" ]
+    and echo -n $parent
+
     set_color -b $segment_basename_color
     echo -ns $directory ' '
 end
@@ -399,7 +373,7 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
 
         if set -q theme_newline_prompt
             echo -ens "$theme_newline_prompt"
-        else if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
+        else if [ "$theme_powerline_fonts" = 'no' -a "$theme_nerd_fonts" != 'yes' ]
             echo -ns '> '
         else
             echo -ns "$right_arrow_glyph "
@@ -637,16 +611,18 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
     [ "$theme_display_k8s_namespace" = 'yes' ]
     and set -l namespace (__bobthefish_k8s_namespace)
 
-    [ -z $context -o "$context" = 'default' ]
-    and [ -z $namespace -o "$namespace" = 'default' ]
+    [ -z "$context" -o "$context" = 'default' ]
+    and [ -z "$namespace" -o "$namespace" = 'default' ]
     and return
 
-    set -l segment $k8s_glyph " " $context
-    [ -n "$namespace" ]
-    and set segment $segment ":" $namespace
+    set -l segment $k8s_glyph ' '
+    [ "$context" != 'default' ]
+    and set segment $segment $context
+    [ "$namespace" != 'default' ]
+    and set segment $segment ':' $namespace
 
     __bobthefish_start_segment $color_k8s
-    echo -ns $segment " "
+    echo -ns $segment ' '
 end
 
 
@@ -658,28 +634,28 @@ function __bobthefish_prompt_aws_vault_profile -S -d 'Show AWS Vault profile'
     [ "$theme_display_aws_vault_profile" = 'yes' ]
     or return
 
-    [ -n "$AWS_VAULT" -a -n "$AWS_SESSION_EXPIRATION" ]
+    [ -n "$AWS_VAULT" -a -n "$AWS_CREDENTIAL_EXPIRATION" ]
     or return
 
     set -l profile $AWS_VAULT
 
     set -l now (date --utc +%s)
-    set -l expiry (date -d "$AWS_SESSION_EXPIRATION" +%s)
+    set -l expiry (date -d "$AWS_CREDENTIAL_EXPIRATION" +%s)
     set -l diff_mins (math "floor(( $expiry - $now ) / 60)")
 
     set -l diff_time $diff_mins"m"
     [ $diff_mins -le 0 ]
-    and set -l diff_time "0m"
+    and set -l diff_time '0m'
     [ $diff_mins -ge 60 ]
     and set -l diff_time (math "floor($diff_mins / 60)")"h"(math "$diff_mins % 60")"m"
 
-    set -l segment $profile " (" $diff_time ")"
+    set -l segment $profile ' (' $diff_time ')'
     set -l status_color $color_aws_vault
     [ $diff_mins -le 0 ]
     and set -l status_color $color_aws_vault_expired
 
     __bobthefish_start_segment $status_color
-    echo -ns $segment " "
+    echo -ns $segment ' '
 end
 
 
@@ -690,7 +666,7 @@ end
 # Polyfill for fish < 2.5.0
 if not type -q prompt_hostname
     if not set -q __bobthefish_prompt_hostname
-        set -g __bobthefish_prompt_hostname (hostname | string replace -r '\..*' '')
+        set -g __bobthefish_prompt_hostname (uname -n | string replace -r '\..*' '')
     end
 
     function prompt_hostname
@@ -830,10 +806,10 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
         set -l asdf_current_ruby (asdf current ruby 2>/dev/null)
         or return
 
-        echo "$asdf_current_ruby" | read -l asdf_ruby_version asdf_provenance
+        echo "$asdf_current_ruby" | read -l _asdf_plugin asdf_ruby_version asdf_provenance
 
         # If asdf changes their ruby version provenance format, update this to match
-        [ (string trim -- "$asdf_provenance") = "(set by $HOME/.tool-versions)" ]
+        [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
         and return
 
         set ruby_version $asdf_ruby_version
@@ -844,6 +820,63 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
 
     __bobthefish_start_segment $color_rvm
     echo -ns $ruby_glyph $ruby_version ' '
+end
+
+function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go information'
+    # setting is 'no', don't display the prompt
+    [ "$theme_display_go" = 'no' ]
+    and return
+
+    # find the closest go.mod
+    set -l gomod_version "0"
+    set -l d $real_pwd
+    while not [ -z "$d" ]
+        if [ -e $d/go.mod ]
+            grep "^go " "$d/go.mod" | read __ gomod_version
+            break
+        end
+
+        [ "$d" = "/" ]
+        and return
+
+        set d (__bobthefish_dirname $d)
+    end
+
+    # no go.mod, not in a go project, don't display the prompt
+    if [ "$gomod_version" = "0" ]
+        return
+    end
+
+    # check if there's a Go executable
+    set -l no_go_installed "0"
+    set -l actual_go_version "0"
+    set -l high_enough_version "0"
+    if type -fq go
+        set actual_go_version (go version | string match -r 'go version go(\\d+\\.\\d+)' -g)
+        if printf "%s\n%s"  "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+            set high_enough_version "1"
+        end
+    else
+        set no_go_installed "1"
+    end
+
+    if [ "$high_enough_version" = "1" ]
+        __bobthefish_start_segment $color_virtualgo
+    else
+        __bobthefish_start_segment $color_rvm
+    end
+
+    echo -ns $go_glyph
+    echo -ns "$gomod_version "
+
+    # showing the prompt -- but plain ( for 'yes' ) or verbose?
+    if  [ "$theme_display_go" = "verbose" ]
+        if [ "$actual_go_version" != "0" ]
+            # show the prompt with the required version AND the currently available
+            # version; same color rules as above
+            echo -ns " ($actual_go_version)"
+        end
+    end
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
@@ -860,14 +893,29 @@ function __bobthefish_virtualenv_python_version -S -d 'Get current Python versio
 end
 
 function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment."
+    type -fq python
+    or return
+
     [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
     and return
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
+    set -l prompt_style 'default'
 
     if [ "$version_glyph" ]
         __bobthefish_start_segment $color_virtualfish
-        echo -ns $virtualenv_glyph $version_glyph ' '
+        if string match -q "Python 2*" (python --version 2>&1 | string trim)
+            set prompt_style 'verbose'
+        else if [ "$theme_display_virtualenv" = 'verbose' ]
+            set prompt_style 'verbose'
+        end
+
+        if [ "$prompt_style" = 'verbose' ]
+            echo -ns $virtualenv_glyph $version_glyph ' '
+        else
+            echo -ns $virtualenv_glyph
+        end
+
     end
 
     if [ "$VIRTUAL_ENV" ]
@@ -891,20 +939,70 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     and return
 
     __bobthefish_start_segment $color_desk
-    echo -ns $desk_glyph ' ' (basename  -a -s ".fish" "$DESK_ENV") ' '
+    echo -ns $desk_glyph ' ' (basename -a -s '.fish' "$DESK_ENV") ' '
     set_color normal
 end
 
-function __bobthefish_prompt_nvm -S -d 'Display current node version through NVM'
-    [ "$theme_display_nvm" = 'yes' -a -n "$NVM_DIR" ]
+function __bobthefish_prompt_find_file_up -S -d 'Find file(s), going up the parent directories'
+    set -l dir "$argv[1]"
+    set -l files $argv[2..-1]
+
+    if test -z "$dir"
+        or test -z "$files"
+        return 1
+    end
+
+    while [ "$dir" ]
+        for f in $files
+            if [ -e "$dir/$f" ]
+                return
+            end
+        end
+
+        [ "$dir" = '/' ]
+        and return 1
+
+        set dir (__bobthefish_dirname "$dir")
+    end
+    return 1
+end
+
+function __bobthefish_prompt_node -S -d 'Display current node version'
+    set -l should_show
+
+    if [ "$theme_display_node" = 'always' -o "$theme_display_nvm" = 'yes' ]
+        set should_show 1
+    else if [ "$theme_display_node" = 'yes' ]
+        __bobthefish_prompt_find_file_up "$PWD" package.json .nvmrc .node-version
+        and set should_show 1
+    end
+
+    [ -z "$should_show" ]
+    and return
+
+    set -l node_manager
+    set -l node_manager_dir
+
+    if type -q nvm
+      set node_manager 'nvm'
+      set node_manager_dir $NVM_DIR
+    else if type -fq fnm
+      set node_manager 'fnm'
+      set node_manager_dir $FNM_DIR
+    end
+
+    [ -n "$node_manager_dir" ]
     or return
 
-    set -l node_version (nvm current 2> /dev/null)
+    set -l node_version ("$node_manager" current 2> /dev/null)
 
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
 
-    __bobthefish_start_segment $color_nvm
+    [ -n "$color_nvm" ]
+    and set -x color_node $color_nvm
+
+    __bobthefish_start_segment $color_node
     echo -ns $node_glyph $node_version ' '
     set_color normal
 end
@@ -928,14 +1026,14 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
 
     set -l flags "$dirty"
     [ "$flags" ]
-    and set flags ""
+    and set flags ''
 
     set -l flag_colors $color_repo
     if [ "$dirty" ]
         set flag_colors $color_repo_dirty
     end
 
-    __bobthefish_path_segment $hg_root_dir
+    __bobthefish_path_segment $hg_root_dir project
 
     __bobthefish_start_segment $flag_colors
     echo -ns $hg_glyph ' '
@@ -976,7 +1074,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
     if [ "$theme_display_git_untracked" != 'no' ]
         set -l show_untracked (command git config --bool bash.showUntrackedFiles 2>/dev/null)
         if [ "$show_untracked" != 'false' ]
-            set new (command git ls-files --other --exclude-standard --directory --no-empty-directory 2>/dev/null)
+            set new (command git ls-files --other --exclude-standard --directory --no-empty-directory "$git_root_dir" 2>/dev/null)
             if [ "$new" ]
                 set new "$git_untracked_glyph"
             end
@@ -995,7 +1093,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
         set flag_colors $color_repo_staged
     end
 
-    __bobthefish_path_segment $git_root_dir
+    __bobthefish_path_segment $git_root_dir project
 
     __bobthefish_start_segment $flag_colors
     echo -ns (__bobthefish_git_branch) $flags ' '
@@ -1077,7 +1175,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the 
 end
 
 function __bobthefish_prompt_dir -S -a real_pwd -d 'Display a shortened form of the current directory'
-    __bobthefish_path_segment "$real_pwd"
+    __bobthefish_path_segment "$real_pwd" pwd
 end
 
 
@@ -1090,8 +1188,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set -l last_status $status
 
     # Use a simple prompt on dumb terminals.
-    if [ "$TERM" = "dumb" ]
-        echo "> "
+    if [ "$TERM" = 'dumb' ]
+        echo '> '
         return
     end
 
@@ -1103,6 +1201,8 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Start each line with a blank slate
     set -l __bobthefish_current_bg
+
+    set -l real_pwd (__bobthefish_pwd)
 
     # Status flags and input mode
     __bobthefish_prompt_status $last_status
@@ -1122,11 +1222,11 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_nix
     __bobthefish_prompt_desk
     __bobthefish_prompt_rubies
+    __bobthefish_prompt_golang $real_pwd
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
-    __bobthefish_prompt_nvm
+    __bobthefish_prompt_node
 
-    set -l real_pwd (__bobthefish_pwd)
 
     # VCS
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
