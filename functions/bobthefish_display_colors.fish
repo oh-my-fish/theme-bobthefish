@@ -3,8 +3,11 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   set -l color_schemes default light \
     solarized solarized-light \
     base16 base16-light \
-    gruvbox zenburn \
+    gruvbox gruvbox-light zenburn \
     dracula nord \
+    catppuccin-latte catppuccin-frappe \
+    catppuccin-macchiato catppuccin-mocha \
+    jellybeans \
     terminal terminal-dark-white \
     terminal-light terminal-light-black \
     terminal2 terminal2-dark-white \
@@ -133,6 +136,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   echo -ns $ruby_glyph rvm ' '
   __bobthefish_finish_segments
 
+  __bobthefish_start_segment $color_nvm
+  echo -ns $ruby_glyph nvm ' '
+  __bobthefish_finish_segments
+
   __bobthefish_start_segment $color_virtualfish
   echo -ns $virtualenv_glyph virtualfish ' '
   __bobthefish_finish_segments
@@ -144,6 +151,7 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
   __bobthefish_start_segment $color_desk
   echo -ns $desk_glyph desk ' '
   __bobthefish_finish_segments
+  echo
 
   __bobthefish_start_segment $color_aws_vault
   echo -ns aws-vault ' (' active ') '
@@ -151,6 +159,10 @@ function bobthefish_display_colors -a color_scheme -d 'Print example prompt colo
 
   __bobthefish_start_segment $color_aws_vault_expired
   echo -ns aws-vault ' (' expired ') '
+  __bobthefish_finish_segments
+
+  __bobthefish_start_segment $color_k8s
+  echo -ns $k8s_glyph ' k8s-context'
   __bobthefish_finish_segments
 
   echo -e "\n"

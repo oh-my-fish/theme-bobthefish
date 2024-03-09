@@ -493,6 +493,48 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_desk                     $blue[2] $fg[2] --bold
       set -x color_nix                      $blue[2] $fg[2] --bold
 
+    case 'gruvbox-light'
+      #               light  medium  dark  darkest
+      #               ------ ------ ------ -------
+      set -l red      9d0006 cc241d
+      set -l green    79740e 98971a
+      set -l yellow   b57614 d79921
+      set -l aqua     427b58 689d6a
+      set -l blue     076678 458588
+      set -l grey     a89984 928374
+      set -l orange   af3a03 d65d0e
+      set -l fg       282828 3c3836 504945 7c6f64
+      set -l bg       d5c4a1 fbf1c7
+
+      set -x color_initial_segment_exit  $red[1] $bg[2] --bold
+      set -x color_initial_segment_su    $fg[1] $green[2] --bold
+      set -x color_initial_segment_jobs  $fg[1] $aqua[2] --bold
+
+      set -x color_path                  $bg[1] $fg[2]
+      set -x color_path_basename         $bg[1] $fg[2] --bold
+      set -x color_path_nowrite          $red[1] $bg[2]
+      set -x color_path_nowrite_basename $red[1] $bg[2] --bold
+
+      set -x color_repo                  $green[2] $fg[1]
+      set -x color_repo_work_tree        $bg[1] $fg[2] --bold
+      set -x color_repo_dirty            $orange[2] $bg[2]
+      set -x color_repo_staged           $yellow[1] $bg[1]
+
+      set -x color_vi_mode_default       $fg[4] $bg[2] --bold
+      set -x color_vi_mode_insert        $blue[1] $bg[2] --bold
+      set -x color_vi_mode_visual        $yellow[1] $bg[2] --bold
+
+      set -x color_vagrant               $blue[2] $fg[2] --bold
+      set -x color_k8s                   $green[2] $fg[2] --bold
+      set -x color_username              $fg[3] $blue[2] --bold
+      set -x color_hostname              $fg[3] $blue[2]
+      set -x color_rvm                   $red[2] $bg[2] --bold
+      set -x color_nvm                   $green[1] $fg[2] --bold
+      set -x color_virtualfish           $blue[2] $fg[2] --bold
+      set -x color_virtualgo             $blue[2] $fg[2] --bold
+      set -x color_desk                  $blue[2] $fg[2] --bold
+      set -x color_nix                   $blue[2] $fg[2] --bold
+
     case 'dracula' # https://draculatheme.com
       set -l bg           282a36
       set -l current_line 44475a
@@ -527,7 +569,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_vi_mode_visual           $orange $bg --bold
 
       set -x color_vagrant                  $pink $bg --bold
-      set -x color_k8s                      $green $fg --bold
+      set -x color_k8s                      $purple $bg --bold
       set -x color_aws_vault                $comment $yellow --bold
       set -x color_aws_vault_expired        $comment $red --bold
       set -x color_username                 $selection $cyan --bold
@@ -591,6 +633,348 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_virtualfish              $base09 $colorfg --bold
       set -x color_virtualgo                $base09 $colorfg --bold
       set -x color_desk                     $base09 $colorfg --bold
+
+    case 'catppuccin-latte'
+      set -l rosewater dc8a78
+      set -l flamingo  dd7878
+      set -l pink      ea76cb
+      set -l mauve     8839ef
+      set -l red       d20f39
+      set -l maroon    e64553
+      set -l peach     fe640b
+      set -l yellow    df8e1d
+      set -l green     40a02b
+      set -l teal      179299
+      set -l sky       04a5e5
+      set -l sapphire  209fb5
+      set -l blue      1e66f5
+      set -l lavender  7287fd
+      set -l text      4c4f69
+      set -l subtext1  5c5f77
+      set -l subtext0  6c6f85
+      set -l overlay2  7c7f93
+      set -l overlay1  8c8fa1
+      set -l overlay0  9ca0b0
+      set -l surface2  acb0be
+      set -l surface1  bcc0cc
+      set -l surface0  ccd0da
+      set -l base      eff1f5
+      set -l mantle    e6e9ef
+      set -l crust     dce0e8
+
+      set -x color_initial_segment_exit     $surface2 $red  --bold
+      set -x color_initial_segment_private  $surface2 $flamingo
+      set -x color_initial_segment_su       $surface2 $green --bold
+      set -x color_initial_segment_jobs     $surface2 $peach --bold
+
+      set -x color_path                     $surface0 $text
+      set -x color_path_basename            $surface0 $text --bold
+      set -x color_path_nowrite             $surface0 $mauve
+      set -x color_path_nowrite_basename    $surface0 $mauve --bold
+
+      set -x color_repo                     $green $mantle
+      set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_dirty               $red $mantle
+      set -x color_repo_staged              $yellow $mantle
+
+      set -x color_vi_mode_default          $sky $mantle --bold
+      set -x color_vi_mode_insert           $green $mantle --bold
+      set -x color_vi_mode_visual           $mauve $mantle --bold
+
+      set -x color_vagrant                  $surface2 $text --bold
+      set -x color_k8s                      $surface2 $text --bold
+      set -x color_aws_vault                $yellow $mantle --bold
+      set -x color_aws_vault_expired        $red $mantle --bold
+      set -x color_username                 $surface2 $yellow --bold
+      set -x color_hostname                 $surface2 $yellow
+      set -x color_rvm                      $red $mantle --bold
+      set -x color_node                     $green $mantle --bold
+      set -x color_virtualfish              $peach $mantle --bold
+      set -x color_virtualgo                $sky $mantle --bold
+      set -x color_desk                     $peach $mantle --bold
+      set -x color_nix                      $sky $mantle --bold
+
+    case 'catppuccin-frappe'
+      set -l rosewater f2d5cf
+      set -l flamingo  eebebe
+      set -l pink      f4b8e4
+      set -l mauve     ca9ee6
+      set -l red       e78284
+      set -l maroon    ea999c
+      set -l peach     ef9f76
+      set -l yellow    e5c890
+      set -l green     a6d189
+      set -l teal      81c8be
+      set -l sky       99d1db
+      set -l sapphire  85c1dc
+      set -l blue      8caaee
+      set -l lavender  babbf1
+      set -l text      c6d0f5
+      set -l subtext1  b5bfe2
+      set -l subtext0  a5adce
+      set -l overlay2  949cbb
+      set -l overlay1  838ba7
+      set -l overlay0  737994
+      set -l surface2  626880
+      set -l surface1  51576d
+      set -l surface0  414559
+      set -l base      303446
+      set -l mantle    292c3c
+      set -l crust     232634
+
+      set -x color_initial_segment_exit     $surface2 $red  --bold
+      set -x color_initial_segment_private  $surface2 $flamingo
+      set -x color_initial_segment_su       $surface2 $green --bold
+      set -x color_initial_segment_jobs     $surface2 $peach --bold
+
+      set -x color_path                     $surface0 $text
+      set -x color_path_basename            $surface0 $text --bold
+      set -x color_path_nowrite             $surface0 $mauve
+      set -x color_path_nowrite_basename    $surface0 $mauve --bold
+
+      set -x color_repo                     $green $mantle
+      set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_dirty               $red $mantle
+      set -x color_repo_staged              $yellow $mantle
+
+      set -x color_vi_mode_default          $sky $mantle --bold
+      set -x color_vi_mode_insert           $green $mantle --bold
+      set -x color_vi_mode_visual           $mauve $mantle --bold
+
+      set -x color_vagrant                  $surface2 $text --bold
+      set -x color_k8s                      $surface2 $text --bold
+      set -x color_aws_vault                $yellow $mantle --bold
+      set -x color_aws_vault_expired        $red $mantle --bold
+      set -x color_username                 $surface2 $yellow --bold
+      set -x color_hostname                 $surface2 $yellow
+      set -x color_rvm                      $red $mantle --bold
+      set -x color_node                     $green $mantle --bold
+      set -x color_virtualfish              $peach $mantle --bold
+      set -x color_virtualgo                $sky $mantle --bold
+      set -x color_desk                     $peach $mantle --bold
+      set -x color_nix                      $sky $mantle --bold
+
+    case 'catppuccin-macchiato'
+      set -l rosewater f4dbd6
+      set -l flamingo  f0c6c6
+      set -l pink      f5bde6
+      set -l mauve     c6a0f6
+      set -l red       ed8796
+      set -l maroon    ee99a0
+      set -l peach     f5a97f
+      set -l yellow    eed49f
+      set -l green     a6da95
+      set -l teal      8bd5ca
+      set -l sky       91d7e3
+      set -l sapphire  7dc4e4
+      set -l blue      8aadf4
+      set -l lavender  b7bdf8
+      set -l text      cad3f5
+      set -l subtext1  b8c0e0
+      set -l subtext0  a5adcb
+      set -l overlay2  939ab7
+      set -l overlay1  8087a2
+      set -l overlay0  6e738d
+      set -l surface2  5b6078
+      set -l surface1  494d64
+      set -l surface0  363a4f
+      set -l base      24273a
+      set -l mantle    1e2030
+      set -l crust     181926
+
+      set -x color_initial_segment_exit     $surface2 $red  --bold
+      set -x color_initial_segment_private  $surface2 $flamingo
+      set -x color_initial_segment_su       $surface2 $green --bold
+      set -x color_initial_segment_jobs     $surface2 $peach --bold
+
+      set -x color_path                     $surface0 $text
+      set -x color_path_basename            $surface0 $text --bold
+      set -x color_path_nowrite             $surface0 $mauve
+      set -x color_path_nowrite_basename    $surface0 $mauve --bold
+
+      set -x color_repo                     $green $mantle
+      set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_dirty               $red $mantle
+      set -x color_repo_staged              $yellow $mantle
+
+      set -x color_vi_mode_default          $sky $mantle --bold
+      set -x color_vi_mode_insert           $green $mantle --bold
+      set -x color_vi_mode_visual           $mauve $mantle --bold
+
+      set -x color_vagrant                  $surface2 $text --bold
+      set -x color_k8s                      $surface2 $text --bold
+      set -x color_aws_vault                $yellow $mantle --bold
+      set -x color_aws_vault_expired        $red $mantle --bold
+      set -x color_username                 $surface2 $yellow --bold
+      set -x color_hostname                 $surface2 $yellow
+      set -x color_rvm                      $red $mantle --bold
+      set -x color_node                     $green $mantle --bold
+      set -x color_virtualfish              $peach $mantle --bold
+      set -x color_virtualgo                $sky $mantle --bold
+      set -x color_desk                     $peach $mantle --bold
+      set -x color_nix                      $sky $mantle --bold
+
+    case 'catppuccin-mocha'
+      set -l rosewater f5e0dc
+      set -l flamingo  f2cdcd
+      set -l pink      f5c2e7
+      set -l mauve     cba6f7
+      set -l red       f38ba8
+      set -l maroon    eba0ac
+      set -l peach     fab387
+      set -l yellow    f9e2af
+      set -l green     a6e3a1
+      set -l teal      94e2d5
+      set -l sky       89dceb
+      set -l sapphire  74c7ec
+      set -l blue      89b4fa
+      set -l lavender  b4befe
+      set -l text      cdd6f4
+      set -l subtext1  bac2de
+      set -l subtext0  a6adc8
+      set -l overlay2  9399b2
+      set -l overlay1  7f849c
+      set -l overlay0  6c7086
+      set -l surface2  585b70
+      set -l surface1  45475a
+      set -l surface0  313244
+      set -l base      1e1e2e
+      set -l mantle    181825
+      set -l crust     11111b
+
+      set -x color_initial_segment_exit     $surface2 $red  --bold
+      set -x color_initial_segment_private  $surface2 $flamingo
+      set -x color_initial_segment_su       $surface2 $green --bold
+      set -x color_initial_segment_jobs     $surface2 $peach --bold
+
+      set -x color_path                     $surface0 $text
+      set -x color_path_basename            $surface0 $text --bold
+      set -x color_path_nowrite             $surface0 $mauve
+      set -x color_path_nowrite_basename    $surface0 $mauve --bold
+
+      set -x color_repo                     $green $mantle
+      set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_dirty               $red $mantle
+      set -x color_repo_staged              $yellow $mantle
+
+      set -x color_vi_mode_default          $sky $mantle --bold
+      set -x color_vi_mode_insert           $green $mantle --bold
+      set -x color_vi_mode_visual           $mauve $mantle --bold
+
+      set -x color_vagrant                  $surface2 $text --bold
+      set -x color_k8s                      $surface2 $text --bold
+      set -x color_aws_vault                $yellow $mantle --bold
+      set -x color_aws_vault_expired        $red $mantle --bold
+      set -x color_username                 $surface2 $yellow --bold
+      set -x color_hostname                 $surface2 $yellow
+      set -x color_rvm                      $red $mantle --bold
+      set -x color_node                     $green $mantle --bold
+      set -x color_virtualfish              $peach $mantle --bold
+      set -x color_virtualgo                $sky $mantle --bold
+      set -x color_desk                     $peach $mantle --bold
+      set -x color_nix                      $sky $mantle --bold
+
+    case 'jellybeans' # https://github.com/nanotech/jellybeans.vim
+      set -l bg             151515
+      set -l darker_grey    1c1c1c
+      set -l dark_grey      262626
+      set -l grey           888888
+      set -l blue_grey      a0a8b0
+      set -l light_grey     d8dee9
+      set -l white          ffffff
+      set -l dark_red       902020
+      set -l red            cf6a4c
+      set -l red_orange     ffb964
+      set -l bright_orange  fad07a
+      set -l pale_gold      dad085
+      set -l pink           f0a0c0
+      set -l lilac          c6b6ee
+      set -l dark_blue      2b5b77
+      set -l deep_blue      0d61ac
+      set -l blue           8197bf
+      set -l bright_blue    7697d6
+      set -l cyan           8fbfdc
+      set -l blue_green     668799
+      set -l green          799d6a
+      set -l bright_green   70b950
+      set -l brighter_green 65c254
+      set -l light_green    99ad6a
+      set -l dark_green     556633
+
+      set -x color_initial_segment_exit    $dark_red $white  --bold
+      set -x color_initial_segment_private $light_grey $dark_grey --bold
+      set -x color_initial_segment_su      $red_orange $darker_grey --bold
+      set -x color_initial_segment_jobs    $lilac $darker_grey --bold
+
+      set -x color_path                    $dark_grey $light_grey
+      set -x color_path_basename           $dark_grey $light_grey --bold
+      set -x color_path_nowrite            $dark_grey $red_orange
+      set -x color_path_nowrite_basename   $dark_grey $red_orange --bold
+
+      set -x color_repo                    $light_green $darker_grey
+      set -x color_repo_work_tree          $dark_grey $light_grey --bold
+      set -x color_repo_dirty              $red $darker_grey
+      set -x color_repo_staged             $pale_gold $darker_grey
+
+      set -x color_vi_mode_default         $bright_blue $darker_grey --bold
+      set -x color_vi_mode_insert          $lilac $darker_grey --bold
+      set -x color_vi_mode_visual          $cyan $darker_grey --bold
+
+      set -x color_username                $dark_grey $blue_grey --bold
+      set -x color_hostname                $dark_grey $blue_grey
+
+      set -x color_vagrant                 $lilac $darker_grey --bold
+      set -x color_k8s                     $pale_gold $darker_grey --bold
+      set -x color_aws_vault               $deep_blue $pale_gold --bold
+      set -x color_aws_vault_expired       $deep_blue $red --bold
+      set -x color_rvm                     $pink $darker_grey --bold
+      set -x color_nvm                     $bright_green $darker_grey --bold
+      set -x color_virtualfish             $cyan $darker_grey --bold
+      set -x color_virtualgo               $light_green $darker_grey --bold
+      set -x color_desk                    $light_grey $darker_grey --bold
+      set -x color_nix                     $bright_blue $darker_grey --bold
+
+    case 'darcula'
+      #             light  medium dark   darkest
+      #             ------ ------ ------ ------
+      set -l grey   808080 616161 595959 424242
+      set -l red    FF4050 F0524F B82421 772E2C
+      set -l green  4FC414 5C962C 458500 39511F
+      set -l yellow E5BF00 A68A0D A87B00 5C4F17
+      set -l blue   1FB0FF 3993D4 1778BD 245980
+      set -l white  F9F9F4 B7C3D0
+
+      set -x color_initial_segment_exit     $white[2] $red[3] --bold
+      set -x color_initial_segment_private  $white[2] $grey[4]
+      set -x color_initial_segment_su       $white[2] $green[3] --bold
+      set -x color_initial_segment_jobs     $white[2] $blue[3] --bold
+
+      set -x color_path                     $grey[4] $white[2]
+      set -x color_path_basename            $grey[4] $white[1] --bold
+      set -x color_path_nowrite             $grey[4] $red[2]
+      set -x color_path_nowrite_basename    $grey[4] $red[1] --bold
+
+      set -x color_repo                     $green[3] $white[4]
+      set -x color_repo_work_tree           $grey[4] $grey[4] --bold
+      set -x color_repo_dirty               $red[3] $grey[4]
+      set -x color_repo_staged              $yellow[3] $grey[4]
+
+      set -x color_vi_mode_default          $grey[4] $yellow[2] --bold
+      set -x color_vi_mode_insert           $green[2] $grey[4] --bold
+      set -x color_vi_mode_visual           $yellow[2] $grey[4] --bold
+
+      set -x color_vagrant                  $blue[2] $green[1] --bold
+      set -x color_k8s                      $green[2] $grey[4] --bold
+      set -x color_aws_vault                $blue[2] $grey[4] --bold
+      set -x color_aws_vault_expired        $blue[2] $red[1] --bold
+      set -x color_username                 $grey[4] $blue[2] --bold
+      set -x color_hostname                 $grey[4] $blue[1]
+      set -x color_rvm                      $red[2] $grey[4] --bold
+      set -x color_node                     $green[3] $white[2] --bold
+      set -x color_virtualfish               $blue[2] $grey[4] --bold
+      set -x color_virtualgo                $blue[2] $grey[4] --bold
+      set -x color_desk                     $blue[2] $grey[4] --bold
+      set -x color_nix                      $blue[2] $grey[4] --bold
 
     case '*' # default dark theme
       #               light  medium dark
