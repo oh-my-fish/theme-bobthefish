@@ -648,33 +648,38 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -l light_green    99ad6a
       set -l dark_green     556633
 
-      set -x color_initial_segment_exit  $dark_red $white  --bold
-      set -x color_initial_segment_su    $red_orange $darker_grey --bold
-      set -x color_initial_segment_jobs  $lilac $darker_grey --bold
+      set -x color_initial_segment_exit    $dark_red $white  --bold
+      set -x color_initial_segment_private $light_grey $dark_grey --bold
+      set -x color_initial_segment_su      $red_orange $darker_grey --bold
+      set -x color_initial_segment_jobs    $lilac $darker_grey --bold
 
-      set -x color_path                  $dark_grey $light_grey
-      set -x color_path_basename         $dark_grey $light_grey --bold
-      set -x color_path_nowrite          $dark_grey $red_orange
-      set -x color_path_nowrite_basename $dark_grey $red_orange --bold
+      set -x color_path                    $dark_grey $light_grey
+      set -x color_path_basename           $dark_grey $light_grey --bold
+      set -x color_path_nowrite            $dark_grey $red_orange
+      set -x color_path_nowrite_basename   $dark_grey $red_orange --bold
 
-      set -x color_repo                  $light_green $darker_grey
-      set -x color_repo_work_tree        $dark_grey $light_grey --bold
-      set -x color_repo_dirty            $red $darker_grey
-      set -x color_repo_staged           $pale_gold $darker_grey
+      set -x color_repo                    $light_green $darker_grey
+      set -x color_repo_work_tree          $dark_grey $light_grey --bold
+      set -x color_repo_dirty              $red $darker_grey
+      set -x color_repo_staged             $pale_gold $darker_grey
 
-      set -x color_vi_mode_default       $bright_blue $darker_grey --bold
-      set -x color_vi_mode_insert        $lilac $darker_grey --bold
-      set -x color_vi_mode_visual        $cyan $darker_grey --bold
+      set -x color_vi_mode_default         $bright_blue $darker_grey --bold
+      set -x color_vi_mode_insert          $lilac $darker_grey --bold
+      set -x color_vi_mode_visual          $cyan $darker_grey --bold
 
-      set -x color_username              $dark_grey $blue_grey --bold
-      set -x color_hostname              $dark_grey $blue_grey
+      set -x color_username                $dark_grey $blue_grey --bold
+      set -x color_hostname                $dark_grey $blue_grey
 
-      set -x color_vagrant               $lilac $darker_grey --bold
-      set -x color_k8s                   $pale_gold $darker_grey --bold
-      set -x color_rvm                   $pink $darker_grey --bold
-      set -x color_virtualfish           $cyan $darker_grey --bold
-      set -x color_virtualgo             $light_green $darker_grey --bold
-      set -x color_desk                  $light_grey $darker_grey --bold
+      set -x color_vagrant                 $lilac $darker_grey --bold
+      set -x color_k8s                     $pale_gold $darker_grey --bold
+      set -x color_aws_vault               $deep_blue $pale_gold --bold
+      set -x color_aws_vault_expired       $deep_blue $red --bold
+      set -x color_rvm                     $pink $darker_grey --bold
+      set -x color_nvm                     $bright_green $darker_grey --bold
+      set -x color_virtualfish             $cyan $darker_grey --bold
+      set -x color_virtualgo               $light_green $darker_grey --bold
+      set -x color_desk                    $light_grey $darker_grey --bold
+      set -x color_nix                     $bright_blue $darker_grey --bold
 
     case 'darcula'
       #             light  medium dark   darkest
