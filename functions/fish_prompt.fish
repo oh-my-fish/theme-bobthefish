@@ -17,7 +17,6 @@
 #
 # See README.md for setup and configuration options.
 #
-
 # ==============================
 # Helper methods
 # ==============================
@@ -1054,6 +1053,20 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
     end
 end
 
+function __bobthefish_prompt_screen -S -d 'Display the screen name'
+    [ "$theme_display_screen" = 'no' ]
+    and return
+
+    [ -z "$STY" ]
+    and return
+
+    __bobthefish_start_segment $color_screen
+    [ "$theme_display_screen_verbose" = "yes" ]
+    and echo -ns (string split "." -- $STY)[2]
+    echo -ns ' '
+    set_color normal
+end
+
 function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the actual git state'
     set -l dirty ''
     if [ "$theme_display_git_dirty" != 'no' ]
@@ -1209,6 +1222,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # User / hostname info
     __bobthefish_prompt_user
+
+    # Screen
+    __bobthefish_prompt_screen
 
     # Containers and VMs
     __bobthefish_prompt_vagrant
