@@ -913,12 +913,36 @@ function __bobthefish_virtualenv_python_version -S -d 'Get current Python versio
     end
 end
 
-function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment."
+function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment, or asdf-managed Python."
     command -q python
     or return
 
-    [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
+    [ "$theme_display_virtualenv" = 'no' ]
     and return
+
+    # When no virtualenv/conda, show asdf Python version if it's from a local .tool-versions
+    if [ -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
+        if command -q asdf
+            set -l asdf_current_python (asdf current python 2>/dev/null)
+            if [ -n "$asdf_current_python" ]
+                echo "$asdf_current_python" | read -l _asdf_plugin asdf_python_version asdf_provenance
+                set asdf_provenance (string trim -- "$asdf_provenance")
+                [ "$asdf_provenance" = "$HOME/.tool-versions" ]
+                and return
+
+                set -l version_glyph (__bobthefish_virtualenv_python_version)
+                __bobthefish_start_segment $color_virtualfish
+                if [ "$version_glyph" ]
+                    echo -ns $virtualenv_glyph $version_glyph ' '
+                else
+                    echo -ns $virtualenv_glyph
+                end
+                echo -ns $asdf_python_version ' '
+                return
+            end
+        end
+        return
+    end
 
     set -l version_glyph (__bobthefish_virtualenv_python_version)
     set -l prompt_style 'default'
@@ -1003,6 +1027,7 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
 
     set -l node_manager
     set -l node_manager_dir
+    set -l node_version
 
     if type -q nvm
         set node_manager 'nvm'
@@ -1010,12 +1035,24 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     else if command -q fnm
         set node_manager 'fnm'
         set node_manager_dir $FNM_DIR
+    else if command -q asdf
+        set -l asdf_current_node (asdf current nodejs 2>/dev/null)
+        [ -z "$asdf_current_node" ]
+        and set asdf_current_node (asdf current node 2>/dev/null)
+        if [ -n "$asdf_current_node" ]
+            echo "$asdf_current_node" | read -l _asdf_plugin node_version asdf_provenance
+            set asdf_provenance (string trim -- "$asdf_provenance")
+            [ "$asdf_provenance" != "$HOME/.tool-versions" ]
+            and set node_manager 'asdf'
+        end
     end
 
-    [ -n "$node_manager_dir" ]
+    [ -n "$node_manager" ]
     or return
 
-    set -l node_version ("$node_manager" current 2> /dev/null)
+    if [ "$node_manager" != 'asdf' ]
+        set node_version ("$node_manager" current 2> /dev/null)
+    end
 
     [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
     and return
