@@ -800,8 +800,8 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     end
 end
 
-function __bobthefish_asdf_plugin_version -S -d 'Guess version of an executable managed by asdf'
-    set -l asdf_current_plugin (asdf current $argv[1] 2>/dev/null)
+function __bobthefish_asdf_plugin_version -S -a plugin -d 'Guess version of an executable managed by asdf'
+    set -l asdf_current_plugin (asdf current $plugin 2>/dev/null)
     or return
 
     echo "$asdf_current_plugin" | read -l _asdf_plugin asdf_plugin_version asdf_provenance
@@ -813,13 +813,13 @@ function __bobthefish_asdf_plugin_version -S -d 'Guess version of an executable 
     echo $asdf_plugin_version
 end
 
-function __bobthefish_mise_plugin_version -S -d 'Guess version of an executable managed by mise'
-    set -l mise_version (mise current $argv[1] 2>/dev/null)
+function __bobthefish_mise_plugin_version -S -a plugin -d 'Guess version of an executable managed by mise'
+    set -l mise_version (mise current $plugin 2>/dev/null)
     or return
 
     # mise outputs just the version number, unlike asdf which outputs "tool version source"
     # Only show if not from global config
-    set -l mise_source (mise ls --current $argv[1] 2>/dev/null | tail -n 1 | awk '{print $3}')
+    set -l mise_source (mise ls --current $plugin 2>/dev/null | tail -n 1 | awk '{print $3}')
     
     # Don't show if it's from the global config (expand ~ to $HOME for comparison)
     set -l global_config (string replace '~' "$HOME" "$mise_source")
