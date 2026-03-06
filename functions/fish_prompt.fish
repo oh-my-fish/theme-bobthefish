@@ -800,14 +800,72 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     end
 end
 
+function __bobthefish_asdf_plugin_version -S -a plugin -d 'Guess version of an executable managed by asdf'
+    set -l asdf_current_plugin (asdf current $plugin 2>/dev/null)
+    or return
+
+    echo "$asdf_current_plugin" | read -l _asdf_plugin asdf_plugin_version asdf_provenance
+
+    # If asdf changes their ruby version provenance format, update this to match
+    [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
+    and return
+
+    echo $asdf_plugin_version
+end
+
+function __bobthefish_mise_plugin_version -S -a plugin -d 'Guess version of an executable managed by mise'
+    set -l mise_version (mise current $plugin 2>/dev/null)
+    or return
+
+    # mise outputs just the version number, unlike asdf which outputs "tool version source"
+    # Only show if not from global config
+    set -l mise_source (mise ls --current $plugin 2>/dev/null | tail -n 1 | awk '{print $3}')
+    
+    # Don't show if it's from the global config (expand ~ to $HOME for comparison)
+    set -l global_config (string replace '~' "$HOME" "$mise_source")
+    [ "$global_config" = "$HOME/.config/mise/config.toml" ]
+    and return
+
+    echo $mise_version
+end
+
 function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
     [ "$theme_display_ruby" = 'no' ]
     and return
 
     set -l ruby_version
+
+    if set -q theme_ruby_manager
+        switch "$theme_ruby_manager"
+            case rvm
+                command -q rvm-prompt
+                and set ruby_version (__bobthefish_rvm_info)
+            case rbenv
+                command -q rbenv
+                and set ruby_version (rbenv version-name)
+            case chruby
+                type -q chruby
+                and set ruby_version $RUBY_VERSION
+            case asdf
+                type -fq asdf
+                and set ruby_version (__bobthefish_asdf_plugin_version ruby)
+            case mise
+                type -fq mise
+                and set ruby_version (__bobthefish_mise_plugin_version ruby)
+            case '*'
+                return
+        end
+
+        [ -z "$ruby_version" ]
+        and return
+    end
+
     if command -q rvm-prompt
         set ruby_version (__bobthefish_rvm_info)
-    else if command -q rbenv
+    end
+
+    if [ -z "$ruby_version" ]
+        and command -q rbenv
         set ruby_version (rbenv version-name)
         # Don't show global ruby version...
         set -q RBENV_ROOT
@@ -821,19 +879,21 @@ function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
 
         [ "$ruby_version" = "$global_ruby_version" ]
         and return
-    else if type -q chruby # chruby is implemented as a function, so using type -q is intentional
+    end
+
+    if [ -z "$ruby_version" ]
+        and type -q chruby # chruby is implemented as a function, so using type -q is intentional
         set ruby_version $RUBY_VERSION
-    else if command -q asdf
-        set -l asdf_current_ruby (asdf current ruby 2>/dev/null)
-        or return
+    end
 
-        echo "$asdf_current_ruby" | read -l _asdf_plugin asdf_ruby_version asdf_provenance
+    if [ -z "$ruby_version" ]
+        and type -fq asdf
+        set ruby_version (__bobthefish_asdf_plugin_version ruby)
+    end
 
-        # If asdf changes their ruby version provenance format, update this to match
-        [ (string trim -- "$asdf_provenance") = "$HOME/.tool-versions" ]
-        and return
-
-        set ruby_version $asdf_ruby_version
+    if [ -z "$ruby_version" ]
+        and type -fq mise
+        set ruby_version (__bobthefish_mise_plugin_version ruby)
     end
 
     [ -z "$ruby_version" ]
@@ -1001,23 +1061,60 @@ function __bobthefish_prompt_node -S -d 'Display current node version'
     [ -z "$should_show" ]
     and return
 
-    set -l node_manager
-    set -l node_manager_dir
+    set -l node_version
 
-    if type -q nvm
-        set node_manager 'nvm'
-        set node_manager_dir $NVM_DIR
-    else if command -q fnm
-        set node_manager 'fnm'
-        set node_manager_dir $FNM_DIR
+    if set -q theme_node_manager
+        switch "$theme_node_manager"
+            case nvm
+                type -q nvm
+                and set node_version (nvm current 2> /dev/null)
+            case fnm
+                type -fq fnm
+                and set node_version (fnm current 2> /dev/null)
+            case asdf
+                type -fq asdf
+                and set node_version (__bobthefish_asdf_plugin_version nodejs)
+            case mise
+                type -fq mise
+                and set node_version (__bobthefish_mise_plugin_version nodejs)
+            case '*'
+                return
+        end
+
+        if [ "$node_version" = 'none' -o "$node_version" = 'system' ]
+            set -e node_version
+        end
+
+        [ -z "$node_version" ]
+        and return
     end
 
-    [ -n "$node_manager_dir" ]
-    or return
+    if type -q nvm
+        set node_version (nvm current 2> /dev/null)
+        if [ -z "$node_version" -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+            set -e node_version
+        end
+    end
 
-    set -l node_version ("$node_manager" current 2> /dev/null)
+    if [ -z "$node_version" ]
+        and type -fq fnm
+        set node_version (fnm current 2> /dev/null)
+        if [ -z "$node_version" -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+            set -e node_version
+        end
+    end
 
-    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+    if [ -z "$node_version" ]
+        and type -fq asdf
+        set node_version (__bobthefish_asdf_plugin_version nodejs)
+    end
+
+    if [ -z "$node_version" ]
+        and type -fq mise
+        set node_version (__bobthefish_mise_plugin_version nodejs)
+    end
+
+    [ -z "$node_version" ]
     and return
 
     [ -n "$color_nvm" ]
