@@ -47,10 +47,10 @@ This theme is based loosely on [agnoster][btf-agnoster].
      * Background jobs (**`%`**)
  * Current vi mode
  * `User@Host` (unless you're the default user)
- * Current RVM, rbenv or chruby (Ruby) version
- * Current virtualenv (Python) version
+ * Current RVM, rbenv, chruby or asdf (Ruby) version
+ * Current virtualenv (Python) version, or asdf-managed Python
      * _If you use virtualenv, you will probably need to disable the default virtualenv prompt, since it doesn't play nice with fish: `set -x VIRTUAL_ENV_DISABLE_PROMPT 1`_
- * Current NVM/FNM version (Nodejs) (inactive by default; see configurations in the next paragraph)
+ * Current NVM, FNM or asdf (Node.js) version (inactive by default; see configurations in the next paragraph)
  * Abbreviated parent directory
  * Current directory, or Git or Mercurial project name
  * Current project's repo branch (<img width="16" alt="branch-glyph" src="https://cloud.githubusercontent.com/assets/53660/8768360/53ee9b58-2e32-11e5-9977-cee0063936fa.png"> master) or detached head (`➦` d0dfd9b)
@@ -174,7 +174,9 @@ Use `no` to disable Ruby version information. By default, the Ruby version is di
 
 #### `set -g theme_display_virtualenv no`
 
-Use `no` to disable Python version information. By default, the Python version is shown when it's interesting, along with the Virtualenv or Conda environmenmt.
+Use `no` to disable Python version information. By default, the Python version is shown when it's interesting, along with the Virtualenv, Conda or asdf-managed Python environment.
+
+**asdf support:** The theme shows versions managed by [asdf](https://asdf-vm.com/) for Ruby, Node.js and Python. For each tool, the version is only shown when it comes from a local `.tool-versions` file (i.e. not the global `~/.tool-versions`), so you see a segment when your project pins a different version.
 
 #### `set -g theme_display_go verbose`
 
@@ -182,7 +184,7 @@ Use `no` to disable the Go version information. Set to `verbose` to show both th
 
 #### `set -g theme_display_node yes`
 
-This feature is disabled by default. Use `yes`, display the version if an `.nvmrc`, `.node-version` or `package.json` file is found in the parent path. Set to `always` to always display the current NPM, NVM or FNM node version.
+This feature is disabled by default. Use `yes`, display the version if an `.nvmrc`, `.node-version` or `package.json` file is found in the parent path. Set to `always` to always display the current NVM, FNM or asdf node version.
 
 #### `set -g theme_display_nix no`
 
