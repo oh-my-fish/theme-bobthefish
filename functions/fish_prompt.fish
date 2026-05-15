@@ -42,14 +42,37 @@ function __bobthefish_escape_regex -a str -d 'A backwards-compatible `string esc
     or echo "$str"
 end
 
+function __bobthefish_version_at_least -S -a required -a actual -d 'Compare dotted numeric versions'
+    set -l required_parts (string split . -- "$required")
+    set -l actual_parts (string split . -- "$actual")
+
+    for i in 1 2 3
+        set -l required_part $required_parts[$i]
+        set -l actual_part $actual_parts[$i]
+
+        [ -n "$required_part" ]
+        or set required_part 0
+        [ -n "$actual_part" ]
+        or set actual_part 0
+
+        if [ $actual_part -gt $required_part ]
+            return 0
+        else if [ $actual_part -lt $required_part ]
+            return 1
+        end
+    end
+
+    return 0
+end
+
 function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish)'
     set -l tag (command git describe --tags --exact-match 2>/dev/null)
     and echo "$tag_glyph $tag "
 
-    set -l branch (command git symbolic-ref HEAD 2>/dev/null | string replace -r '^refs/heads/' '')
+    set -l branch (command git symbolic-ref --quiet --short HEAD 2>/dev/null)
     and begin
         [ -n "$theme_git_default_branches" ]
-        or set -l theme_git_default_branches master main (git config init.defaultBranch)
+        or set -l theme_git_default_branches master main (command git config init.defaultBranch 2>/dev/null)
 
         [ "$theme_display_git_master_branch" != yes -a "$theme_display_git_default_branch" != yes ]
         and contains $branch $theme_git_default_branches
@@ -67,7 +90,7 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
 
     # If we've already shown a tag we don't need to show a detached branch
     if [ -z "$tag" ]
-        set -l branch (command git show-ref --head -s --abbrev | head -n1 2>/dev/null)
+        set -l branch (command git rev-parse --short HEAD 2>/dev/null)
         echo "$detached_glyph $branch"
     end
 end
@@ -79,7 +102,7 @@ end
 
 function __bobthefish_hg_branch -S -d 'Get the current hg branch'
     set -l branch (command hg branch 2>/dev/null)
-    set -l book (command hg book | command grep \* | cut -d\  -f3)
+    set -l book (command hg book 2>/dev/null | string replace --filter -r '^\s*\*\s+(\S+).*' '$1')
     echo "$branch_glyph $branch @ $book"
 end
 
@@ -201,7 +224,7 @@ end
 function __bobthefish_fossil_project_dir -S -a real_pwd -d 'Print the current fossil project base directory'
     [ "$theme_display_fossil" = yes ]
     and command -q fossil
-    and set -f dir (command fossil json status 2>/dev/null | grep localRoot | string split ':' -f2 | string trim --chars='"/,')
+    and set -f dir (command fossil json status 2>/dev/null | string replace --filter -r '^\s*"localRoot"\s*:\s*"([^"]*)".*' '$1' | string trim --chars=/)
     or return
 
     set -q theme_vcs_ignore_paths
@@ -284,8 +307,16 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
     set -l commits (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
     or return
 
-    set -l behind (count (for arg in $commits; echo $arg; end | command grep '^<'))
-    set -l ahead (count (for arg in $commits; echo $arg; end | command grep -v '^<'))
+    set -l behind 0
+    set -l ahead 0
+    for commit in $commits
+        switch "$commit"
+            case '<*'
+                set behind (math $behind + 1)
+            case '>*'
+                set ahead (math $ahead + 1)
+        end
+    end
 
     switch "$ahead $behind"
         case '' # no upstream
@@ -301,9 +332,20 @@ function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind
 end
 
 function __bobthefish_git_dirty_verbose -S -d 'Print a more verbose dirty state for the current working tree'
-    set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print "+" added "/-" removed }')
+    set -l diff_stats (command git diff --numstat)
     or return
 
+    set -l added 0
+    set -l removed 0
+    for line in $diff_stats
+        set -l fields (string split \t -- $line)
+        string match -rq '^\d+$' -- $fields[1]
+        and set added (math $added + $fields[1])
+        string match -rq '^\d+$' -- $fields[2]
+        and set removed (math $removed + $fields[2])
+    end
+
+    set -l changes "+$added/-$removed"
     echo "$changes " | string replace -r '(\+0/(-0)?|/-0)' ''
 end
 
@@ -433,12 +475,12 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     if set -q AUTOJUMP_SOURCED
         # Autojump special case: check if there are jobs besides the `autojump`
         # job, since that one is (briefly) backgrounded every time we `cd`
-        set bg_jobs (jobs -c | string match -v --regex '(Command|autojump)' | wc -l)
+        set bg_jobs (count (jobs -c | string match -v --regex '(Command|autojump)'))
         [ "$bg_jobs" -eq 0 ]
         and set bg_jobs # clear it out so it doesn't show when `0`
     else
         if [ "$theme_display_jobs_verbose" = yes ]
-            set bg_jobs (jobs -p | wc -l)
+            set bg_jobs (count (jobs -p))
             [ "$bg_jobs" -eq 0 ]
             and set bg_jobs # clear it out so it doesn't show when `0`
         else
@@ -518,7 +560,7 @@ end
 
 function __bobthefish_prompt_vagrant_vbox -S -a id -d 'Display VirtualBox Vagrant status'
     set -l vagrant_status
-    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | command grep 'VMState=' | tr -d '"' | cut -d '=' -f 2)
+    set -l vm_status (VBoxManage showvminfo --machinereadable $id 2>/dev/null | string replace --filter -r '^VMState="(.*)"$' '$1')
 
     switch "$vm_status"
         case running
@@ -559,7 +601,8 @@ end
 
 function __bobthefish_prompt_vagrant_parallels -S -d 'Display Parallels Vagrant status'
     set -l vagrant_status
-    set -l vm_status (prlctl list $id -o status 2>/dev/null | command tail -1)
+    set -l vm_status (prlctl list $id -o status 2>/dev/null)
+    set vm_status $vm_status[-1]
 
     switch "$vm_status"
         case running
@@ -702,7 +745,9 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
 
     if set -q display_user
         __bobthefish_start_segment $color_username
-        echo -ns (whoami)
+        [ -n "$USER" ]
+        and echo -ns $USER
+        or echo -ns (whoami)
     end
 
     if set -q display_sudo_user
@@ -742,12 +787,12 @@ function __bobthefish_rvm_parse_ruby -S -a ruby_string -a scope -d 'Parse RVM Ru
     # Function arguments:
     # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
     # - 'default' or 'current'
-    set -l IFS @
-    echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
-    set IFS -
-    echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
-    set -e __ruby
-    set -e __
+    set -l ruby_parts (string split @ -- "$ruby_string")
+    set __rvm_{$scope}_ruby_gemset $ruby_parts[2]
+
+    set -l ruby_version_parts (string split - -- $ruby_parts[1])
+    set __rvm_{$scope}_ruby_interpreter $ruby_version_parts[1]
+    set __rvm_{$scope}_ruby_version $ruby_version_parts[2]
 end
 
 function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
@@ -755,8 +800,17 @@ function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
     set -q rvm_path
     or set -l rvm_path ~/.rvm /usr/local/rvm
 
-    # More `sed`/`grep`/`cut` magic...
-    set -l __rvm_default_ruby (grep GEM_HOME $rvm_path/environments/default 2>/dev/null | sed -e"s/'//g" | sed -e's/.*\///')
+    set -l __rvm_default_ruby
+    for env_file in $rvm_path/environments/default
+        [ -e "$env_file" ]
+        or continue
+
+        set -l gem_home (string replace --filter -r "^.*GEM_HOME='?([^']*)'?.*" '$1' <"$env_file")
+        [ "$gem_home" ]
+        and set __rvm_default_ruby (__bobthefish_basename "$gem_home")
+        and break
+    end
+
     set -l __rvm_current_ruby (rvm-prompt i v g)
 
     [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]
@@ -868,7 +922,7 @@ function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go inform
     set -l high_enough_version 0
     if command -q go
         set actual_go_version (go version | string replace --filter -r 'go version go(\\d+\\.\\d+(?:\\.\\d+)?).*' '$1')
-        if printf "%s\n%s" "$gomod_version" "$actual_go_version" | sort --check=silent --version-sort
+        if __bobthefish_version_at_least "$gomod_version" "$actual_go_version"
             set high_enough_version 1
         end
     else
@@ -895,7 +949,7 @@ function __bobthefish_prompt_golang -S -a real_pwd -d 'Display current Go inform
 end
 
 function __bobthefish_virtualenv_python_version -S -d 'Get current Python version'
-    switch (python --version 2>&1 | tr '\n' ' ')
+    switch (python --version 2>&1 | string join ' ')
         case 'Python 2*PyPy*'
             echo $pypy_glyph
         case 'Python 3*PyPy*'
@@ -934,9 +988,9 @@ function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual e
     end
 
     if [ "$VIRTUAL_ENV" ]
-        echo -ns (basename "$VIRTUAL_ENV") ' '
+        echo -ns (__bobthefish_basename "$VIRTUAL_ENV") ' '
     else if [ "$CONDA_DEFAULT_ENV" ]
-        echo -ns (basename "$CONDA_DEFAULT_ENV") ' '
+        echo -ns (__bobthefish_basename "$CONDA_DEFAULT_ENV") ' '
     end
 end
 
@@ -945,7 +999,7 @@ function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environ
     and return
 
     __bobthefish_start_segment $color_virtualgo
-    echo -ns $go_glyph ' ' (basename "$VIRTUALGO") ' '
+    echo -ns $go_glyph ' ' (__bobthefish_basename "$VIRTUALGO") ' '
     set_color normal
 end
 
@@ -954,7 +1008,7 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     and return
 
     __bobthefish_start_segment $color_desk
-    echo -ns $desk_glyph ' ' (basename -a -s '.fish' "$DESK_ENV") ' '
+    echo -ns $desk_glyph ' ' (string replace -r '\.fish$' '' (__bobthefish_basename "$DESK_ENV")) ' '
     set_color normal
 end
 
@@ -1037,7 +1091,7 @@ end
 # ==============================
 
 function __bobthefish_prompt_fossil -S -a fossil_root_dir -a real_pwd -d 'Display the actual fossil state'
-    set -f fossil_statuses (command fossil changes --differ 2>/dev/null | cut -d' ' -f1 | sort -u)
+    set -f fossil_statuses (command fossil changes --differ 2>/dev/null | string replace --filter -r '^(\S+).*' '$1')
 
     # Fossil doesn't really stage changes; untracked files are ignored, tracked files are committed by default
     # It also syncs by default when you commit, and monitors for conflicts (which will be reported here)
@@ -1254,7 +1308,16 @@ function __bobthefish_closest_parent -S
     if builtin -q path
         echo (path sort -r $argv)[1]
     else
-        string join \n $argv | awk '{ print length, $0 }' | sort -nsr | head -1 | cut -d" " -f2-
+        set -l closest
+        for candidate in $argv
+            [ -z "$candidate" ]
+            and continue
+
+            if [ -z "$closest" -o (string length -- "$candidate") -gt (string length -- "$closest") ]
+                set closest $candidate
+            end
+        end
+        echo $closest
     end
 end
 
