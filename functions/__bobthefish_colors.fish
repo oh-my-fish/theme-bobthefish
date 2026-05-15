@@ -19,6 +19,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     green $colorfg
       set -x color_repo_work_tree           black $colorfg --bold
+      set -x color_repo_pending             black $colorfg --bold
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
 
@@ -55,6 +56,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     green $colorfg
       set -x color_repo_work_tree           white $colorfg --bold
+      set -x color_repo_pending             white $colorfg --bold
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
 
@@ -91,6 +93,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     green $colorfg
       set -x color_repo_work_tree           brgrey $colorfg --bold
+      set -x color_repo_pending             brgrey $colorfg --bold
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
 
@@ -127,6 +130,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     green $colorfg
       set -x color_repo_work_tree           grey $colorfg --bold
+      set -x color_repo_pending             grey $colorfg --bold
       set -x color_repo_dirty               brred $colorfg
       set -x color_repo_staged              yellow $colorfg
 
@@ -169,6 +173,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $grey
       set -x color_repo_work_tree           $grey $grey --bold
+      set -x color_repo_pending             $grey $grey --bold
       set -x color_repo_dirty               $red $grey
       set -x color_repo_staged              $yellow $grey
 
@@ -222,6 +227,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $base0B $colorfg
       set -x color_repo_work_tree           $base06 $colorfg --bold
+      set -x color_repo_pending             $base06 $colorfg --bold
       set -x color_repo_dirty               $base08 $colorfg
       set -x color_repo_staged              $base09 $colorfg
 
@@ -275,6 +281,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $base0B $colorfg
       set -x color_repo_work_tree           $base02 $colorfg --bold
+      set -x color_repo_pending             $base02 $colorfg --bold
       set -x color_repo_dirty               $base08 $colorfg
       set -x color_repo_staged              $base09 $colorfg
 
@@ -328,6 +335,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $colorfg
       set -x color_repo_work_tree           $base2 $colorfg --bold
+      set -x color_repo_pending             $base2 $colorfg --bold
       set -x color_repo_dirty               $red $colorfg
       set -x color_repo_staged              $yellow $colorfg
 
@@ -381,6 +389,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $colorfg
       set -x color_repo_work_tree           $base02 $colorfg --bold
+      set -x color_repo_pending             $base02 $colorfg --bold
       set -x color_repo_dirty               $red $colorfg
       set -x color_repo_staged              $yellow $colorfg
 
@@ -427,6 +436,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green[1] $green[3]
       set -x color_repo_work_tree           $grey[1] $white --bold
+      set -x color_repo_pending             $grey[1] $white --bold
       set -x color_repo_dirty               $red[2] $white
       set -x color_repo_staged              $orange[1] $orange[3]
 
@@ -472,6 +482,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green[2] $bg[1]
       set -x color_repo_work_tree           $bg[1] $fg[2] --bold
+      set -x color_repo_pending             $bg[1] $fg[2] --bold
       set -x color_repo_dirty               $red[2] $fg[2]
       set -x color_repo_staged              $yellow[1] $bg[1]
 
@@ -516,7 +527,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_path_nowrite_basename $red[1] $bg[2] --bold
 
       set -x color_repo                  $green[2] $fg[1]
-      set -x color_repo_work_tree        $bg[1] $fg[2] --bold
+      set -x color_repo_work_tree           $bg[1] $fg[2] --bold
+      set -x color_repo_pending             $bg[1] $fg[2] --bold
       set -x color_repo_dirty            $orange[2] $bg[2]
       set -x color_repo_staged           $yellow[1] $bg[1]
 
@@ -562,6 +574,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $bg
       set -x color_repo_work_tree           $selection $fg --bold
+      set -x color_repo_pending             $selection $fg --bold
       set -x color_repo_dirty               $red $bg
       set -x color_repo_staged              $yellow $bg
 
@@ -615,6 +628,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $base0E $colorfg
       set -x color_repo_work_tree           $base02 $colorfg --bold
+      set -x color_repo_pending             $base02 $colorfg --bold
       set -x color_repo_dirty               $base0B $colorfg
       set -x color_repo_staged              $base0D $colorfg
 
@@ -675,6 +689,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $mantle
       set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_pending             $surface2 $mantle --bold
       set -x color_repo_dirty               $red $mantle
       set -x color_repo_staged              $yellow $mantle
 
@@ -736,6 +751,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $mantle
       set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_pending             $surface2 $mantle --bold
       set -x color_repo_dirty               $red $mantle
       set -x color_repo_staged              $yellow $mantle
 
@@ -797,6 +813,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $mantle
       set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_pending             $surface2 $mantle --bold
       set -x color_repo_dirty               $red $mantle
       set -x color_repo_staged              $yellow $mantle
 
@@ -858,6 +875,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green $mantle
       set -x color_repo_work_tree           $surface2 $mantle --bold
+      set -x color_repo_pending             $surface2 $mantle --bold
       set -x color_repo_dirty               $red $mantle
       set -x color_repo_staged              $yellow $mantle
 
@@ -917,7 +935,8 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_path_nowrite_basename   $dark_grey $red_orange --bold
 
       set -x color_repo                    $light_green $darker_grey
-      set -x color_repo_work_tree          $dark_grey $light_grey --bold
+      set -x color_repo_work_tree           $dark_grey $light_grey --bold
+      set -x color_repo_pending             $dark_grey $light_grey --bold
       set -x color_repo_dirty              $red $darker_grey
       set -x color_repo_staged             $pale_gold $darker_grey
 
@@ -962,6 +981,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green[3] $white[4]
       set -x color_repo_work_tree           $grey[4] $grey[4] --bold
+      set -x color_repo_pending             $grey[4] $grey[4] --bold
       set -x color_repo_dirty               $red[3] $grey[4]
       set -x color_repo_staged              $yellow[3] $grey[4]
 
@@ -1009,6 +1029,7 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
 
       set -x color_repo                     $green[1] $green[3]
       set -x color_repo_work_tree           $grey[3] $white --bold
+      set -x color_repo_pending             $grey[3] $white --bold
       set -x color_repo_dirty               $red[2] $white
       set -x color_repo_staged              $orange[1] $orange[3]
 
@@ -1030,6 +1051,9 @@ function __bobthefish_colors -S -a color_scheme -d 'Define colors used by bobthe
       set -x color_desk                     $blue[2] $grey[1] --bold
       set -x color_nix                      $blue[2] $grey[1] --bold
   end
+
+  set -q color_repo_pending
+  or set -x color_repo_pending $color_repo_work_tree
 end
 
 function __bobthefish_user_color_scheme_deprecated
@@ -1043,6 +1067,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -q __color_path_nowrite_basename;    or set -l __color_path_nowrite_basename    660000 cc9999 --bold
   set -q __color_repo;                     or set -l __color_repo                     addc10 0c4801
   set -q __color_repo_work_tree;           or set -l __color_repo_work_tree           333333 ffffff --bold
+  set -q __color_repo_pending;             or set -l __color_repo_pending             333333 ffffff --bold
   set -q __color_repo_dirty;               or set -l __color_repo_dirty               ce000f ffffff
   set -q __color_repo_staged;              or set -l __color_repo_staged              f6b117 3a2a03
   set -q __color_vi_mode_default;          or set -l __color_vi_mode_default          999999 333333 --bold
@@ -1081,6 +1106,7 @@ function __bobthefish_user_color_scheme_deprecated
   set -x color_path_nowrite_basename    $__color_path_nowrite_basename
   set -x color_repo                     $__color_repo
   set -x color_repo_work_tree           $__color_repo_work_tree
+  set -x color_repo_pending             $__color_repo_pending
   set -x color_repo_dirty               $__color_repo_dirty
   set -x color_repo_staged              $__color_repo_staged
   set -x color_vi_mode_default          $__color_vi_mode_default

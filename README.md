@@ -208,6 +208,14 @@ This feature is disabled by default. Use `yes` to show the currently executing [
 
 Use `no` to disable Git integration. If you're doing this for performance reasons, try some of the options below before disabling it entirely!
 
+#### `set -g theme_display_git_async no`
+
+Git status is rendered asynchronously by default in interactive shells. Bobthefish shows the prompt immediately, computes branch and status flags in the background, then repaints the prompt when the Git metadata is ready. Use `no` to restore synchronous Git rendering. Async rendering is currently disabled when `theme_git_worktree_support` is `yes`.
+
+#### `set -g theme_git_async_refresh_interval 0`
+
+Bobthefish waits at least one second between async Git refresh workers by default. If a prompt render is skipped during that interval, Bobthefish schedules one trailing refresh. Set this to `0` to check Git state on every prompt render.
+
 #### `set -g theme_display_git_dirty no`
 
 Use `no` to hide Git dirty state. Set the Git `bash.showDirtyState` option on a per-repository basis to disable it just for especially large repos.
