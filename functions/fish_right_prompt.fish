@@ -1,14 +1,14 @@
 # See "Right prompt options" in README.md for configuration options
 
 function __bobthefish_cmd_duration -S -d 'Show command duration'
-    [ "$theme_display_cmd_duration" = "no" ]
+    [ "$theme_display_cmd_duration" = no ]
     and return
 
     [ -z "$CMD_DURATION" -o "$CMD_DURATION" -lt 100 ]
     and return
 
     if [ "$CMD_DURATION" -lt 5000 ]
-        echo -ns $CMD_DURATION 'ms'
+        echo -ns $CMD_DURATION ms
     else if [ "$CMD_DURATION" -lt 60000 ]
         __bobthefish_pretty_ms $CMD_DURATION s
     else if [ "$CMD_DURATION" -lt 3600000 ]
@@ -22,7 +22,7 @@ function __bobthefish_cmd_duration -S -d 'Show command duration'
     set_color $fish_color_normal
     set_color $fish_color_autosuggestion
 
-    [ "$theme_display_date" = "no" ]
+    [ "$theme_display_date" = no ]
     or echo -ns ' ' $__bobthefish_left_arrow_glyph
 end
 
@@ -54,7 +54,7 @@ function __bobthefish_pretty_ms -S -a ms -a interval -d 'Millisecond formatting 
 end
 
 function __bobthefish_timestamp -S -d 'Show the current timestamp'
-    [ "$theme_display_date" = "no" ]
+    [ "$theme_display_date" = no ]
     and return
 
     set -q theme_date_format
@@ -62,13 +62,13 @@ function __bobthefish_timestamp -S -d 'Show the current timestamp'
 
     echo -n ' '
     set -q theme_date_timezone
-        and env TZ="$theme_date_timezone" date $theme_date_format
-        or date $theme_date_format
+    and env TZ="$theme_date_timezone" date $theme_date_format
+    or date $theme_date_format
 end
 
 function fish_right_prompt -d 'bobthefish is all about the right prompt'
     set -l __bobthefish_left_arrow_glyph \uE0B3
-    if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
+    if [ "$theme_powerline_fonts" = no -a "$theme_nerd_fonts" != yes ]
         set __bobthefish_left_arrow_glyph '<'
     end
 

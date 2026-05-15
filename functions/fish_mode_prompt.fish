@@ -7,13 +7,13 @@
 #     set -g theme_display_vi no
 
 function fish_mode_prompt -d 'bobthefish-optimized fish mode indicator'
-    [ "$theme_display_vi" != 'no' ]
+    [ "$theme_display_vi" != no ]
     or return
 
-    [ "$fish_key_bindings" = 'fish_vi_key_bindings' \
-        -o "$fish_key_bindings" = 'hybrid_bindings' \
-        -o "$fish_key_bindings" = 'fish_hybrid_key_bindings' \
-        -o "$theme_display_vi" = 'yes' ]
+    [ "$fish_key_bindings" = fish_vi_key_bindings \
+        -o "$fish_key_bindings" = hybrid_bindings \
+        -o "$fish_key_bindings" = fish_hybrid_key_bindings \
+        -o "$theme_display_vi" = yes ]
     or return
 
     __bobthefish_colors $theme_color_scheme
