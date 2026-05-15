@@ -1065,6 +1065,7 @@ function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -a repaint -d 'D
     if __bobthefish_git_async_enabled
         __bobthefish_prompt_git_async $git_root_dir $real_pwd $repaint
     else
+        __bobthefish_git_async_stop_poller
         __bobthefish_prompt_git_sync $git_root_dir $real_pwd
     end
 end
@@ -1104,6 +1105,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
     # Use a simple prompt on dumb terminals.
     if [ "$TERM" = dumb ]
+        __bobthefish_git_async_stop_poller
         echo '> '
         return
     end
@@ -1153,12 +1155,15 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     # only show the closest parent
     switch (__bobthefish_closest_parent "$git_root_dir" "$hg_root_dir" "$fossil_root_dir")
         case ''
+            __bobthefish_git_async_stop_poller
             __bobthefish_prompt_dir $real_pwd
         case "$git_root_dir"
             __bobthefish_prompt_git $git_root_dir $real_pwd $git_async_repaint
         case "$hg_root_dir"
+            __bobthefish_git_async_stop_poller
             __bobthefish_prompt_hg $hg_root_dir $real_pwd
         case "$fossil_root_dir"
+            __bobthefish_git_async_stop_poller
             __bobthefish_prompt_fossil $fossil_root_dir $real_pwd
     end
 

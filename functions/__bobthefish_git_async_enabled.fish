@@ -1,65 +1,4 @@
 function __bobthefish_git_async_enabled -S -d 'Check whether async git prompt updates should be used'
-    if [ "$argv[1]" = --init ]
-        if status is-interactive; and __bobthefish_version_at_least 3.0.0 $version
-            # The git metadata var must be universal: the detached background fish
-            # writes it, and a universal variable is the only channel that can deliver
-            # a value back into this (the parent) shell. It's namespaced by pid so
-            # concurrent sessions don't clobber each other.
-            set -g __bobthefish_git_async_var __bobthefish_git_async_$fish_pid
-            set -U $__bobthefish_git_async_var
-
-            # Fires when the background worker publishes new metadata. The pending
-            # flag tells the next fish_prompt that this render is the async repaint
-            # (so it must not spawn another worker).
-            function __bobthefish_git_async_repaint --on-variable $__bobthefish_git_async_var
-                set -g __bobthefish_git_async_repaint_pending 1
-                commandline --function repaint
-            end
-
-            function __bobthefish_git_async_cleanup --on-event fish_exit
-                set -q __bobthefish_git_async_pid
-                and command kill $__bobthefish_git_async_pid 2>/dev/null
-                set -q __bobthefish_git_async_trailing_pid
-                and command kill $__bobthefish_git_async_trailing_pid 2>/dev/null
-
-                set -q __bobthefish_git_async_var
-                and set -e $__bobthefish_git_async_var
-            end
-
-            __bobthefish_git_async_gc
-        end
-
-    # The git metadata var must be universal: the detached background fish
-    # writes it, and a universal variable is the only channel that can deliver
-    # a value back into this (the parent) shell. It's namespaced by pid so
-    # concurrent sessions don't clobber each other.
-    set -g __bobthefish_git_async_var __bobthefish_git_async_$fish_pid
-    set -U $__bobthefish_git_async_var
-
-    # Fires when the background worker publishes new metadata. The pending
-    # flag tells the next fish_prompt that this render is the async repaint
-    # (so it must not spawn another worker).
-    function __bobthefish_git_async_repaint --on-variable $__bobthefish_git_async_var
-        set -g __bobthefish_git_async_repaint_pending 1
-        commandline --function repaint
-    end
-
-    function __bobthefish_git_async_cleanup --on-event fish_exit
-        set -q __bobthefish_git_async_pid
-        and command kill $__bobthefish_git_async_pid 2>/dev/null
-        set -q __bobthefish_git_async_trailing_pid
-        and command kill $__bobthefish_git_async_trailing_pid 2>/dev/null
-        set -q __bobthefish_git_async_poll_pid
-        and command kill $__bobthefish_git_async_poll_pid 2>/dev/null
-
-        set -q __bobthefish_git_async_var
-        and set -e $__bobthefish_git_async_var
-    end
-
-    __bobthefish_git_async_gc
-end
-
-function __bobthefish_git_async_enabled -S -d 'Check whether async git prompt updates should be used'
     [ "$theme_display_git_async" = no ]
     and return 1
 
@@ -111,12 +50,91 @@ function __bobthefish_git_async_gc -S -d 'Remove async git metadata left behind 
     end
 end
 
-function __bobthefish_git_async_refresh_interval -S -d 'Get the minimum seconds between async git workers'
-    set -l interval 1
-    string match -qr '^\d+$' -- "$theme_git_async_refresh_interval"
-    and set interval $theme_git_async_refresh_interval
+function __bobthefish_git_async_interval -S -a varname -a fallback -d 'Resolve a positive-integer async git interval, falling back to a default'
+    set -l interval $fallback
+    set -l configured $$varname
+    string match -qr '^\d+$' -- "$configured"
+    and set interval $configured
 
     echo $interval
+end
+
+function __bobthefish_git_async_refresh_interval -S -d 'Get the minimum seconds between async git workers'
+    __bobthefish_git_async_interval theme_git_async_refresh_interval 1
+end
+
+function __bobthefish_git_async_poll_interval -S -d 'Get the interval for idle async git refresh polling (0 if disabled)'
+    [ "$theme_git_async_poll_interval" = no ]
+    and echo 0
+    and return
+    __bobthefish_git_async_interval theme_git_async_poll_interval 5
+end
+
+function __bobthefish_git_async_first_render_budget_ms -S -d 'Get the maximum milliseconds to wait for first async git metadata'
+    __bobthefish_git_async_interval theme_git_async_first_render_budget_ms 200
+end
+
+function __bobthefish_git_async_clear_trailing -S -d 'Kill and forget the trailing async git refresh worker, if any'
+    set -q __bobthefish_git_async_trailing_pid
+    or return
+
+    command kill $__bobthefish_git_async_trailing_pid 2>/dev/null
+    set -e __bobthefish_git_async_trailing_pid
+end
+
+# Must be called whenever the prompt leaves git-async context (sync mode, dumb
+# terminal, hg/fossil/no repo). A poller left running keeps forking workers
+# against the repo it was started for, long after the shell has cd'd away.
+function __bobthefish_git_async_stop_poller -S -d 'Stop the idle async git refresh poller'
+    set -q __bobthefish_git_async_poll_pid
+    or return
+
+    command kill $__bobthefish_git_async_poll_pid 2>/dev/null
+    set -e __bobthefish_git_async_poll_pid
+    set -e __bobthefish_git_async_poll_key
+end
+
+function __bobthefish_git_async_start_poller -S -a git_root_dir -d 'Start an idle poller for async git prompt metadata'
+    set -q __bobthefish_git_async_var
+    or return
+
+    set -l interval (__bobthefish_git_async_poll_interval)
+    if [ "$interval" -le 0 ]
+        __bobthefish_git_async_stop_poller
+        return
+    end
+
+    set -l worker_path (__bobthefish_git_async_worker_path)
+    or return
+    set -l fish_bin (__bobthefish_git_async_fish)
+    set -l worker_theme_args "$theme_display_git_dirty" "$theme_display_git_dirty_verbose" "$theme_display_git_untracked" "$theme_display_git_stashed_verbose"
+
+    # The forked poller bakes in the repo, interval, and display flags, so a
+    # running poller is only reusable while all of those still match. Re-keying
+    # on any change (cd to another repo, a mid-session theme tweak) replaces a
+    # stale poller instead of leaving it publishing metadata under old settings.
+    set -l poll_key (string join \x1e -- $git_root_dir $interval $worker_theme_args)
+
+    if set -q __bobthefish_git_async_poll_pid
+        if command kill -0 $__bobthefish_git_async_poll_pid 2>/dev/null
+            [ "$__bobthefish_git_async_poll_key" = "$poll_key" ]
+            and return
+        end
+
+        __bobthefish_git_async_stop_poller
+    end
+
+    command $fish_bin --private -c '
+        source $argv[2]
+        while true
+            sleep $argv[1]
+            __bobthefish_git_async_worker $argv[3] $argv[4] $argv[5] $argv[6] $argv[7] $argv[8]
+        end
+    ' $interval $worker_path $__bobthefish_git_async_var $git_root_dir $worker_theme_args &
+    builtin -q disown
+    and builtin disown
+    set -g __bobthefish_git_async_poll_pid $last_pid
+    set -g __bobthefish_git_async_poll_key $poll_key
 end
 
 function __bobthefish_git_async_schedule_trailing -S -a git_root_dir -a delay -d 'Schedule a trailing async git refresh'
@@ -151,6 +169,8 @@ end
 function __bobthefish_git_async_start -S -a git_root_dir -d 'Start a background git prompt metadata update'
     set -q __bobthefish_git_async_var
     or return
+
+    __bobthefish_git_async_start_poller $git_root_dir
 
     # Keep at most one worker active per prompt session. Re-rendering while a
     # worker is still collecting git state should not kill the worker that will

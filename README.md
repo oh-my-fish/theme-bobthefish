@@ -216,6 +216,14 @@ Git status is rendered asynchronously by default in interactive shells. Bobthefi
 
 Bobthefish waits at least one second between async Git refresh workers by default. If a prompt render is skipped during that interval, Bobthefish schedules one trailing refresh. Set this to `0` to check Git state on every prompt render.
 
+#### `set -g theme_git_async_first_render_budget_ms 0`
+
+Bobthefish waits up to 200ms for async Git metadata when entering a repo without current cached state, avoiding a pending Git segment when the worker finishes quickly. Set this to `0` to always render immediately.
+
+#### `set -g theme_git_async_poll_interval 0`
+
+Bobthefish polls the current Git repo every five seconds while the prompt is idle, updating and repainting the prompt when Git metadata changes. Set this to `0` or `no` to disable idle polling, or to another number of seconds to adjust the interval.
+
 #### `set -g theme_display_git_dirty no`
 
 Use `no` to hide Git dirty state. Set the Git `bash.showDirtyState` option on a per-repository basis to disable it just for especially large repos.
