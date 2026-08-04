@@ -272,51 +272,35 @@ function __bobthefish_project_pwd -S -a project_root_dir -a real_pwd -d 'Print t
 end
 
 function __bobthefish_git_ahead -S -d 'Print the ahead/behind state for the current branch'
+    [ "$theme_display_git_ahead" = no ]
+    and return
+
     if [ "$theme_display_git_ahead_verbose" = yes ]
         __bobthefish_git_ahead_verbose
         return
     end
 
-    set -l ahead 0
-    set -l behind 0
-    for line in (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
-        switch "$line"
-            case '>*'
-                if [ $behind -eq 1 ]
-                    echo '±'
-                    return
-                end
-                set ahead 1
-            case '<*'
-                if [ $ahead -eq 1 ]
-                    echo "$git_plus_minus_glyph"
-                    return
-                end
-                set behind 1
-        end
-    end
+    set -l counts (command git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null | string split \t)
+    or return
 
-    if [ $ahead -eq 1 ]
+    set -l behind $counts[1]
+    set -l ahead $counts[2]
+
+    if [ $ahead -gt 0 -a $behind -gt 0 ]
+        echo "$git_plus_minus_glyph"
+    else if [ $ahead -gt 0 ]
         echo "$git_plus_glyph"
-    else if [ $behind -eq 1 ]
+    else if [ $behind -gt 0 ]
         echo "$git_minus_glyph"
     end
 end
 
 function __bobthefish_git_ahead_verbose -S -d 'Print a more verbose ahead/behind state for the current branch'
-    set -l commits (command git rev-list --left-right '@{upstream}...HEAD' 2>/dev/null)
+    set -l counts (command git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null | string split \t)
     or return
 
-    set -l behind 0
-    set -l ahead 0
-    for commit in $commits
-        switch "$commit"
-            case '<*'
-                set behind (math $behind + 1)
-            case '>*'
-                set ahead (math $ahead + 1)
-        end
-    end
+    set -l behind $counts[1]
+    set -l ahead $counts[2]
 
     switch "$ahead $behind"
         case '' # no upstream
