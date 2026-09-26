@@ -1179,6 +1179,29 @@ function __bobthefish_prompt_screen -S -d 'Display the screen name'
     set_color normal
 end
 
+function __bobthefish_prompt_tmux -S -d 'Display the tmux session name'
+    [ "$theme_display_tmux" = no -o -z "$TMUX" ]
+    and return
+
+    set -l format '#S'
+    [ "$theme_display_tmux_verbose" = yes ]
+    and set format '#S:#W'
+
+    set -l session (tmux display-message -p "$format" 2>/dev/null)
+    [ -z "$session" ]
+    and return
+
+    set -l color $color_screen
+    set -q color_tmux
+    and set color $color_tmux
+
+    __bobthefish_start_segment $color
+    [ -n "$tmux_glyph" ]
+    and echo -ns "$tmux_glyph "
+    echo -ns $session ' '
+    set_color normal
+end
+
 function __bobthefish_prompt_git -S -a git_root_dir -a real_pwd -d 'Display the actual git state'
     set -l dirty ''
     if [ "$theme_display_git_dirty" != no ]
@@ -1352,8 +1375,9 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     # User / hostname info
     __bobthefish_prompt_user
 
-    # Screen
+    # Screen & Tmux
     __bobthefish_prompt_screen
+    __bobthefish_prompt_tmux
 
     # Containers and VMs
     __bobthefish_prompt_vagrant
