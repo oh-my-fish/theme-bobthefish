@@ -257,6 +257,21 @@ function __bobthefish_hg_project_dir -S -a real_pwd -d 'Print the current hg pro
     end
 end
 
+function __bobthefish_jj_project_dir -S -a real_pwd -d 'Print the current jj project base directory'
+    [ "$theme_display_jj" = yes ]
+    and command -q jj
+    or return
+
+    set -q theme_vcs_ignore_paths
+    and [ (__bobthefish_ignore_vcs_dir $real_pwd) ]
+    and return
+
+    set -l jj_dir (command jj root --quiet 2>/dev/null)
+    or return
+
+    echo $jj_dir
+end
+
 function __bobthefish_project_pwd -S -a project_root_dir -a real_pwd -d 'Print the working directory relative to project root'
     set -q theme_project_dir_length
     or set -l theme_project_dir_length 0
@@ -1170,6 +1185,98 @@ function __bobthefish_prompt_hg -S -a hg_root_dir -a real_pwd -d 'Display the ac
     end
 end
 
+function __bobthefish_prompt_jj -S -a jj_root_dir -a real_pwd -d 'Display the actual jj state'
+    set -l template 'join(
+        "\t",
+        if(empty, "empty"),
+        if(conflict, "conflict"),
+        if(divergent, "divergent"),
+        if(local_bookmarks.any(|b| !b.synced()), "unsynced"),
+        change_id.shortest(8).prefix(),
+        change_id.shortest(8).rest(),
+        bookmarks.map(|b| b.name()).join("|"),
+        if(description, "desc")
+    )'
+
+    set -l jj_state (command jj log --no-graph --ignore-working-copy -r @ -T "$template" 2>/dev/null)
+    [ -z "$jj_state" ]
+    and return
+
+    echo -n -- "$jj_state" | read -d \t -l empty conflict divergent unsynced change_id_prefix change_id_rest bookmarks desc
+
+    set -l flags ''
+    [ "$conflict" ]
+    and set flags "$flags$jj_conflict_glyph"
+
+    [ "$divergent" ]
+    and set flags "$flags$jj_divergent_glyph"
+
+    [ -z "$desc" -a -z "$empty" ]
+    and set flags "$flags$jj_nodesc_glyph"
+
+    [ "$unsynced" ]
+    and set flags "$flags$jj_unsynced_glyph"
+
+    set -l flag_colors $color_repo
+    if [ "$flags" ]
+        if [ "$flags" = "$jj_nodesc_glyph" ]
+            set flag_colors $color_repo_staged
+        else
+            set flag_colors $color_repo_dirty
+        end
+    end
+
+    __bobthefish_path_segment $jj_root_dir project
+
+    __bobthefish_start_segment $flag_colors
+    echo -ns $jj_glyph ' '
+
+    set_color -o
+    echo -ns $change_id_prefix
+
+    set_color normal
+    set_color -b $flag_colors[1] $flag_colors[2..-1]
+    echo -ns $change_id_rest ' '
+
+    if [ "$bookmarks" ]
+        set -l bmark_list (string split '|' -- "$bookmarks")
+        set -l bmark_count (count $bmark_list)
+        set -l primary_bmark $bmark_list[1]
+
+        for preferred in main master develop dev
+            if contains $preferred $bmark_list
+                set primary_bmark $preferred
+                break
+            end
+        end
+
+        [ "$theme_use_abbreviated_bookmark_name" = yes ]
+        and set primary_bmark (string replace -r '^(.{17}).{3,}(.{5})$' '$1…$2' $primary_bmark)
+
+        if [ $bmark_count -gt 1 ]
+            set -l extra_count (math $bmark_count - 1)
+            echo -ns "($primary_bmark, …+$extra_count) "
+        else
+            echo -ns "($primary_bmark) "
+        end
+    end
+
+    [ "$flags" ]
+    and echo -ns $flags ' '
+
+    set_color normal
+
+    set -l project_pwd (__bobthefish_project_pwd $jj_root_dir $real_pwd)
+    if [ "$project_pwd" ]
+        set -l colors $color_path
+        [ -w "$real_pwd" ]
+        or set colors $color_path_nowrite
+
+        __bobthefish_start_segment $colors
+        echo -ns $project_pwd ' '
+    end
+end
+
 function __bobthefish_prompt_screen -S -d 'Display the screen name'
     [ "$theme_display_screen" = no -o -z "$STY" ]
     and return
@@ -1376,11 +1483,14 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     set -l git_root_dir (__bobthefish_git_project_dir $real_pwd)
     set -l hg_root_dir (__bobthefish_hg_project_dir $real_pwd)
     set -l fossil_root_dir (__bobthefish_fossil_project_dir $real_pwd)
+    set -l jj_root_dir (__bobthefish_jj_project_dir $real_pwd)
 
     # only show the closest parent
-    switch (__bobthefish_closest_parent "$git_root_dir" "$hg_root_dir" "$fossil_root_dir")
+    switch (__bobthefish_closest_parent "$jj_root_dir" "$git_root_dir" "$hg_root_dir" "$fossil_root_dir")
         case ''
             __bobthefish_prompt_dir $real_pwd
+        case "$jj_root_dir"
+            __bobthefish_prompt_jj $jj_root_dir $real_pwd
         case "$git_root_dir"
             __bobthefish_prompt_git $git_root_dir $real_pwd
         case "$hg_root_dir"

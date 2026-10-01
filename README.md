@@ -67,6 +67,11 @@ This theme is based loosely on [agnoster][btf-agnoster].
      * Dirty working directory (**`*`**)
      * Untracked files (**`…`**)
      * Conflicts (**`!`**)
+ * Jujutsu status, via colors and flags:
+     * Conflict (**`!`**)
+     * Working-copy commit has changes but no description (**`∅`**)
+     * Divergent (**`⇔`**)
+     * Working-copy bookmark(s) unsynced with remote (**`↑`**)
  * Abbreviated project-relative path
 
 
@@ -251,6 +256,14 @@ This feature is disabled by default. Use `yes` to enable Mercurial support in Bo
 #### `set -g theme_display_fossil yes`
 
 This feature is also disabled by default. It should be faster than Mercurial, but if you aren't using Fossil it's safe to leave disabled.
+
+#### `set -g theme_display_jj yes`
+
+This feature is disabled by default. Use `yes` to enable Jujutsu support in bobthefish. Jujutsu is prioritized in Git colocated workspaces if Git support is enabled.
+
+#### `set -g theme_use_abbreviated_bookmark_name yes`
+
+This feature is disabled by default. Use `yes` to truncate extremely long Jujutsu bookmark names.
 
 #### `set -g theme_vcs_ignore_paths /some/path /some/other/path{foo,bar}`
 

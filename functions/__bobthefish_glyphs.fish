@@ -52,6 +52,13 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     # Fossil glyph (it reuses most of the git glyphs)
     set -x fossil_glyph \U1F9B4 # Unicode bone emoji
 
+    # Jujutsu glyphs
+    set -x jj_glyph 'jj'
+    set -x jj_conflict_glyph '!'
+    set -x jj_nodesc_glyph \u2205 # '∅'
+    set -x jj_divergent_glyph \u21D4 # '⇔'
+    set -x jj_unsynced_glyph \u2191 # '↑'
+
     # Disable Powerline fonts (unless we're using nerd fonts instead)
     if [ "$theme_powerline_fonts" = no -a "$theme_nerd_fonts" != yes ]
         set private_glyph \u29B8 ' '
@@ -94,11 +101,17 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
         set git_plus_glyph \uF0DE # fa-sort-asc
         set git_minus_glyph \uF0DD # fa-sort-desc
         set git_plus_minus_glyph \uF0DC # fa-sort
+
+        set jj_glyph \uF418\U000F15C6 # nf-oct-git_branch + nf-md-bird
+        set jj_unsynced_glyph \uF47B # nf-oct-chevron_up
     end
 
     # Avoid ambiguous glyphs
     if [ "$theme_avoid_ambiguous_glyphs" = yes ]
         set git_untracked_glyph '...'
         set fossil_glyph '' # blank, for lack of a good fallback
+
+        set jj_nodesc_glyph '?'
+        set jj_divergent_glyph '<=>'
     end
 end
